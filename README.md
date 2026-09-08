@@ -1,4 +1,4 @@
-# 🚀 Analytics OS | IBPS SO IT Officer Mains - Mock Exam & Performance Platform
+# 🚀 ExamMatrix IT | IBPS SO IT Officer Mains - Mock Exam & Performance Platform
 
 <div align="center">
 
