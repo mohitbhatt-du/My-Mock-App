@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- CRITICAL FOR MOBILE ADAPTABILITY -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IT Officer Mains: Day 4</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- PRE-TEST SCREEN --- */
+        #setup-screen {
+            background: var(--bg-card);
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 10vh;
+            border: 1px solid var(--border-color);
+        }
+
+        select {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            margin: 20px 0;
+            background: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: var(--accent-hover); }
+
+        /* --- QUIZ SCREEN --- */
+        #quiz-screen { display: none; }
+        
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 8px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive UI Elements */
+        .svg-container {
+            width: 100%;
+            overflow-x: auto;
+            background: #fff;
+            border-radius: 8px;
+            margin: 15px 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        pre {
+            background: var(--bg-main);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .match-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .match-table th, .match-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+
+        /* Touch-Friendly Options */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            background: var(--bg-main);
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover { border-color: var(--accent-blue); }
+        input[type="radio"] { transform: scale(1.3); margin: 0; }
+
+        /* Results Screen */
+        #results-screen { display: none; text-align: center; }
+        .explanation {
+            display: none;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--accent-emerald);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        @media print {
+            body { background: white; color: black; }
+            .header-bar, .btn { display: none !important; }
+            .question-card { border: 1px solid #ccc; break-inside: avoid; }
+            .explanation { display: block !important; border-left-color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- SETUP SCREEN -->
+    <div id="setup-screen">
+        <h2>IT Officer Mains: Day 4</h2>
+        <p style="color: var(--text-muted)">Focus: DBMS, Code Snippets & Architectures (Easy-Moderate)</p>
+        
+        <select id="timer-select">
+            <option value="20">20 Minutes</option>
+            <option value="35">35 Minutes</option>
+            <option value="45" selected>45 Minutes</option>
+            <option value="60">60 Minutes</option>
+        </select>
+        
+        <button class="btn" onclick="startQuiz()">Start Mock Test</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen">
+        <div class="header-bar">
+            <div id="progress-text">Question 1 / 50</div>
+            <div id="timer-display" style="font-weight: bold; color: var(--accent-rose);">45:00</div>
+        </div>
+
+        <div id="questions-container"></div>
+        
+        <button class="btn" onclick="submitQuiz()" style="margin-top: 20px;">Submit Quiz</button>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div id="results-screen">
+        <h2>Quiz Completed!</h2>
+        <p id="score-display" style="font-size: 1.5rem; font-weight: bold;"></p>
+        <button class="btn" onclick="window.print()" style="margin-bottom: 10px;">Download PDF / Print</button>
+        <button class="btn" onclick="goToDashboard()" style="background: var(--bg-card); border: 1px solid var(--border-color);">Return to Dashboard</button>
+        <div id="review-container" style="margin-top: 30px;"></div>
+    </div>
+</div>
+
+<script>
+    // --- QUESTION DATABASE (FIRST 10 DEMO QUESTIONS) ---
+    const questions = [
+        {
+            id: 1,
+            topic: "DBMS",
+            text: "Based on the ER diagram provided below, which of the following is true about the relationship between 'Student' and 'Course'?",
+            svg: `<svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="50" width="100" height="50" fill="white" stroke="black" stroke-width="2"/>
+                    <text x="70" y="80" text-anchor="middle" fill="black" font-weight="bold">STUDENT</text>
+                    <path d="M 170 75 L 220 50 L 270 75 L 220 100 Z" fill="white" stroke="black" stroke-width="2"/>
+                    <text x="220" y="80" text-anchor="middle" fill="black">ENROLLS</text>
+                    <rect x="320" y="50" width="100" height="50" fill="white" stroke="black" stroke-width="2"/>
+                    <text x="370" y="80" text-anchor="middle" fill="black" font-weight="bold">COURSE</text>
+                    <line x1="120" y1="75" x2="170" y2="75" stroke="black" stroke-width="2"/>
+                    <text x="145" y="70" fill="black">M</text>
+                    <line x1="270" y1="75" x2="320" y2="75" stroke="black" stroke-width="2"/>
+                    <text x="295" y="70" fill="black">N</text>
+                  </svg>`,
+            options: [
+                "A) One student can enroll in only one course.",
+                "B) A course can have only one student enrolled.",
+                "C) Many students can enroll in many courses.",
+                "D) The relationship requires a weak entity."
+            ],
+            correct: 2,
+            explanation: "The 'M' and 'N' on the lines connecting the entities to the relationship diamond indicate a Many-to-Many (M:N) relationship."
+        },
+        {
+            id: 2,
+            topic: "DBMS",
+            text: "Match the Database Normal Forms (List I) with their corresponding rules (List II):",
+            matchTable: `
+                <tr><th>List I (Normal Form)</th><th>List II (Rule)</th></tr>
+                <tr><td>P. 1NF</td><td>1. Removes transitive dependency</td></tr>
+                <tr><td>Q. 2NF</td><td>2. Every determinant is a candidate key (Strict 3NF)</td></tr>
+                <tr><td>R. 3NF</td><td>3. Values in a column must be atomic</td></tr>
+                <tr><td>S. BCNF</td><td>4. Removes partial dependency</td></tr>`,
+            options: [
+                "A) P-3, Q-4, R-1, S-2",
+                "B) P-4, Q-3, R-2, S-1",
+                "C) P-3, Q-1, R-4, S-2",
+                "D) P-1, Q-2, R-3, S-4"
+            ],
+            correct: 0,
+            explanation: "1NF requires atomic values (3). 2NF eliminates partial dependencies (4). 3NF eliminates transitive dependencies (1). BCNF requires every determinant to be a candidate key (2)."
+        },
+        {
+            id: 3,
+            topic: "Python Programming",
+            text: "What will be the output of the following Python snippet?",
+            code: `def calc(x, y=[]):\n    y.append(x)\n    return y\n\nprint(calc(1))\nprint(calc(2, []))\nprint(calc(3))`,
+            options: [
+                "A) [1] \\n [2] \\n [3]",
+                "B) [1] \\n [2] \\n [1, 3]",
+                "C) [1] \\n [2] \\n [1, 2, 3]",
+                "D) Syntax Error"
+            ],
+            correct: 1,
+            explanation: "Default mutable arguments (like lists) in Python are evaluated once when the function is defined. The first call modifies the default list to [1]. The second call passes a new empty list. The third call uses the modified default list, appending 3, resulting in [1, 3]."
+        },
+        {
+            id: 4,
+            topic: "Java Programming",
+            text: "Consider the following Java code. What happens when it is compiled and run?",
+            code: `public class Test {\n    public static void main(String[] args) {\n        try {\n            int x = 5 / 0;\n        } catch (Exception e) {\n            System.out.print("Exception ");\n        } catch (ArithmeticException a) {\n            System.out.print("Arithmetic ");\n        }\n    }\n}`,
+            options: [
+                "A) Prints: Exception",
+                "B) Prints: Arithmetic",
+                "C) Compile-time Error",
+                "D) Runtime Error"
+            ],
+            correct: 2,
+            explanation: "Compile-time Error: 'ArithmeticException' has already been caught. In Java, subclasses (ArithmeticException) must be caught BEFORE their superclasses (Exception)."
+        },
+        {
+            id: 5,
+            topic: "Digital Logic",
+            text: "Identify the logic gate represented by the following boolean expression and SVG symbol: Y = (A + B)'",
+            svg: `<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 50 20 Q 80 50 50 80 Q 120 80 150 50 Q 120 20 50 20" fill="none" stroke="black" stroke-width="2"/>
+                    <circle cx="155" cy="50" r="5" fill="none" stroke="black" stroke-width="2"/>
+                    <line x1="20" y1="35" x2="60" y2="35" stroke="black" stroke-width="2"/>
+                    <line x1="20" y1="65" x2="60" y2="65" stroke="black" stroke-width="2"/>
+                    <line x1="160" y1="50" x2="190" y2="50" stroke="black" stroke-width="2"/>
+                  </svg>`,
+            options: [
+                "A) AND Gate",
+                "B) NAND Gate",
+                "C) NOR Gate",
+                "D) XOR Gate"
+            ],
+            correct: 2,
+            explanation: "The expression Y = (A + B)' and the curved shield symbol with an inversion bubble at the output represent a NOR gate."
+        },
+        {
+            id: 6,
+            topic: "Computer Networks",
+            text: "Match the OSI Layers (List I) with their primary Data Units (List II):",
+            matchTable: `
+                <tr><th>List I (Layer)</th><th>List II (Data Unit)</th></tr>
+                <tr><td>P. Physical</td><td>1. Packets</td></tr>
+                <tr><td>Q. Data Link</td><td>2. Segments</td></tr>
+                <tr><td>R. Network</td><td>3. Bits</td></tr>
+                <tr><td>S. Transport</td><td>4. Frames</td></tr>`,
+            options: [
+                "A) P-3, Q-4, R-1, S-2",
+                "B) P-4, Q-3, R-1, S-2",
+                "C) P-3, Q-4, R-2, S-1",
+                "D) P-3, Q-1, R-4, S-2"
+            ],
+            correct: 0,
+            explanation: "Physical layer handles Bits. Data Link handles Frames. Network layer handles Packets. Transport layer handles Segments."
+        },
+        {
+            id: 7,
+            topic: "Numerical",
+            text: "An organization is granted the block 130.34.12.64/26. How many total usable host addresses are available in this subnet?",
+            options: [
+                "A) 64",
+                "B) 62",
+                "C) 32",
+                "D) 30"
+            ],
+            correct: 1,
+            explanation: "A /26 subnet masks leaves 32 - 26 = 6 bits for hosts. Total IP addresses = 2^6 = 64. Usable hosts = 64 - 2 (Network & Broadcast address) = 62."
+        },
+        {
+            id: 8,
+            topic: "C++ Programming",
+            text: "What will be the output of the following C++ code snippet?",
+            code: `#include <iostream>\nusing namespace std;\n\nint main() {\n    int arr[] = {10, 20, 30, 40};\n    int *ptr = arr;\n    cout << *(ptr + 2);\n    return 0;\n}`,
+            options: [
+                "A) 10",
+                "B) 20",
+                "C) 30",
+                "D) Garbage Value"
+            ],
+            correct: 2,
+            explanation: "The pointer `ptr` points to the first element (10). `*(ptr + 2)` uses pointer arithmetic to access the element 2 index positions away, which is 30."
+        },
+        {
+            id: 9,
+            topic: "DBMS",
+            text: "In SQL, which command is used to change the structure of an existing table, such as adding or dropping a column?",
+            options: [
+                "A) UPDATE",
+                "B) ALTER",
+                "C) MODIFY",
+                "D) CHANGE"
+            ],
+            correct: 1,
+            explanation: "The ALTER TABLE command (a DDL command) is used to add, delete, or modify columns in an existing table."
+        },
+        {
+            id: 10,
+            topic: "Misc (IT Act 2000)",
+            text: "Under the Information Technology Act, 2000, which section specifically deals with punishment for hacking with a computer system?",
+            options: [
+                "A) Section 43",
+                "B) Section 65",
+                "C) Section 66",
+                "D) Section 67"
+            ],
+            correct: 2,
+            explanation: "Section 66 of the IT Act 2000 deals with computer-related offenses, specifically hacking, prescribing imprisonment up to 3 years or a fine."
+        }
+    ];
+
+    // --- LOGIC ENGINE ---
+    let timerInterval;
+    let timeRemaining;
+    let userAnswers = {};
+
+    function startQuiz() {
+        const timeLimit = parseInt(document.getElementById('timer-select').value) * 60;
+        timeRemaining = timeLimit;
+        
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        
+        renderQuestions();
+        startTimer();
+
+        // Anti-reload protection
+        window.onbeforeunload = () => "You have an active quiz. Progress will be lost!";
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            let mediaHtml = '';
+            if (q.svg) mediaHtml += `<div class="svg-container">${q.svg}</div>`;
+            if (q.code) mediaHtml += `<pre><code>${q.code}</code></pre>`;
+            if (q.matchTable) mediaHtml += `<table class="match-table">${q.matchTable}</table>`;
+
+            let optionsHtml = q.options.map((opt, i) => `
+                <label class="option-label">
+                    <input type="radio" name="q${q.id}" value="${i}" onchange="saveAnswer(${q.id}, ${i})">
+                    ${opt}
+                </label>
+            `).join('');
+
+            container.innerHTML += `
+                <div class="question-card" id="card-${q.id}">
+                    <div style="color: var(--accent-blue); font-size: 0.9rem; font-weight: bold; margin-bottom: 5px;">Q${index + 1}. [${q.topic}]</div>
+                    <div class="question-text">${q.text}</div>
+                    ${mediaHtml}
+                    <div class="options-grid">${optionsHtml}</div>
+                    <div class="explanation" id="exp-${q.id}"><strong>Explanation:</strong> ${q.explanation}</div>
+                </div>
+            `;
+        });
+    }
+
+    function saveAnswer(qId, ansIndex) {
+        userAnswers[qId] = ansIndex;
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            let m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            let s = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${m}:${s}`;
+            
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                submitQuiz();
+            }
+        }, 1000);
+    }
+
+    function submitQuiz() {
+        clearInterval(timerInterval);
+        window.onbeforeunload = null; // Remove reload block
+        
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let unattemptedCount = 0;
+        let topicBreakdown = {};
+
+        questions.forEach(q => {
+            const uAns = userAnswers[q.id];
+            
+            // Track Topics
+            if (!topicBreakdown[q.topic]) topicBreakdown[q.topic] = { correct: 0, total: 0 };
+            topicBreakdown[q.topic].total++;
+
+            if (uAns === undefined) {
+                unattemptedCount++;
+            } else if (uAns === q.correct) {
+                correctCount++;
+                topicBreakdown[q.topic].correct++;
+            } else {
+                incorrectCount++;
+            }
+
+            // Show Explanations and Highlight logic for Review (PDF)
+            const card = document.getElementById(`card-${q.id}`);
+            const radios = card.querySelectorAll('input[type="radio"]');
+            
+            radios.forEach((radio, idx) => {
+                radio.disabled = true;
+                if (idx === q.correct) {
+                    radio.parentElement.style.backgroundColor = 'rgba(16, 185, 129, 0.2)'; // Green
+                    radio.parentElement.style.borderColor = 'var(--accent-emerald)';
+                } else if (idx === uAns && uAns !== q.correct) {
+                    radio.parentElement.style.backgroundColor = 'rgba(244, 63, 94, 0.2)'; // Red
+                    radio.parentElement.style.borderColor = 'var(--accent-rose)';
+                }
+            });
+            document.getElementById(`exp-${q.id}`).style.display = 'block';
+        });
+
+        // Generate JSON for Dashboard
+        const resultData = {
+            quizTitle: "IT Officer Mains: Day 4",
+            quizDay: 4,
+            date: new Date().toISOString(),
+            totalQuestions: questions.length,
+            correct: correctCount,
+            incorrect: incorrectCount,
+            unattempted: unattemptedCount,
+            score: (correctCount / questions.length) * 100,
+            topicBreakdown: topicBreakdown
+        };
+
+        // Save to localStorage so dashboard can read it
+        let pastResults = JSON.parse(localStorage.getItem('itMainsResults') || '[]');
+        pastResults.push(resultData);
+        localStorage.setItem('itMainsResults', JSON.stringify(pastResults));
+
+        // Update UI
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('results-screen').style.display = 'block';
+        document.getElementById('score-display').innerText = `You scored ${correctCount} / ${questions.length}`;
+        
+        // Move questions to review container for printing
+        document.getElementById('review-container').appendChild(document.getElementById('questions-container'));
+    }
+
+    function goToDashboard() {
+        window.location.href = 'index.html'; // Adjust to your actual dashboard filename
+    }
+</script>
+
+</body>
+</html>
