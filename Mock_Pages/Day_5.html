@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="difficulty-level" content="2">
+  <meta name="quiz-difficulty" content="Easy to Moderate">
+  <title>IT Officer Mains: Day 5</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a; --card-bg: #1e293b; --border-color: #334155;
+      --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-blue: #38bdf8; --accent-green: #4ade80; 
+      --accent-red: #f87171; --accent-yellow: #facc15; --accent-indigo: #818cf8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 20px; }
+
+    header {
+      max-width: 1100px; margin: 0 auto 20px; display: flex; justify-content: space-between;
+      align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);
+    }
+    h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .badge-diff { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-left: 10px; }
+    .timer { font-size: 1.1rem; font-weight: 600; color: var(--accent-yellow); display: flex; align-items: center; gap: 6px; }
+
+    /* Setup Screen */
+    .setup-screen { max-width: 600px; margin: 80px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 40px; text-align: center; }
+    .setup-screen h2 { font-size: 1.8rem; margin-bottom: 12px; }
+    .setup-screen p { color: var(--text-muted); margin-bottom: 30px; }
+    .time-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+    .time-btn { background: #0f172a; border: 2px solid var(--border-color); color: var(--text-main); padding: 16px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: 0.2s; }
+    .time-btn:hover { border-color: var(--accent-blue); }
+    .time-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); }
+    .time-desc { display: block; font-size: 0.8rem; font-weight: 400; color: var(--text-muted); margin-top: 4px; }
+    .btn-start-exam { background: var(--accent-green); color: #0f172a; font-size: 1.2rem; font-weight: 700; width: 100%; padding: 16px; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-start-exam:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .quiz-container { max-width: 1100px; margin: 0 auto; display: none; grid-template-columns: 1fr 320px; gap: 20px; }
+    
+    .main-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
+    .question-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
+    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+    
+    /* Matching Table & Media Styles */
+    .matching-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; background: #0f172a; font-size: 0.95rem; }
+    .matching-table th, .matching-table td { padding: 10px; border: 1px solid var(--border-color); text-align: left; }
+    .matching-table th { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
+    .code-block { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); font-family: monospace; font-size: 14px; overflow-x: auto; margin-bottom: 15px; font-weight: normal;}
+    
+    .diagram-container { background: #fff; padding: 20px; border-radius: 8px; overflow-x: auto; margin-bottom: 15px; text-align: center; }
+    .diagram-container svg { width: 100%; max-width: 480px; min-width: 300px; height: auto; display: block; margin: 0 auto; }
+
+    .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .option-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 18px; border-radius: 8px; text-align: left; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+    .option-btn:hover:not(:disabled) { border-color: var(--accent-blue); background: #1e293b; }
+    .option-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); font-weight: 600; }
+    .option-btn.correct-opt { border-color: var(--accent-green) !important; background: rgba(74, 222, 128, 0.15) !important; font-weight: 600; }
+    .option-btn.wrong-opt { border-color: var(--accent-red) !important; background: rgba(248, 113, 113, 0.15) !important; }
+
+    .sidebar { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; height: fit-content; }
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+    .p-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 0; border-radius: 6px; font-weight: 600; cursor: pointer; text-align: center; font-size: 0.85rem; transition: 0.2s; }
+    .p-btn.answered { background: var(--accent-blue); color: #0f172a; border-color: var(--accent-blue); }
+    .p-btn.active { border: 2px solid #ffffff; }
+    .p-btn.review-correct { background: var(--accent-green); color: #0f172a; border-color: var(--accent-green); }
+    .p-btn.review-wrong { background: var(--accent-red); color: #0f172a; border-color: var(--accent-red); }
+
+    .nav-btns { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+    .btn { background: var(--accent-blue); color: #0f172a; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-submit { background: var(--accent-green); color: #0f172a; }
+    .btn-danger { background: var(--accent-red); color: #0f172a; }
+
+    .scorecard { display: none; max-width: 900px; margin: 20px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; }
+    .score-header { text-align: center; margin-bottom: 24px; }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; text-align: center; }
+    .stat-box { background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .stat-val { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .topic-table-container { margin-top: 24px; background: #0f172a; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+    .topic-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .topic-table th, .topic-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+    .topic-table th { background: var(--card-bg); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+    
+    .scorecard-actions { display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+    .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-blue); border-radius: 4px; font-size: 0.95rem; line-height: 1.5; }
+    .save-indicator { position: absolute; top: 24px; right: 24px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    @media print {
+      #setup-screen, #main-header, #quiz-ui, #scorecard { display: none !important; }
+      body { background-color: white !important; color: black !important; padding: 0; height: auto; overflow: visible; }
+      #pdf-export-area { display: block !important; position: static !important; width: 100%; color: black; background: white; padding: 10px; }
+      .pdf-question { margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px; page-break-inside: avoid; }
+      svg text { fill: black !important; }
+      svg path, svg line, svg circle, svg rect { stroke: black !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pdf-export-area" style="display:none;"></div>
+
+  <div class="setup-screen" id="setup-screen">
+    <i data-lucide="settings" style="width: 48px; height: 48px; color: var(--accent-blue); margin-bottom: 16px;"></i>
+    <h2>Configure Your Exam</h2>
+    <p>IT Officer Mains: Day 5 (Balanced Full Syllabus)</p>
+    
+    <div class="time-options">
+      <div class="time-btn" onclick="selectTime(20, this)">20 Minutes<span class="time-desc">Speed Run</span></div>
+      <div class="time-btn selected" onclick="selectTime(40, this)">40 Minutes<span class="time-desc">Actual Exam Time</span></div>
+      <div class="time-btn" onclick="selectTime(45, this)">45 Minutes<span class="time-desc">Relaxed Pacing</span></div>
+      <div class="time-btn" onclick="selectTime(60, this)">60 Minutes<span class="time-desc">Deep Analysis</span></div>
+    </div>
+    
+    <button class="btn-start-exam" onclick="startExamFromSetup()">
+      Begin Exam <i data-lucide="arrow-right"></i>
+    </button>
+  </div>
+
+  <header id="main-header" style="display: none;">
+    <h1>
+      <i data-lucide="award"></i> IT Officer Mains: Day 5
+      <span class="badge-diff">Balanced Full Syllabus</span>
+    </h1>
+    <div class="timer" id="timer"><i data-lucide="clock"></i> 00:00</div>
+  </header>
+
+  <div class="quiz-container" id="quiz-ui">
+    <div class="main-card">
+      <div class="save-indicator" id="save-indicator"><i data-lucide="cloud-lightning" size="16"></i> Auto-saved</div>
+      <div class="question-header">
+        <span id="q-topic">Topic: Loading...</span>
+        <span id="q-counter">Question 1 of 50</span>
+      </div>
+      <div class="question-text" id="q-text" style="overflow-x: auto;">Loading question...</div>
+      <div class="options-list" id="options-list"></div>
+      <div class="explanation" id="explanation"></div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" onclick="prevQuestion()" id="btn-prev"><i data-lucide="chevron-left"></i> Previous</button>
+        <button class="btn" onclick="clearSelection()" id="btn-clear" style="display:none;">Clear Response</button>
+        <button class="btn" onclick="nextQuestion()" id="btn-next">Next <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <h3 style="font-size: 1rem; margin-bottom: 12px; text-align: center;">Question Palette</h3>
+      <div class="palette-grid" id="palette"></div>
+      <button class="btn btn-submit" style="width: 100%; justify-content: center; margin-top: 24px;" onclick="submitQuiz()">
+        <i data-lucide="check-circle"></i> Submit Quiz
+      </button>
+      <button class="btn btn-danger" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="resetQuiz()">
+        <i data-lucide="rotate-ccw"></i> Reset All
+      </button>
+    </div>
+  </div>
+
+  <div class="scorecard" id="scorecard">
+    <div class="score-header">
+      <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Quiz Completed!</h2>
+      <p style="color: var(--text-muted);">IT Officer Mains: Day 5</p>
+    </div>
+    
+    <div class="score-grid">
+      <div class="stat-box"><div class="stat-val" id="score-total" style="color: var(--accent-blue);">0</div><div class="stat-label">Total Score</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-correct" style="color: var(--accent-green);">0</div><div class="stat-label">Correct (+2)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-wrong" style="color: var(--accent-red);">0</div><div class="stat-label">Incorrect (-0.5)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-unattempted" style="color: var(--accent-yellow);">0</div><div class="stat-label">Skipped</div></div>
+    </div>
+
+    <div class="topic-table-container">
+      <table class="topic-table">
+        <thead>
+          <tr><th>Topic</th><th>Attempted</th><th>Correct</th><th>Incorrect</th><th>Accuracy</th></tr>
+        </thead>
+        <tbody id="topic-breakdown-body"></tbody>
+      </table>
+    </div>
+
+    <div class="scorecard-actions">
+      <button class="btn btn-secondary" onclick="reviewAnswers()"><i data-lucide="search"></i> Review Answers</button>
+      <button class="btn" style="background: var(--accent-indigo); color: #000;" onclick="generateAndPrintPDF()"><i data-lucide="file-text"></i> Download PDF</button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let selectedTimeMinutes = 40; // Defaulted to 40 for Day 5
+
+    function selectTime(minutes, element) {
+      selectedTimeMinutes = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    // 50 Questions: Fully jumbled, balanced syllabus, code/diagram/match natively embedded, NO ALL CAPS PREFIXES.
+    const questions = [
+        { topic: "Database Systems", text: "Which normal form is strictly based on the concept of eliminating partial dependencies?", options: ["First Normal Form (1NF)", "Second Normal Form (2NF)", "Third Normal Form (3NF)", "Boyce-Codd Normal Form (BCNF)"], correct: 1, explanation: "2NF requires that a relation is in 1NF and all non-key attributes are fully functionally dependent on the entire primary key, eliminating partial dependencies." },
+        { topic: "Computer Networks", text: "Match the following IEEE standards with their common names:<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. IEEE 802.3</td><td>1. Wi-Fi</td></tr><tr><td>Q. IEEE 802.11</td><td>2. Bluetooth (PAN)</td></tr><tr><td>R. IEEE 802.15</td><td>3. Ethernet</td></tr></table>", options: ["P-3, Q-1, R-2", "P-1, Q-2, R-3", "P-3, Q-2, R-1", "P-2, Q-1, R-3"], correct: 0, explanation: "802.3 is the standard for Ethernet. 802.11 is the standard for Wireless LANs (Wi-Fi). 802.15 is the standard for Wireless PANs (Bluetooth)." },
+        { topic: "Python Programming", text: "What will be the output of the following Python code snippet?<br><br><div class='code-block'>data = {'a': 1, 'b': 2}\nprint(data.get('c', 3))</div>", options: ["None", "KeyError", "3", "0"], correct: 2, explanation: "The dictionary `.get(key, default)` method returns the value for the specified key if it exists. If the key is not found, it returns the specified default value (which is 3 in this case)." },
+        { topic: "Operating Systems", text: "A system uses 3 page frames for a process. The reference string of pages is: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5. How many page faults occur using the FIFO page replacement algorithm?", options: ["9", "10", "12", "7"], correct: 0, explanation: "Using FIFO with 3 frames: \n1(PF)->[1], \n2(PF)->[1,2], \n3(PF)->[1,2,3], \n4(PF)->[2,3,4], \n1(PF)->[3,4,1], \n2(PF)->[4,1,2], \n5(PF)->[1,2,5], \n1(Hit), \n2(Hit), \n3(PF)->[2,5,3], \n4(PF)->[5,3,4], \n5(Hit). Total page faults = 9." },
+        { topic: "Software Engineering", text: "In the context of software testing, which of the following best describes 'White Box Testing'?", options: ["Testing conducted at the user end to validate business requirements.", "Testing the internal structure, design, and coding of software.", "Testing without any knowledge of the internal source code.", "Testing the system's performance under extreme load conditions."], correct: 1, explanation: "White Box testing (or structural testing) evaluates the internal logic, code structure, and data flows of an application, requiring programming knowledge." },
+        { topic: "Digital Logic", text: "Observe the logic gate symbol below. What logic function does it represent?<br><br><div class='diagram-container'><svg viewBox='0 0 200 100' xmlns='http://www.w3.org/2000/svg'><path d='M 40 20 L 80 20 A 30 30 0 0 1 80 80 L 40 80 Z' fill='none' stroke='black' stroke-width='2'/><circle cx='115' cy='50' r='5' fill='none' stroke='black' stroke-width='2'/><line x1='10' y1='35' x2='40' y2='35' stroke='black' stroke-width='2'/><line x1='10' y1='65' x2='40' y2='65' stroke='black' stroke-width='2'/><line x1='120' y1='50' x2='150' y2='50' stroke='black' stroke-width='2'/></svg></div>", options: ["AND Gate", "OR Gate", "NAND Gate", "NOR Gate"], correct: 2, explanation: "The symbol features a straight vertical back (AND gate) followed by an inversion bubble at the output, making it a NAND gate." },
+        { topic: "Java Programming", text: "What happens when you attempt to compile and execute this Java code?<br><br><div class='code-block'>class Test {\n    public static void main(String args[]) {\n        final int x = 10;\n        x = 20;\n        System.out.println(x);\n    }\n}</div>", options: ["Prints 10", "Prints 20", "Throws a RuntimeException", "Compile-time error"], correct: 3, explanation: "The `final` keyword makes the variable `x` a constant. Attempting to reassign a value to a final variable (`x = 20;`) results in a compile-time error." },
+        { topic: "Cyber Security", text: "In the RSA algorithm, if the prime numbers chosen are p=5 and q=7, what is the value of the Euler's Totient function, φ(n)?", options: ["35", "24", "12", "48"], correct: 1, explanation: "In RSA, the Totient function is calculated as φ(n) = (p-1) * (q-1). So, (5-1) * (7-1) = 4 * 6 = 24." },
+        { topic: "Data Structures & Algorithms", text: "Which traversal technique visits the root node, then the left subtree, and finally the right subtree?", options: ["In-order Traversal", "Pre-order Traversal", "Post-order Traversal", "Level-order Traversal"], correct: 1, explanation: "Pre-order traversal follows the sequence: Root, Left, Right." },
+        { topic: "Misc (IT Act 2000)", text: "Under the Information Technology Act, 2000, Section 43 deals primarily with:", options: ["Electronic Signatures", "Damage to computer systems without owner's consent", "Publishing obscene material in electronic form", "Establishment of the Cyber Appellate Tribunal"], correct: 1, explanation: "Section 43 of the IT Act prescribes the penalty and compensation for damage to a computer, computer system, or network without the permission of the owner." },
+        { topic: "Misc (Banking IT)", text: "Between NEFT and RTGS payment systems in India, which of the following statements is true?", options: ["RTGS settles transactions in batches, while NEFT settles in real-time.", "NEFT settles transactions in half-hourly batches, while RTGS is settled continuously in real-time.", "Both NEFT and RTGS settle transactions only at the end of the business day.", "RTGS requires no minimum transaction limit, whereas NEFT has a minimum limit of Rs. 2 Lakhs."], correct: 1, explanation: "NEFT operates on a Deferred Net Settlement (DNS) basis settling in half-hourly batches. RTGS stands for Real-Time Gross Settlement, settling transactions continuously. RTGS actually has a minimum limit of Rs. 2 Lakhs." },
+        { topic: "Compiler Design", text: "Which phase of a compiler utilizes a Parse Tree (or Syntax Tree) to ensure the expressions are structurally correct?", options: ["Lexical Analyzer", "Syntax Analyzer", "Semantic Analyzer", "Code Optimizer"], correct: 1, explanation: "The Syntax Analyzer (Parser) groups tokens into grammatical phrases, typically represented as a parse tree, to check for structural correctness." },
+        { topic: "C/C++ Programming", text: "What is the output of the following C code snippet?<br><br><div class='code-block'>#include &lt;stdio.h&gt;\nint main() {\n    int a = 10;\n    int *p = &a;\n    *p = 20;\n    printf(\"%d\", a);\n    return 0;\n}</div>", options: ["10", "20", "Garbage Value", "Compilation Error"], correct: 1, explanation: "The pointer `p` holds the memory address of `a`. Dereferencing it (`*p = 20`) directly alters the value stored at that address, so `a` becomes 20." },
+        { topic: "Computer Networks", text: "If a computer has the IP address 172.16.5.10 with a subnet mask of 255.255.255.0, what is the network address of this computer?", options: ["172.16.0.0", "172.16.5.0", "172.16.5.255", "172.0.0.0"], correct: 1, explanation: "A subnet mask of 255.255.255.0 (/24) means the first three octets identify the network. Therefore, the network address is 172.16.5.0." },
+        { topic: "Object Oriented Programming", text: "What OOP concept allows a single function name or operator to exhibit different behaviors depending on the input parameters or data types?", options: ["Encapsulation", "Polymorphism", "Abstraction", "Inheritance"], correct: 1, explanation: "Polymorphism (meaning 'many forms') allows methods to do different things based on the object it is acting upon or the parameters passed (e.g., method overloading/overriding)." },
+        { topic: "Database Systems", text: "In a relational database schema, what does the term 'Degree' refer to?", options: ["The number of rows/tuples in a table.", "The number of attributes/columns in a table.", "The maximum number of foreign keys allowed.", "The total number of relations in the database."], correct: 1, explanation: "In relational algebra, the Degree (or Arity) refers to the number of attributes (columns) in a relation, whereas Cardinality refers to the number of tuples (rows)." },
+        { topic: "Software Engineering", text: "Which level of cohesion is considered the most desirable in software design because all elements in a module contribute strictly to a single, well-defined task?", options: ["Logical Cohesion", "Temporal Cohesion", "Communicational Cohesion", "Functional Cohesion"], correct: 3, explanation: "Functional cohesion is the strongest and most desirable level of cohesion. It means every part of the module is focused on executing one single, specific function." },
+        { topic: "Operating Systems", text: "Which condition necessary for a deadlock involves a process holding at least one resource and requesting additional resources held by other processes?", options: ["Mutual Exclusion", "Hold and Wait", "No Preemption", "Circular Wait"], correct: 1, explanation: "The 'Hold and Wait' condition occurs when a process holding at least one resource is waiting to acquire additional resources held by other processes." },
+        { topic: "Data Structures & Algorithms", text: "Identify the type of tree shown in the diagram below, where the balance factor of every node is either -1, 0, or +1.<br><br><div class='diagram-container'><svg viewBox='0 0 300 200' xmlns='http://www.w3.org/2000/svg'><circle cx='150' cy='30' r='15' fill='white' stroke='black' stroke-width='2'/><text x='150' y='35' text-anchor='middle'>M</text><circle cx='80' cy='90' r='15' fill='white' stroke='black' stroke-width='2'/><text x='80' y='95' text-anchor='middle'>F</text><circle cx='220' cy='90' r='15' fill='white' stroke='black' stroke-width='2'/><text x='220' y='95' text-anchor='middle'>S</text><line x1='140' y1='40' x2='90' y2='80' stroke='black' stroke-width='2'/><line x1='160' y1='40' x2='210' y2='80' stroke='black' stroke-width='2'/><circle cx='40' cy='150' r='15' fill='white' stroke='black' stroke-width='2'/><text x='40' y='155' text-anchor='middle'>A</text><circle cx='120' cy='150' r='15' fill='white' stroke='black' stroke-width='2'/><text x='120' y='155' text-anchor='middle'>K</text><line x1='70' y1='100' x2='50' y2='140' stroke='black' stroke-width='2'/><line x1='90' y1='100' x2='110' y2='140' stroke='black' stroke-width='2'/></svg></div>", options: ["B-Tree", "Red-Black Tree", "AVL Tree", "Trie"], correct: 2, explanation: "An AVL tree is a self-balancing binary search tree where the difference between heights of left and right subtrees (the balance factor) cannot be more than 1 for all nodes." },
+        { topic: "Misc (Cloud Computing)", text: "Which tool is an open-source container orchestration platform used for automating the deployment, scaling, and management of containerized applications?", options: ["Jenkins", "Git", "Kubernetes", "Ansible"], correct: 2, explanation: "Kubernetes (K8s) is the industry standard open-source system for orchestrating, managing, and scaling containerized applications (like those built with Docker)." },
+        { topic: "Python Programming", text: "What is the primary purpose of the `__init__` method in a Python class?", options: ["It is used to destroy an object and free memory.", "It is a constructor used to initialize the object's attributes when it is created.", "It is used to define class-level (static) variables.", "It returns a string representation of the object."], correct: 1, explanation: "The `__init__` method is the constructor in Python. It is automatically called when an object of the class is instantiated, primarily to initialize instance variables." },
+        { topic: "Database Systems", text: "What is the result of executing a `LEFT OUTER JOIN` between Table A and Table B?", options: ["Only the matching rows from both tables are returned.", "All rows from Table B and matching rows from Table A are returned.", "All rows from Table A and matching rows from Table B are returned; non-matching rows from Table A will have NULLs for Table B columns.", "All rows from both tables are returned, combining matching and non-matching rows with NULLs."], correct: 2, explanation: "A LEFT OUTER JOIN preserves all rows from the left table (Table A). If there is no match in the right table (Table B), the result set will contain NULLs for the Table B columns." },
+        { topic: "Digital Logic", text: "In Boolean algebra, what does the expression A + A'B simplify to?", options: ["A", "B", "A + B", "1"], correct: 2, explanation: "By the Distributive Law and the property (A + A') = 1: A + A'B = (A + A')(A + B) = 1 * (A + B) = A + B. This is the boolean absorption rule." },
+        { topic: "Java Programming", text: "Which collection interface in Java does not allow duplicate elements?", options: ["List", "Set", "Map", "Queue"], correct: 1, explanation: "The Set interface (e.g., HashSet, TreeSet) in the Java Collections Framework models the mathematical set abstraction and does not permit duplicate elements." },
+        { topic: "Computer Networks", text: "Which protocol is responsible for securing communication over a computer network by encrypting the data transmitted, commonly used in securing web browsing (HTTPS)?", options: ["FTP", "SMTP", "TLS / SSL", "SNMP"], correct: 2, explanation: "Transport Layer Security (TLS), and its predecessor Secure Sockets Layer (SSL), are cryptographic protocols designed to provide communications security over a computer network." },
+        { topic: "Data Structures & Algorithms", text: "In an undirected graph with 'V' vertices and 'E' edges, what is the sum of the degrees of all the vertices?", options: ["V", "E", "2 * V", "2 * E"], correct: 3, explanation: "According to the Handshaking Lemma, every edge connects two vertices, meaning it contributes exactly 2 to the sum of the degrees. Thus, the sum of degrees is 2*E." },
+        { topic: "Operating Systems", text: "What is the primary difference between a Thread and a Process?", options: ["A process shares memory with other processes; threads have isolated memory.", "A thread is an independent executing entity with its own PCB; a process is a lightweight unit within a thread.", "Threads within the same process share code, data, and OS resources, while processes have separate isolated address spaces.", "There is no difference; the terms are synonymous in modern Linux kernels."], correct: 2, explanation: "A process is a heavyweight, isolated execution environment. Threads are lightweight units of execution within a process that share the process's memory space and resources." },
+        { topic: "Cyber Security", text: "What type of attack involves an attacker sending an overwhelming amount of traffic to a target server to exhaust its resources, making it unavailable to legitimate users?", options: ["SQL Injection", "Man-in-the-Middle (MitM)", "Denial-of-Service (DoS)", "Cross-Site Scripting (XSS)"], correct: 2, explanation: "A DoS (or DDoS) attack is specifically designed to overwhelm systems, servers, or networks with a flood of internet traffic to exhaust resources." },
+        { topic: "Software Engineering", text: "In the Constructive Cost Model (COCOMO), estimating the effort required for a project is primarily based on which metric?", options: ["Function Points (FP)", "Lines of Code (KLOC)", "Number of Use Cases", "Number of Developers"], correct: 1, explanation: "The basic COCOMO model calculates software development effort (and cost) as a function of the estimated size of the software, primarily measured in Kilo Lines of Code (KLOC)." },
+        { topic: "Misc (Emerging Tech)", text: "In Machine Learning, what is 'Supervised Learning'?", options: ["The algorithm learns by interacting with an environment and receiving rewards or penalties.", "The algorithm is trained on unlabeled data to find hidden structures or clusters.", "The algorithm is trained on a labeled dataset, where each training example is paired with an output label.", "The algorithm creates neural networks automatically without human data input."], correct: 2, explanation: "In supervised learning, models are trained using labeled datasets, meaning the algorithm is provided with the input data and the corresponding correct output to learn the mapping function." },
+        { topic: "Compiler Design", text: "Match the following compiler phases (List I) with their output (List II).<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. Lexical Analysis</td><td>1. Parse Tree</td></tr><tr><td>Q. Syntax Analysis</td><td>2. Stream of Tokens</td></tr><tr><td>R. Intermediate Code Gen.</td><td>3. Three-Address Code</td></tr></table>", options: ["P-1, Q-2, R-3", "P-2, Q-1, R-3", "P-3, Q-1, R-2", "P-2, Q-3, R-1"], correct: 1, explanation: "Lexical Analysis produces Tokens (2). Syntax Analysis produces a Parse Tree (1). Intermediate Code Generation produces representation like Three-Address Code (3)." },
+        { topic: "C/C++ Programming", text: "Which access specifier in a C++ class makes members accessible only from within the class and its derived (child) classes?", options: ["public", "private", "protected", "internal"], correct: 2, explanation: "The `protected` access specifier allows a class member to be accessible within the class itself and by classes that inherit from it, but not from the outside world." },
+        { topic: "Database Systems", text: "In SQL, what is the difference between the `WHERE` and `HAVING` clauses?", options: ["WHERE is used with UPDATE statements; HAVING is used with SELECT statements.", "WHERE filters rows before aggregation; HAVING filters groups after aggregation.", "WHERE can only be used with numeric data; HAVING is used with strings.", "There is no difference; they are interchangeable."], correct: 1, explanation: "The `WHERE` clause applies conditions to individual rows before the `GROUP BY` clause groups them. The `HAVING` clause applies conditions to the aggregated groups formed by `GROUP BY`." },
+        { topic: "Operating Systems", text: "Consider a disk with 200 tracks (0-199) and a disk queue with requests for I/O to blocks on cylinders: 98, 183, 37, 122, 14, 124, 65, 67. The head is initially at cylinder 53. If the Shortest Seek Time First (SSTF) algorithm is used, what is the next cylinder serviced?", options: ["98", "65", "67", "37"], correct: 1, explanation: "SSTF selects the request with the minimum seek time from the current head position. The distances from 53 are: |53-65|=12, |53-37|=16, |53-67|=14. The shortest distance is to 65." },
+        { topic: "Data Structures & Algorithms", text: "What is the time complexity of searching for an element in a perfectly balanced Binary Search Tree (BST) containing 'n' nodes?", options: ["O(1)", "O(n)", "O(log n)", "O(n log n)"], correct: 2, explanation: "In a balanced BST, every comparison cuts the search space in half. This halving process results in a logarithmic time complexity of O(log n)." },
+        { topic: "Computer Networks", text: "Which IP address belongs to the Class B network range?", options: ["10.25.14.8", "172.16.45.90", "192.168.1.1", "224.0.0.5"], correct: 1, explanation: "Class A is 1-126. Class B is 128-191. Class C is 192-223. The address 172.16.45.90 falls squarely in the Class B range." },
+        { topic: "Object Oriented Programming", text: "Which of the following is NOT a pillar of Object-Oriented Programming?", options: ["Abstraction", "Inheritance", "Compilation", "Encapsulation"], correct: 2, explanation: "The four main pillars of OOP are Abstraction, Encapsulation, Inheritance, and Polymorphism. Compilation is a process in programming languages, not an OOP concept." },
+        { topic: "Python Programming", text: "What will the following list comprehension produce in Python?<br><br><div class='code-block'>squares = [x**2 for x in range(4)]\nprint(squares)</div>", options: ["[1, 4, 9, 16]", "[0, 1, 4, 9]", "[0, 2, 4, 6]", "[0, 1, 8, 27]"], correct: 1, explanation: "`range(4)` generates numbers 0, 1, 2, 3. The comprehension squares them: 0**2=0, 1**2=1, 2**2=4, 3**2=9. The result is [0, 1, 4, 9]." },
+        { topic: "Digital Logic", text: "How many selection lines are required for an 8-to-1 Multiplexer (MUX)?", options: ["1", "2", "3", "4"], correct: 2, explanation: "A multiplexer with 2<sup>n</sup> data inputs requires 'n' select lines to choose which input is routed to the output. For 8 inputs (2<sup>3</sup>), 3 select lines are required." },
+        { topic: "Misc (IT Standards)", text: "Which international ISO/IEC standard provides guidelines on IT Service Management (ITSM), often aligned with ITIL frameworks?", options: ["ISO 9001", "ISO 20000", "ISO 27001", "ISO 14001"], correct: 1, explanation: "ISO/IEC 20000 is the international standard for IT service management. ISO 27001 is for security, and 9001 is for general quality management." },
+        { topic: "Cyber Security", text: "What is a primary characteristic of a 'Stateful Firewall' compared to a 'Stateless Firewall'?", options: ["It blocks all UDP traffic permanently.", "It only inspects the IP header and port numbers of individual packets without tracking connection context.", "It tracks the state and context of active network connections, allowing return traffic for established sessions.", "It encrypts all payload data passing through it."], correct: 2, explanation: "Stateful firewalls remember the state of connections (like a TCP handshake) and make decisions based on the context of the traffic flow, not just individual packets." },
+        { topic: "Java Programming", text: "Which keyword in Java is used to invoke a parent class's constructor or access parent class members from a child class?", options: ["this", "super", "extends", "parent"], correct: 1, explanation: "The `super` keyword in Java is a reference variable used to refer to the immediate parent class object, allowing access to its constructors and overridden methods." },
+        { topic: "Database Systems", text: "A transaction in a database schedule reads a value written by an uncommitted transaction that subsequently aborts. What is this phenomenon called?", options: ["Lost Update", "Phantom Read", "Dirty Read", "Non-repeatable Read"], correct: 2, explanation: "A Dirty Read occurs when a transaction is allowed to read data from a row that has been modified by another running transaction and not yet committed." },
+        { topic: "Computer Networks", text: "Which device operates primarily at the Data Link layer (Layer 2) of the OSI model and uses MAC addresses to forward frames?", options: ["Router", "Hub", "Repeater", "Switch"], correct: 3, explanation: "A Switch operates at Layer 2, inspecting MAC addresses to forward data frames directly to the intended device. Hubs/Repeaters are Layer 1, and Routers are Layer 3." },
+        { topic: "Compiler Design", text: "What is a 'Symbol Table' used for in a compiler?", options: ["To optimize the machine code for the target CPU architecture.", "To store information about identifiers, their types, scope, and memory locations during compilation.", "To parse the context-free grammar.", "To convert tokens into regular expressions."], correct: 1, explanation: "The Symbol Table is a crucial data structure created and maintained by compilers to keep track of semantics of variables, such as variable names, types, and scope." },
+        { topic: "Software Engineering", text: "In the Unified Modeling Language (UML), which diagram is a structural diagram that shows the system's classes, their attributes, methods, and relationships?", options: ["Use Case Diagram", "Sequence Diagram", "Activity Diagram", "Class Diagram"], correct: 3, explanation: "A Class Diagram is a static structural diagram that describes the structure of a system by showing the system's classes and the relationships among them." },
+        { topic: "Data Structures & Algorithms", text: "In a Hash Table, what is a 'Collision'?", options: ["When two tables share the same memory space.", "When a hash function maps two different keys to the same array index.", "When the array size exceeds the maximum memory limit.", "When a deleted key is accessed again."], correct: 1, explanation: "A collision happens when a hash function generates the same index for more than one key. It is handled using techniques like Chaining or Open Addressing." },
+        { topic: "Operating Systems", text: "What is 'Thrashing' in the context of Operating System memory management?", options: ["A rapid context switching between multiple high-priority threads.", "A state where the CPU is highly utilized doing actual computations.", "A condition where the system spends more time swapping pages in and out of memory than executing code.", "The physical corruption of sectors on the hard disk drive."], correct: 2, explanation: "Thrashing occurs when a computer's virtual memory subsystem is in a constant state of paging, rapidly exchanging data in memory for data on disk, causing performance to collapse." },
+        { topic: "C/C++ Programming", text: "In C++, what does the `inline` keyword request the compiler to do?", options: ["Make the function accessible from other files.", "Insert the function's code directly into the calling code to eliminate function call overhead.", "Force the function to execute in a single CPU cycle.", "Prevent the function from modifying any global variables."], correct: 1, explanation: "An inline function is a request to the compiler to substitute the function call with the actual code of the function, reducing overhead for small, frequently called functions." },
+        { topic: "Misc (Banking IT)", text: "What does the acronym 'UPI' stand for in the context of Indian digital payments?", options: ["Unified Payments Interface", "Universal Payment Infrastructure", "Unique Payment Identification", "United Portal Integration"], correct: 0, explanation: "UPI stands for Unified Payments Interface, an instant real-time payment system developed by NPCI facilitating inter-bank peer-to-peer and person-to-merchant transactions." }
+    ];
+
+    let currentQ = 0;
+    let userAnswers = new Array(50).fill(null);
+    let isReviewMode = false;
+    let quizSubmitted = false;
+    let timeRemaining = 0;
+    let timerInterval;
+
+    const elTopic = document.getElementById('q-topic');
+    const elCounter = document.getElementById('q-counter');
+    const elText = document.getElementById('q-text');
+    const elOptions = document.getElementById('options-list');
+    const elExplanation = document.getElementById('explanation');
+    const elPalette = document.getElementById('palette');
+    const saveIndicator = document.getElementById('save-indicator');
+
+    function initQuiz() {
+      window.addEventListener('beforeunload', function (e) {
+        if (!quizSubmitted && document.getElementById('quiz-ui').style.display === 'grid') {
+          e.preventDefault(); e.returnValue = '';
+        }
+      });
+
+      const savedData = localStorage.getItem('it_officer_mains_day5');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          if (parsed && parsed.timeRemaining > 0 && !parsed.quizSubmitted) {
+            userAnswers = parsed.userAnswers;
+            timeRemaining = parsed.timeRemaining;
+            currentQ = parsed.currentQ;
+            
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-header').style.display = 'flex';
+            document.getElementById('quiz-ui').style.display = 'grid';
+            
+            buildPalette();
+            loadQuestion(currentQ);
+            startTimer(true);
+            return;
+          }
+        } catch(e) { console.error("Error loading save state"); }
+      }
+    }
+
+    function startExamFromSetup() {
+      timeRemaining = selectedTimeMinutes * 60;
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      
+      buildPalette();
+      loadQuestion(0);
+      triggerAutoSave();
+      startTimer(false);
+    }
+
+    function buildPalette() {
+      for (let i = 0; i < 50; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'p-btn';
+        btn.innerText = i + 1;
+        btn.onclick = () => jumpToQuestion(i);
+        elPalette.appendChild(btn);
+      }
+    }
+
+    function triggerAutoSave() {
+      if(quizSubmitted) return;
+      const state = { currentQ, userAnswers, timeRemaining, quizSubmitted };
+      localStorage.setItem('it_officer_mains_day5', JSON.stringify(state));
+      saveIndicator.classList.add('show');
+      setTimeout(() => saveIndicator.classList.remove('show'), 1500);
+    }
+
+    function resetQuiz() {
+      if(confirm("Are you sure you want to reset the entire quiz? All progress will be lost forever.")) {
+        localStorage.removeItem('it_officer_mains_day5');
+        location.reload();
+      }
+    }
+
+    function startTimer(isResume) {
+      const elTimer = document.getElementById('timer');
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining % 10 === 0) triggerAutoSave(); 
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          elTimer.innerHTML = `<i data-lucide="clock"></i> 00:00`;
+          submitQuiz(true); 
+        } else {
+          const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+          const s = (timeRemaining % 60).toString().padStart(2, '0');
+          elTimer.innerHTML = `<i data-lucide="clock"></i> ${m}:${s}`;
+        }
+      }, 1000);
+    }
+
+    function loadQuestion(index) {
+      currentQ = index;
+      const q = questions[index];
+      
+      elTopic.innerText = `Topic: ${q.topic}`;
+      elCounter.innerText = `Question ${index + 1} of 50`;
+      elText.innerHTML = q.text; 
+
+      elOptions.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (userAnswers[index] === i) btn.classList.add('selected');
+        
+        if (isReviewMode) {
+          btn.disabled = true;
+          if (i === q.correct) btn.classList.add('correct-opt');
+          if (userAnswers[index] === i && i !== q.correct) btn.classList.add('wrong-opt');
+        }
+
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> ${opt}`;
+        if (!isReviewMode) btn.onclick = () => selectOption(i);
+        elOptions.appendChild(btn);
+      });
+
+      document.getElementById('btn-clear').style.display = (!isReviewMode && userAnswers[index] !== null) ? 'block' : 'none';
+      
+      if (isReviewMode) {
+        elExplanation.style.display = 'block';
+        elExplanation.innerHTML = `<strong>Explanation:</strong> ${q.explanation}`;
+      } else {
+        elExplanation.style.display = 'none';
+      }
+      updatePaletteUI();
+    }
+
+    function selectOption(optIndex) {
+      userAnswers[currentQ] = optIndex;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function clearSelection() {
+      userAnswers[currentQ] = null;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function nextQuestion() { if (currentQ < 49) loadQuestion(currentQ + 1); }
+    function prevQuestion() { if (currentQ > 0) loadQuestion(currentQ - 1); }
+    function jumpToQuestion(index) { loadQuestion(index); }
+
+    function updatePaletteUI() {
+      const btns = elPalette.children;
+      for (let i = 0; i < 50; i++) {
+        btns[i].className = 'p-btn';
+        if (isReviewMode) {
+          if (userAnswers[i] === questions[i].correct) btns[i].classList.add('review-correct');
+          else if (userAnswers[i] !== null) btns[i].classList.add('review-wrong');
+        } else {
+          if (userAnswers[i] !== null) btns[i].classList.add('answered');
+        }
+        if (i === currentQ) btns[i].classList.add('active');
+      }
+    }
+
+    let generatedAnalyticsData = {}; 
+
+    function submitQuiz(force = false) {
+      if (!force && !confirm("Are you sure you want to submit the quiz?")) return;
+      
+      quizSubmitted = true;
+      clearInterval(timerInterval);
+      localStorage.removeItem('it_officer_mains_day5');
+
+      document.getElementById('quiz-ui').style.display = 'none';
+      document.getElementById('scorecard').style.display = 'block';
+      document.getElementById('main-header').style.display = 'none';
+
+      let correct = 0, wrong = 0, unattempted = 0;
+      let topicStats = {};
+      let wrongLog = [], skippedLog = [];
+
+      for (let i = 0; i < 50; i++) {
+        let q = questions[i];
+        let baseTopic = q.topic;
+        
+        if(!topicStats[baseTopic]) {
+            topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+        }
+        topicStats[baseTopic].total++;
+
+        if (userAnswers[i] === null) {
+          unattempted++; topicStats[baseTopic].skipped++;
+          skippedLog.push({ qNum: i+1, topic: baseTopic, text: q.text });
+        } else if (userAnswers[i] === q.correct) {
+          correct++; topicStats[baseTopic].correct++;
+        } else {
+          wrong++; topicStats[baseTopic].wrong++;
+          wrongLog.push({
+             qNum: i+1, topic: baseTopic, text: q.text, 
+             userAnswer: q.options[userAnswers[i]], correctAnswer: q.options[q.correct]
+          });
+        }
+      }
+
+      const score = (correct * 2) - (wrong * 0.5);
+      document.getElementById('score-total').innerText = score;
+      document.getElementById('score-correct').innerText = correct;
+      document.getElementById('score-wrong').innerText = wrong;
+      document.getElementById('score-unattempted').innerText = unattempted;
+
+      const tbBody = document.getElementById('topic-breakdown-body');
+      tbBody.innerHTML = '';
+      for (const [topic, stats] of Object.entries(topicStats)) {
+          const acc = Math.round((stats.correct / stats.total) * 100);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
+          tbBody.appendChild(tr);
+      }
+
+      generatedAnalyticsData = {
+        quizDay: 5, 
+        quizTitle: "IT Officer Mains: Day 5",
+        difficultyLevel: 2,
+        difficultyName: "Easy to Moderate",
+        focusArea: "Balanced Full Syllabus",
+        date: new Date().toISOString(),
+        totalQuestions: 50,
+        correct: correct, incorrect: wrong, unattempted: unattempted, score: score,
+        topicBreakdown: topicStats, wrongQuestions: wrongLog, skippedQuestions: skippedLog
+      };
+
+      autoSaveToServer(generatedAnalyticsData);
+    }
+
+    function reviewAnswers() {
+      isReviewMode = true;
+      document.getElementById('scorecard').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      document.querySelector('.btn-submit').style.display = 'none';
+      document.querySelector('.btn-danger').style.display = 'none';
+      loadQuestion(0);
+    }
+
+    function autoSaveToServer(data) {
+      try {
+        const storageKey = `quiz_result_day_${data.quizDay}`;
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        console.log("Result saved locally!");
+        
+        if (window.parent && window.parent.loadDataFromBackend) {
+          window.parent.loadDataFromBackend();
+        }
+      } catch (err) {
+        console.error("Error saving result locally.", err);
+      }
+    }
+
+    function generateAndPrintPDF() {
+        const printArea = document.getElementById('pdf-export-area');
+        let htmlContent = `
+            <div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; color: #000;">
+                <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">IT Officer Mains: Day 5 - Answer Key</h1>
+                <p><strong>Difficulty:</strong> Easy to Moderate | <strong>Focus:</strong> Balanced Full Syllabus</p>
+                <hr style="margin-bottom: 30px;">
+        `;
+
+        questions.forEach((q, i) => {
+            const uAns = userAnswers[i];
+            let statusBadge = "";
+            if (uAns === null) statusBadge = "<span style='color: orange;'>[Skipped]</span>";
+            else if (uAns === q.correct) statusBadge = "<span style='color: green;'>[Correct]</span>";
+            else statusBadge = "<span style='color: red;'>[Wrong]</span>";
+
+            htmlContent += `
+                <div class="pdf-question">
+                    <h3>Q${i+1}. ${q.text} ${statusBadge}</h3>
+                    <p style="font-size: 0.9em; color: #555;">Topic: ${q.topic}</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+            `;
+            
+            q.options.forEach((opt, optIndex) => {
+                let prefix = "[ ]";
+                let style = "";
+                if(optIndex === q.correct) {
+                    prefix = "[✓]"; style = "color: green; font-weight: bold;";
+                } else if (uAns === optIndex) {
+                    prefix = "[✗]"; style = "color: red; text-decoration: line-through;";
+                }
+                htmlContent += `<li style="margin-bottom: 5px; ${style}">${prefix} ${String.fromCharCode(65 + optIndex)}. ${opt}</li>`;
+            });
+
+            htmlContent += `
+                    </ul>
+                    <div style="background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin-top: 10px;">
+                        <strong>Explanation:</strong> ${q.explanation}
+                    </div>
+                </div>
+            `;
+        });
+
+        htmlContent += `</div>`;
+        printArea.innerHTML = htmlContent;
+        window.print();
+    }
+
+    window.onload = initQuiz;
+  </script>
+</body>
+</html>

@@ -1,473 +1,579 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IT Officer Mains: Day 4</title>
-    <!-- Add Lucide Icons for UI -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        :root {
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --bg-panel: #283548;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #3b82f6;
-            --accent-hover: #2563eb;
-            --status-answered: #10b981; /* Green */
-            --status-unanswered: #ef4444; /* Red */
-            --status-notvisited: #64748b; /* Gray */
-            --border-color: #334155;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="difficulty-level" content="2">
+  <meta name="quiz-difficulty" content="Easy to Moderate">
+  <title>IT Officer Mains: Day 4</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a; --card-bg: #1e293b; --border-color: #334155;
+      --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-blue: #38bdf8; --accent-green: #4ade80; 
+      --accent-red: #f87171; --accent-yellow: #facc15; --accent-indigo: #818cf8;
+    }
 
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; /* Prevent body scrolling */
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 20px; }
 
-        /* --- SETUP SCREEN --- */
-        #setup-screen {
-            max-width: 500px;
-            margin: 10vh auto;
-            background: var(--bg-card);
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
+    header {
+      max-width: 1100px; margin: 0 auto 20px; display: flex; justify-content: space-between;
+      align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);
+    }
+    h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .badge-diff { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-left: 10px; }
+    .timer { font-size: 1.1rem; font-weight: 600; color: var(--accent-yellow); display: flex; align-items: center; gap: 6px; }
 
-        select {
-            width: 100%;
-            padding: 12px;
-            margin: 20px 0;
-            background: var(--bg-main);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-        }
+    /* Setup Screen */
+    .setup-screen { max-width: 600px; margin: 80px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 40px; text-align: center; }
+    .setup-screen h2 { font-size: 1.8rem; margin-bottom: 12px; }
+    .setup-screen p { color: var(--text-muted); margin-bottom: 30px; }
+    .time-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+    .time-btn { background: #0f172a; border: 2px solid var(--border-color); color: var(--text-main); padding: 16px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: 0.2s; }
+    .time-btn:hover { border-color: var(--accent-blue); }
+    .time-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); }
+    .time-desc { display: block; font-size: 0.8rem; font-weight: 400; color: var(--text-muted); margin-top: 4px; }
+    .btn-start-exam { background: var(--accent-green); color: #0f172a; font-size: 1.2rem; font-weight: 700; width: 100%; padding: 16px; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-start-exam:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        .btn {
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn:hover { background: var(--accent-hover); }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); }
+    .quiz-container { max-width: 1100px; margin: 0 auto; display: none; grid-template-columns: 1fr 320px; gap: 20px; }
+    
+    .main-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
+    .question-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
+    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+    
+    /* Matching Table & Media Styles */
+    .matching-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; background: #0f172a; font-size: 0.95rem; }
+    .matching-table th, .matching-table td { padding: 10px; border: 1px solid var(--border-color); text-align: left; }
+    .matching-table th { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
+    .code-block { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); font-family: monospace; font-size: 14px; overflow-x: auto; margin-bottom: 15px; font-weight: normal;}
+    
+    /* Improved Diagram Container */
+    .diagram-container { background: #fff; padding: 20px; border-radius: 8px; overflow-x: auto; margin-bottom: 15px; text-align: center; }
+    .diagram-container svg { width: 100%; max-width: 480px; min-width: 300px; height: auto; display: block; margin: 0 auto; }
 
-        /* --- EXAM UI (Desktop Grid) --- */
-        #quiz-screen {
-            display: none;
-            height: 100vh;
-            display: grid;
-            grid-template-rows: 60px 1fr;
-            grid-template-columns: 1fr 300px;
-            grid-template-areas: 
-                "header header"
-                "main panel";
-        }
+    .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .option-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 18px; border-radius: 8px; text-align: left; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+    .option-btn:hover:not(:disabled) { border-color: var(--accent-blue); background: #1e293b; }
+    .option-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); font-weight: 600; }
+    .option-btn.correct-opt { border-color: var(--accent-green) !important; background: rgba(74, 222, 128, 0.15) !important; font-weight: 600; }
+    .option-btn.wrong-opt { border-color: var(--accent-red) !important; background: rgba(248, 113, 113, 0.15) !important; }
 
-        .exam-header {
-            grid-area: header;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
+    .sidebar { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; height: fit-content; }
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+    .p-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 0; border-radius: 6px; font-weight: 600; cursor: pointer; text-align: center; font-size: 0.85rem; transition: 0.2s; }
+    .p-btn.answered { background: var(--accent-blue); color: #0f172a; border-color: var(--accent-blue); }
+    .p-btn.active { border: 2px solid #ffffff; }
+    .p-btn.review-correct { background: var(--accent-green); color: #0f172a; border-color: var(--accent-green); }
+    .p-btn.review-wrong { background: var(--accent-red); color: #0f172a; border-color: var(--accent-red); }
 
-        .timer { font-size: 1.2rem; font-weight: bold; color: var(--status-unanswered); }
+    .nav-btns { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+    .btn { background: var(--accent-blue); color: #0f172a; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-submit { background: var(--accent-green); color: #0f172a; }
+    .btn-danger { background: var(--accent-red); color: #0f172a; }
 
-        /* Main Question Area */
-        .main-area {
-            grid-area: main;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
+    .scorecard { display: none; max-width: 900px; margin: 20px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; }
+    .score-header { text-align: center; margin-bottom: 24px; }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; text-align: center; }
+    .stat-box { background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .stat-val { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .topic-table-container { margin-top: 24px; background: #0f172a; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+    .topic-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .topic-table th, .topic-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+    .topic-table th { background: var(--card-bg); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+    
+    .scorecard-actions { display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+    .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-blue); border-radius: 4px; font-size: 0.95rem; line-height: 1.5; }
+    .save-indicator { position: absolute; top: 24px; right: 24px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
 
-        .question-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: var(--accent-blue);
-        }
-
-        .question-text { font-size: 1.1rem; margin-bottom: 20px; }
-
-        .svg-container { background: #fff; padding: 10px; border-radius: 8px; overflow-x: auto; margin-bottom: 15px;}
-        pre { background: var(--bg-main); padding: 15px; border-radius: 8px; overflow-x: auto; border: 1px solid var(--border-color); }
-        .match-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        .match-table th, .match-table td { border: 1px solid var(--border-color); padding: 8px; }
-
-        .options-grid { display: flex; flex-direction: column; gap: 10px; }
-        .option-label {
-            background: var(--bg-card);
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .option-label:hover { border-color: var(--accent-blue); }
-        input[type="radio"] { transform: scale(1.3); margin: 0; }
-
-        .action-bar {
-            margin-top: auto;
-            padding-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        /* Side Panel (Question Palette) */
-        .side-panel {
-            grid-area: panel;
-            background: var(--bg-panel);
-            border-left: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .panel-header { padding: 15px; border-bottom: 1px solid var(--border-color); font-weight: bold; text-align: center; }
-        
-        .legend {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 15px;
-            font-size: 0.8rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .legend-item { display: flex; align-items: center; gap: 5px; }
-        .legend-box { width: 15px; height: 15px; border-radius: 3px; }
-
-        .palette-grid {
-            padding: 15px;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            overflow-y: auto;
-        }
-
-        .palette-btn {
-            aspect-ratio: 1;
-            border-radius: 4px;
-            border: none;
-            background: var(--status-notvisited);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .palette-btn.answered { background: var(--status-answered); }
-        .palette-btn.unanswered { background: var(--status-unanswered); }
-        .palette-btn.active { border: 2px solid white; transform: scale(1.1); }
-
-        .submit-section { padding: 15px; margin-top: auto; border-top: 1px solid var(--border-color); }
-        .submit-section .btn { width: 100%; background: var(--status-answered); }
-
-        /* Mobile Toggle Button */
-        #mobile-palette-toggle { display: none; }
-
-        /* --- MOBILE RESPONSIVENESS --- */
-        @media (max-width: 768px) {
-            #quiz-screen {
-                display: flex;
-                flex-direction: column;
-            }
-            .side-panel {
-                position: fixed;
-                top: 60px;
-                right: -100%;
-                width: 250px;
-                height: calc(100vh - 60px);
-                z-index: 1000;
-                transition: right 0.3s ease;
-                box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-            }
-            .side-panel.open { right: 0; }
-            #mobile-palette-toggle {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                background: var(--bg-panel);
-                border: 1px solid var(--border-color);
-                color: white;
-                padding: 5px 10px;
-                border-radius: 4px;
-            }
-        }
-    </style>
+    /* Fixed Print CSS */
+    @media print {
+      /* Hide all UI elements from the print flow */
+      #setup-screen, #main-header, #quiz-ui, #scorecard { display: none !important; }
+      
+      /* Reset body for clean printing */
+      body { background-color: white !important; color: black !important; padding: 0; height: auto; overflow: visible; }
+      
+      /* Force PDF container to display and flow naturally */
+      #pdf-export-area { display: block !important; position: static !important; width: 100%; color: black; background: white; padding: 10px; }
+      
+      /* Prevent questions from breaking awkwardly across pages */
+      .pdf-question { margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px; page-break-inside: avoid; }
+      
+      /* Keep SVGs readable */
+      svg text { fill: black !important; }
+      svg path, svg line, svg circle, svg rect { stroke: black !important; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- SETUP SCREEN -->
-    <div id="setup-screen">
-        <h2>IT Officer Mains: Day 4</h2>
-        <select id="timer-select">
-            <option value="20">20 Minutes</option>
-            <option value="35">35 Minutes</option>
-            <option value="45" selected>45 Minutes</option>
-            <option value="60">60 Minutes</option>
-        </select>
-        <button class="btn" style="width:100%" onclick="startQuiz()">Start Exam</button>
+  <!-- Ensure display:none is here to keep it hidden during the actual quiz -->
+  <div id="pdf-export-area" style="display:none;"></div>
+
+  <!-- Pre-Test Setup Screen -->
+  <div class="setup-screen" id="setup-screen">
+    <i data-lucide="settings" style="width: 48px; height: 48px; color: var(--accent-blue); margin-bottom: 16px;"></i>
+    <h2>Configure Your Exam</h2>
+    <p>IT Officer Mains: Day 4</p>
+    
+    <div class="time-options">
+      <div class="time-btn" onclick="selectTime(20, this)">20 Minutes<span class="time-desc">Speed Run</span></div>
+      <div class="time-btn selected" onclick="selectTime(40, this)">40 Minutes<span class="time-desc">Actual Exam Time</span></div>
+      <div class="time-btn" onclick="selectTime(45, this)">45 Minutes<span class="time-desc">Relaxed Pacing</span></div>
+      <div class="time-btn" onclick="selectTime(60, this)">60 Minutes<span class="time-desc">Deep Analysis</span></div>
+    </div>
+    
+    <button class="btn-start-exam" onclick="startExamFromSetup()">
+      Begin Exam <i data-lucide="arrow-right"></i>
+    </button>
+  </div>
+
+  <header id="main-header" style="display: none;">
+    <h1>
+      <i data-lucide="award"></i> IT Officer Mains: Day 4
+      <span class="badge-diff">DBMS & Core Focused</span>
+    </h1>
+    <div class="timer" id="timer"><i data-lucide="clock"></i> 00:00</div>
+  </header>
+
+  <div class="quiz-container" id="quiz-ui">
+    <div class="main-card">
+      <div class="save-indicator" id="save-indicator"><i data-lucide="cloud-lightning" size="16"></i> Auto-saved</div>
+      <div class="question-header">
+        <span id="q-topic">Topic: Loading...</span>
+        <span id="q-counter">Question 1 of 50</span>
+      </div>
+      <div class="question-text" id="q-text" style="overflow-x: auto;">Loading question...</div>
+      <div class="options-list" id="options-list"></div>
+      <div class="explanation" id="explanation"></div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" onclick="prevQuestion()" id="btn-prev"><i data-lucide="chevron-left"></i> Previous</button>
+        <button class="btn" onclick="clearSelection()" id="btn-clear" style="display:none;">Clear Response</button>
+        <button class="btn" onclick="nextQuestion()" id="btn-next">Next <i data-lucide="chevron-right"></i></button>
+      </div>
     </div>
 
-    <!-- EXAM SCREEN -->
-    <div id="quiz-screen" style="display: none;">
-        <!-- Header -->
-        <div class="exam-header">
-            <div><strong>IT-Mains Hub</strong></div>
-            <div class="timer"><i data-lucide="clock" style="width: 18px; vertical-align: middle;"></i> <span id="timer-display">45:00</span></div>
-            <button id="mobile-palette-toggle" onclick="toggleMobilePalette()">
-                <i data-lucide="grid"></i> Grid
-            </button>
-        </div>
+    <div class="sidebar">
+      <h3 style="font-size: 1rem; margin-bottom: 12px; text-align: center;">Question Palette</h3>
+      <div class="palette-grid" id="palette"></div>
+      <button class="btn btn-submit" style="width: 100%; justify-content: center; margin-top: 24px;" onclick="submitQuiz()">
+        <i data-lucide="check-circle"></i> Submit Quiz
+      </button>
+      <button class="btn btn-danger" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="resetQuiz()">
+        <i data-lucide="rotate-ccw"></i> Reset All
+      </button>
+    </div>
+  </div>
 
-        <!-- Main Question Area -->
-        <div class="main-area">
-            <div class="question-header">
-                <span id="q-number-title">Question 1</span>
-                <span id="q-topic-title" style="color: var(--text-muted);">Topic</span>
-            </div>
-            
-            <div id="question-content">
-                <!-- Question injected via JS -->
-            </div>
-
-            <div class="action-bar">
-                <button class="btn btn-outline" onclick="prevQuestion()"><i data-lucide="chevron-left"></i> Prev</button>
-                <button class="btn btn-outline" onclick="clearResponse()" style="margin: 0 auto;">Clear Response</button>
-                <button class="btn" onclick="nextQuestion()">Next <i data-lucide="chevron-right"></i></button>
-            </div>
-        </div>
-
-        <!-- Side Panel (Palette) -->
-        <div class="side-panel" id="side-panel">
-            <div class="panel-header">Question Palette</div>
-            <div class="legend">
-                <div class="legend-item"><div class="legend-box" style="background: var(--status-answered)"></div> Answered</div>
-                <div class="legend-item"><div class="legend-box" style="background: var(--status-unanswered)"></div> Not Answered</div>
-                <div class="legend-item"><div class="legend-box" style="background: var(--status-notvisited)"></div> Not Visited</div>
-            </div>
-            <div class="palette-grid" id="palette-grid">
-                <!-- Buttons injected via JS -->
-            </div>
-            <div class="submit-section">
-                <button class="btn" onclick="submitQuiz()">Submit Final Exam</button>
-            </div>
-        </div>
+  <div class="scorecard" id="scorecard">
+    <div class="score-header">
+      <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Quiz Completed!</h2>
+      <p style="color: var(--text-muted);">IT Officer Mains: Day 4</p>
+    </div>
+    
+    <div class="score-grid">
+      <div class="stat-box"><div class="stat-val" id="score-total" style="color: var(--accent-blue);">0</div><div class="stat-label">Total Score</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-correct" style="color: var(--accent-green);">0</div><div class="stat-label">Correct (+2)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-wrong" style="color: var(--accent-red);">0</div><div class="stat-label">Incorrect (-0.5)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-unattempted" style="color: var(--accent-yellow);">0</div><div class="stat-label">Skipped</div></div>
     </div>
 
-<script>
-    // --- Initialize Lucide Icons ---
+    <div class="topic-table-container">
+      <table class="topic-table">
+        <thead>
+          <tr><th>Topic</th><th>Attempted</th><th>Correct</th><th>Incorrect</th><th>Accuracy</th></tr>
+        </thead>
+        <tbody id="topic-breakdown-body"></tbody>
+      </table>
+    </div>
+
+    <div class="scorecard-actions">
+      <button class="btn btn-secondary" onclick="reviewAnswers()"><i data-lucide="search"></i> Review Answers</button>
+      <button class="btn" style="background: var(--accent-indigo); color: #000;" onclick="generateAndPrintPDF()"><i data-lucide="file-text"></i> Download PDF</button>
+    </div>
+  </div>
+
+  <script>
     lucide.createIcons();
 
-    // --- QUESTION DATABASE (Demo 10 Questions, I will provide the other 40 as JSON!) ---
+    let selectedTimeMinutes = 40; 
+
+    function selectTime(minutes, element) {
+      selectedTimeMinutes = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    // Question Bank
     const questions = [
-        {
-            id: 1, topic: "DBMS", text: "Based on the ER diagram provided below, which of the following is true about the relationship between 'Student' and 'Course'?",
-            svg: `<svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="50" width="100" height="50" fill="white" stroke="black" stroke-width="2"/><text x="70" y="80" text-anchor="middle" fill="black" font-weight="bold">STUDENT</text><path d="M 170 75 L 220 50 L 270 75 L 220 100 Z" fill="white" stroke="black" stroke-width="2"/><text x="220" y="80" text-anchor="middle" fill="black">ENROLLS</text><rect x="320" y="50" width="100" height="50" fill="white" stroke="black" stroke-width="2"/><text x="370" y="80" text-anchor="middle" fill="black" font-weight="bold">COURSE</text><line x1="120" y1="75" x2="170" y2="75" stroke="black" stroke-width="2"/><text x="145" y="70" fill="black">M</text><line x1="270" y1="75" x2="320" y2="75" stroke="black" stroke-width="2"/><text x="295" y="70" fill="black">N</text></svg>`,
-            options: ["A) One student can enroll in only one course.", "B) A course can have only one student enrolled.", "C) Many students can enroll in many courses.", "D) The relationship requires a weak entity."], correct: 2
-        },
-        {
-            id: 2, topic: "DBMS", text: "Match the Database Normal Forms (List I) with their corresponding rules (List II):",
-            matchTable: `<tr><th>List I (Normal Form)</th><th>List II (Rule)</th></tr><tr><td>P. 1NF</td><td>1. Removes transitive dependency</td></tr><tr><td>Q. 2NF</td><td>2. Every determinant is a candidate key</td></tr><tr><td>R. 3NF</td><td>3. Values in a column must be atomic</td></tr><tr><td>S. BCNF</td><td>4. Removes partial dependency</td></tr>`,
-            options: ["A) P-3, Q-4, R-1, S-2", "B) P-4, Q-3, R-2, S-1", "C) P-3, Q-1, R-4, S-2", "D) P-1, Q-2, R-3, S-4"], correct: 0
-        },
-        {
-            id: 3, topic: "Python Programming", text: "What will be the output of the following Python snippet?",
-            code: `def calc(x, y=[]):\n    y.append(x)\n    return y\n\nprint(calc(1))\nprint(calc(2, []))\nprint(calc(3))`,
-            options: ["A) [1] \\n [2] \\n [3]", "B) [1] \\n [2] \\n [1, 3]", "C) [1] \\n [2] \\n [1, 2, 3]", "D) Syntax Error"], correct: 1
-        },
-        {
-            id: 4, topic: "Java Programming", text: "Consider the following Java code. What happens when it is compiled and run?",
-            code: `try {\n    int x = 5 / 0;\n} catch (Exception e) {\n    System.out.print("Exception ");\n} catch (ArithmeticException a) {\n    System.out.print("Arithmetic ");\n}`,
-            options: ["A) Prints: Exception", "B) Prints: Arithmetic", "C) Compile-time Error", "D) Runtime Error"], correct: 2
-        },
-        {
-            id: 5, topic: "Digital Logic", text: "Identify the logic gate represented by the boolean expression Y = (A + B)'",
-            options: ["A) AND Gate", "B) NAND Gate", "C) NOR Gate", "D) XOR Gate"], correct: 2
-        },
-        {
-            id: 6, topic: "Computer Networks", text: "Which OSI Layer is responsible for handling 'Frames'?",
-            options: ["A) Physical", "B) Data Link", "C) Network", "D) Transport"], correct: 1
-        },
-        {
-            id: 7, topic: "Numerical", text: "In a /26 subnet, how many usable host IP addresses are available?",
-            options: ["A) 64", "B) 62", "C) 32", "D) 30"], correct: 1
-        },
-        {
-            id: 8, topic: "C++ Programming", text: "What does `*(ptr + 2)` do if `ptr` points to the start of an integer array?",
-            options: ["A) Adds 2 to the value of the first element", "B) Accesses the memory address 2 bytes ahead", "C) Accesses the 3rd element in the array", "D) Throws a segmentation fault"], correct: 2
-        },
-        {
-            id: 9, topic: "DBMS", text: "Which DDL command is used to add a new column to an existing table?",
-            options: ["A) UPDATE", "B) ALTER", "C) MODIFY", "D) CHANGE"], correct: 1
-        },
-        {
-            id: 10, topic: "Misc (IT Act 2000)", text: "Under the IT Act 2000, which section specifically deals with punishment for hacking?",
-            options: ["A) Section 43", "B) Section 65", "C) Section 66", "D) Section 67"], correct: 2
-        }
+        { topic: "Database Systems", text: "DIAGRAM: Based on the ER diagram provided below, which of the following is true about the relationship between 'Student' and 'Course'?<br><br><div class='diagram-container'><svg viewBox='0 0 450 150' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='50' width='100' height='50' fill='white' stroke='black' stroke-width='2'/><text x='70' y='80' text-anchor='middle' fill='black' font-weight='bold'>STUDENT</text><path d='M 170 75 L 220 50 L 270 75 L 220 100 Z' fill='white' stroke='black' stroke-width='2'/><text x='220' y='80' text-anchor='middle' fill='black'>ENROLLS</text><rect x='320' y='50' width='100' height='50' fill='white' stroke='black' stroke-width='2'/><text x='370' y='80' text-anchor='middle' fill='black' font-weight='bold'>COURSE</text><line x1='120' y1='75' x2='170' y2='75' stroke='black' stroke-width='2'/><text x='145' y='70' fill='black'>M</text><line x1='270' y1='75' x2='320' y2='75' stroke='black' stroke-width='2'/><text x='295' y='70' fill='black'>N</text></svg></div>", options: ["One student can enroll in only one course.", "A course can have only one student enrolled.", "Many students can enroll in many courses.", "The relationship requires a weak entity."], correct: 2, explanation: "The 'M' and 'N' on the lines connecting the entities to the relationship diamond indicate a Many-to-Many (M:N) relationship." },
+        { topic: "Python Programming", text: "What will be the output of the following Python snippet?<br><br><div class='code-block'>def calc(x, y=[]):\n    y.append(x)\n    return y\n\nprint(calc(1))\nprint(calc(2, []))\nprint(calc(3))</div>", options: ["[1], [2], [3]", "[1], [2], [1, 3]", "[1], [2], [1, 2, 3]", "Syntax Error"], correct: 1, explanation: "Default mutable arguments (like lists) are evaluated once. The first call modifies the default list to [1]. The second call passes a new empty list. The third call appends to the modified default list, resulting in [1, 3]." },
+        { topic: "Computer Networks", text: "Which routing protocol uses Dijkstra's algorithm to find the shortest path?", options: ["RIP", "BGP", "OSPF", "EIGRP"], correct: 2, explanation: "OSPF (Open Shortest Path First) is a link-state routing protocol that uses Dijkstra's algorithm to compute the shortest path tree." },
+        { topic: "Java Programming", text: "What happens when this Java code is compiled and run?<br><br><div class='code-block'>try {\n    int x = 5 / 0;\n} catch (Exception e) {\n    System.out.print(\"Exception \");\n} catch (ArithmeticException a) {\n    System.out.print(\"Arithmetic \");\n}</div>", options: ["Prints: Exception", "Prints: Arithmetic", "Compile-time Error", "Runtime Error"], correct: 2, explanation: "Compile-time Error: Subclasses must be caught BEFORE their superclasses. `ArithmeticException` is a subclass of `Exception`, making the second catch block unreachable." },
+        { topic: "Operating Systems", text: "NUMERICAL: A system uses 32-bit logical addresses and 4KB pages. How many entries are in the page table of a process?", options: ["2<sup>12</sup>", "2<sup>20</sup>", "2<sup>24</sup>", "2<sup>32</sup>"], correct: 1, explanation: "Page size = 4KB = 2<sup>12</sup> bytes, requiring 12 bits for the offset. Logical address = 32 bits. Page number bits = 32 - 12 = 20 bits. Total entries = 2<sup>20</sup>." },
+        { topic: "Data Structures & Algorithms", text: "NUMERICAL: What is the worst-case time complexity of the QuickSort algorithm?", options: ["O(n)", "O(n log n)", "O(n<sup>2</sup>)", "O(log n)"], correct: 2, explanation: "The worst-case occurs when the pivot chosen is always the extreme element (e.g., already sorted array), resulting in O(n<sup>2</sup>) complexity." },
+        { topic: "Digital Logic", text: "Which flip-flop toggles its output when both inputs are HIGH (1)?", options: ["D Flip-Flop", "T Flip-Flop", "SR Flip-Flop", "JK Flip-Flop"], correct: 3, explanation: "In a JK flip-flop, when J=1 and K=1, the next state is the complement (toggle) of the current state." },
+        { topic: "Compiler Design", text: "Which phase of the compiler is responsible for checking syntax errors?", options: ["Lexical Analysis", "Syntax Analysis (Parsing)", "Semantic Analysis", "Code Generation"], correct: 1, explanation: "Syntax Analysis (Parsing) checks if the stream of tokens conforms to the grammar rules of the language." },
+        { topic: "Software Engineering", text: "Which SDLC model is characterized by risk analysis at each iteration?", options: ["Waterfall", "Agile", "Spiral", "V-Model"], correct: 2, explanation: "The Spiral model explicitly includes a risk analysis phase in every cycle/iteration before proceeding." },
+        { topic: "Cyber Security", text: "Which of the following is an example of an Asymmetric Encryption algorithm?", options: ["AES", "DES", "RSA", "RC4"], correct: 2, explanation: "RSA uses a public/private key pair, making it an asymmetric encryption algorithm. AES and DES are symmetric." },
+        { topic: "Misc (IT Act 2000)", text: "Under the IT Act 2000, which section deals with the punishment for hacking?", options: ["Section 43", "Section 65", "Section 66", "Section 67"], correct: 2, explanation: "Section 66 of the IT Act prescribes punishment for computer-related offenses, effectively covering hacking." },
+        { topic: "Database Systems", text: "Which property of a database transaction ensures that once a transaction has been committed, it will remain so, even in the event of power loss?", options: ["Atomicity", "Consistency", "Isolation", "Durability"], correct: 3, explanation: "Durability guarantees that completed (committed) transactions survive permanently in the database even in the event of system failure." },
+        { topic: "C/C++ Programming", text: "What does `*(ptr + 2)` do if `ptr` points to the start of an integer array?", options: ["Adds 2 to the value of the first element", "Accesses the memory address 2 bytes ahead", "Accesses the 3rd element in the array", "Throws a segmentation fault"], correct: 2, explanation: "Pointer arithmetic accounts for data type size. `ptr + 2` moves the pointer forward by 2 integer sizes, pointing to the 3rd element in the array." },
+        { topic: "Networking (Numericals)", text: "NUMERICAL: An organization is granted the block 130.34.12.64/26. How many usable host IP addresses are available in this subnet?", options: ["64", "62", "32", "30"], correct: 1, explanation: "A /26 subnet masks leaves 32 - 26 = 6 bits for hosts. Total addresses = 2<sup>6</sup> = 64. Usable hosts = 64 - 2 (Network & Broadcast address) = 62." },
+        { topic: "Object Oriented Programming", text: "Which design pattern restricts the instantiation of a class to one single instance?", options: ["Factory", "Observer", "Singleton", "Decorator"], correct: 2, explanation: "The Singleton pattern ensures a class has only one instance and provides a global point of access to it." },
+        { topic: "Operating Systems", text: "In CPU scheduling, which algorithm can lead to starvation?", options: ["Round Robin", "Shortest Job First (SJF)", "First Come First Serve (FCFS)", "Both B and C"], correct: 1, explanation: "SJF can lead to starvation if short processes continually arrive, preventing longer processes from ever getting CPU time." },
+        { topic: "Data Structures & Algorithms", text: "In a binary search tree (BST), which traversal outputs the elements in sorted (ascending) order?", options: ["Pre-order", "In-order", "Post-order", "Level-order"], correct: 1, explanation: "In-order traversal (Left, Root, Right) of a BST strictly processes nodes in ascending sorted order." },
+        { topic: "Misc (Banking IT)", text: "In modern banking, what does CBS stand for?", options: ["Centralized Banking Security", "Core Banking Solution", "Common Business Server", "Commercial Bank System"], correct: 1, explanation: "Core Banking Solutions (CBS) enable banks to centralize operations, allowing customers to access their accounts from any branch." },
+        { topic: "Python Programming", text: "Which of the following is NOT a valid built-in mutable data type in Python?", options: ["List", "Dictionary", "Set", "Tuple"], correct: 3, explanation: "Tuples in Python are immutable data types, meaning their elements cannot be changed after assignment." },
+        { topic: "Database Systems", text: "MATCHING: Match the Database Normal Forms (List I) with their corresponding rules (List II).<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. 1NF</td><td>1. Removes transitive dependency</td></tr><tr><td>Q. 2NF</td><td>2. Every determinant is a candidate key</td></tr><tr><td>R. 3NF</td><td>3. Atomic values only</td></tr><tr><td>S. BCNF</td><td>4. Removes partial dependency</td></tr></table>", options: ["P-3, Q-4, R-1, S-2", "P-4, Q-3, R-2, S-1", "P-3, Q-1, R-4, S-2", "P-1, Q-2, R-3, S-4"], correct: 0, explanation: "1NF requires atomic values. 2NF eliminates partial dependencies. 3NF eliminates transitive dependencies. BCNF requires every determinant to be a candidate key." },
+        { topic: "Java Programming", text: "Which keyword is used in Java to prevent a class from being inherited?", options: ["static", "const", "final", "volatile"], correct: 2, explanation: "The `final` keyword applied to a class prevents any other class from extending (inheriting from) it." },
+        { topic: "Digital Logic", text: "Identify the logic gate represented by the boolean expression Y = (A + B)'", options: ["AND Gate", "NAND Gate", "NOR Gate", "XOR Gate"], correct: 2, explanation: "Y = (A + B)' is the inverse of an OR gate, which is the definition of a NOR gate." },
+        { topic: "Compiler Design", text: "A grammar that produces more than one parse tree for some sentence is called:", options: ["Ambiguous", "Context-Free", "Regular", "Recursive"], correct: 0, explanation: "An ambiguous grammar can generate the same string using different leftmost/rightmost derivations, leading to multiple parse trees." },
+        { topic: "Software Engineering", text: "Testing individual modules in isolation is known as:", options: ["Integration Testing", "System Testing", "Unit Testing", "Acceptance Testing"], correct: 2, explanation: "Unit testing focuses on verifying the smallest testable parts of an application (modules/functions) in isolation." },
+        { topic: "Cyber Security", text: "NUMERICAL: In RSA, if prime p=3 and prime q=11, what is the value of the modulus (n)?", options: ["14", "33", "8", "20"], correct: 1, explanation: "In RSA cryptography, the modulus n is calculated as the product of the two primes: n = p * q = 3 * 11 = 33." },
+        { topic: "Numerical (Architecture)", text: "NUMERICAL: A pipeline has 4 stages with delays: 10ns, 15ns, 12ns, 11ns. What is the clock cycle time of the pipeline?", options: ["10ns", "12ns", "15ns", "48ns"], correct: 2, explanation: "The clock cycle time of a pipeline is determined by its slowest (longest delay) stage. Max(10, 15, 12, 11) = 15ns." },
+        { topic: "Database Systems", text: "In SQL, which command is used to revoke privileges granted to a user?", options: ["DROP", "ROLLBACK", "REVOKE", "DELETE"], correct: 2, explanation: "REVOKE is a Data Control Language (DCL) command used to remove user access privileges previously granted with the GRANT command." },
+        { topic: "C/C++ Programming", text: "In C++, which function is used to deallocate memory created by the `new` keyword?", options: ["free()", "remove()", "delete", "clear()"], correct: 2, explanation: "In C++, `new` is used for dynamic memory allocation, and `delete` (or `delete[]` for arrays) is used to deallocate it." },
+        { topic: "Computer Networks", text: "Which protocol operates at the Transport layer and provides connectionless, unacknowledged service?", options: ["TCP", "IP", "UDP", "ICMP"], correct: 2, explanation: "UDP (User Datagram Protocol) is connectionless and does not guarantee delivery, operating at the transport layer." },
+        { topic: "Operating Systems", text: "Which condition is NOT one of the Coffman conditions required for Deadlock?", options: ["Mutual Exclusion", "Hold and Wait", "Circular Wait", "Preemption"], correct: 3, explanation: "The four conditions are Mutual Exclusion, Hold and Wait, No Preemption, and Circular Wait. Preemption breaks deadlocks." },
+        { topic: "Data Structures & Algorithms", text: "Which data structure is best suited for evaluating postfix expressions?", options: ["Queue", "Stack", "Linked List", "Binary Tree"], correct: 1, explanation: "A Stack is used to evaluate postfix expressions by pushing operands and popping them when an operator is encountered." },
+        { topic: "Misc (Cloud Computing)", text: "Which cloud service model provides hardware, OS, and network infrastructure over the internet?", options: ["SaaS", "PaaS", "IaaS", "FaaS"], correct: 2, explanation: "Infrastructure as a Service (IaaS) provides virtualized computing resources (servers, networking, storage) over the internet." },
+        { topic: "Python Programming", text: "What is the output of this Python code?<br><br><div class='code-block'>x = [1, 2, 3]\ny = x\ny[0] = 4\nprint(x[0])</div>", options: ["1", "4", "TypeError", "[1, 2, 3]"], correct: 1, explanation: "Lists in Python are mutable, and assigning `y = x` copies the reference, not the object. Changing `y[0]` also changes `x[0]`." },
+        { topic: "Java Programming", text: "In Java multithreading, which method is called internally when the start() method is invoked?", options: ["init()", "execute()", "run()", "thread()"], correct: 2, explanation: "Invoking `start()` on a Thread creates a new call stack and internally executes the `run()` method in that new thread." },
+        { topic: "Digital Logic", text: "A Karnaugh Map (K-Map) is used primarily for:", options: ["Binary to Decimal conversion", "Simplifying Boolean expressions", "Designing multiplexers", "Error detection"], correct: 1, explanation: "K-Maps provide a systematic, visual method for simplifying boolean algebra expressions without using complex theorems." },
+        { topic: "Compiler Design", text: "Which tool is typically used to generate a lexical analyzer?", options: ["YACC", "LEX", "Bison", "Make"], correct: 1, explanation: "LEX is a widely used tool that generates a lexical analyzer from a set of regular expressions." },
+        { topic: "Software Engineering", text: "Good software design dictates that modules should have:", options: ["High coupling, Low cohesion", "Low coupling, High cohesion", "High coupling, High cohesion", "Low coupling, Low cohesion"], correct: 1, explanation: "Modules should be highly cohesive (focused on a single task) and loosely coupled (independent from other modules)." },
+        { topic: "Cyber Security", text: "An attack that manipulates a web application's database by inserting malicious code into input fields is known as:", options: ["XSS", "SQL Injection", "CSRF", "Phishing"], correct: 1, explanation: "SQL Injection occurs when malicious SQL statements are inserted into entry fields for execution by the database." },
+        { topic: "Numerical (OS Disk)", text: "NUMERICAL: In FCFS disk scheduling, if the queue is [98, 183, 37] and head starts at 53, what is the total head movement?", options: ["45", "130", "276", "310"], correct: 2, explanation: "|53-98| = 45. |98-183| = 85. |183-37| = 146. Total = 45 + 85 + 146 = 276." },
+        { topic: "Database Systems", text: "Which indexing structure is most commonly used in RDBMS to support both equality and range queries efficiently?", options: ["Hash Table", "B+ Tree", "Binary Search Tree", "R-Tree"], correct: 1, explanation: "B+ Trees are the standard for relational databases because they keep data sorted and allow for extremely fast sequential (range) access as well as exact matches." },
+        { topic: "C/C++ Programming", text: "What is a virtual function in C++ primarily used to achieve?", options: ["Compile-time polymorphism", "Runtime polymorphism", "Data hiding", "Operator overloading"], correct: 1, explanation: "Virtual functions allow for late binding (runtime polymorphism), ensuring that the correct overridden function in a derived class is called." },
+        { topic: "Computer Networks", text: "MATCHING: Match the OSI Layers with their Data Units.<br><br><table class='matching-table'><tr><th>Layer</th><th>Data Unit</th></tr><tr><td>P. Physical</td><td>1. Packets</td></tr><tr><td>Q. Data Link</td><td>2. Segments</td></tr><tr><td>R. Network</td><td>3. Bits</td></tr><tr><td>S. Transport</td><td>4. Frames</td></tr></table>", options: ["P-3, Q-4, R-1, S-2", "P-4, Q-3, R-1, S-2", "P-3, Q-4, R-2, S-1", "P-1, Q-2, R-3, S-4"], correct: 0, explanation: "Physical handles Bits. Data Link handles Frames. Network handles Packets. Transport handles Segments." },
+        { topic: "Object Oriented Programming", text: "Hiding the internal state and requiring all interaction to be performed through an object's methods is known as:", options: ["Polymorphism", "Inheritance", "Encapsulation", "Abstraction"], correct: 2, explanation: "Encapsulation is the bundling of data and the methods that operate on that data into a single unit, restricting direct access to some of the object's components." },
+        { topic: "Operating Systems", text: "Which component is shared across multiple threads belonging to the same process?", options: ["Stack", "Registers", "Heap (Data Section)", "Program Counter"], correct: 2, explanation: "Threads share the process's data section (Heap), code section, and OS resources, but have their own Stack, Registers, and Program Counter." },
+        { topic: "Data Structures & Algorithms", text: "Which graph traversal algorithm uses a Queue data structure?", options: ["Depth First Search (DFS)", "Breadth First Search (BFS)", "Dijkstra's", "Prim's"], correct: 1, explanation: "BFS explores nodes level by level, utilizing a FIFO Queue to keep track of adjacent nodes to visit." },
+        { topic: "Misc (Emerging Tech)", text: "In Blockchain technology, a 'Hash' primarily ensures:", options: ["Scalability", "Data Immutability", "Faster Transactions", "User Anonymity"], correct: 1, explanation: "Cryptographic hashes link blocks together. Any change to data alters the hash, immediately exposing the tampering, thereby ensuring immutability." },
+        { topic: "Python Programming", text: "Identify the correct way to handle exceptions in Python:", options: ["try...catch", "try...except", "try...finally...catch", "do...except"], correct: 1, explanation: "Python uses the `try` block to test a block of code for errors, and the `except` block to handle the error." },
+        { topic: "Java Programming", text: "Which interface does the java.util.Hashtable class implement?", options: ["List", "Set", "Map", "Queue"], correct: 2, explanation: "Hashtable implements the Map interface (storing key/value pairs) and is synchronized." },
+        { topic: "Networking (Numericals)", text: "NUMERICAL: Given IP 192.168.1.50 and subnet mask 255.255.255.224, what is the network address?", options: ["192.168.1.0", "192.168.1.32", "192.168.1.48", "192.168.1.64"], correct: 1, explanation: "Mask 224 means block size is 32 (256-224=32). Subnets are .0, .32, .64. The IP .50 falls in the .32 network block." },
+        { topic: "Misc (IT Standards)", text: "Which ISO standard specifies the requirements for an Information Security Management System (ISMS)?", options: ["ISO 9001", "ISO 27001", "ISO 14001", "ISO 31000"], correct: 1, explanation: "ISO/IEC 27001 is the international standard for information security management systems (ISMS)." }
     ];
 
-    // --- STATE MANAGEMENT ---
-    let currentIndex = 0;
+    let currentQ = 0;
+    let userAnswers = new Array(50).fill(null);
+    let isReviewMode = false;
+    let quizSubmitted = false;
+    let timeRemaining = 0;
     let timerInterval;
-    let timeRemaining;
-    let answers = {}; // Maps index to selected option
-    let status = new Array(questions.length).fill('notvisited'); // 'notvisited', 'unanswered', 'answered'
 
-    function startQuiz() {
-        const timeLimit = parseInt(document.getElementById('timer-select').value) * 60;
-        timeRemaining = timeLimit;
-        
-        document.getElementById('setup-screen').style.display = 'none';
-        document.getElementById('quiz-screen').style.display = 'grid'; // Uses CSS Grid
-        
-        buildPalette();
-        loadQuestion(0);
-        startTimer();
+    const elTopic = document.getElementById('q-topic');
+    const elCounter = document.getElementById('q-counter');
+    const elText = document.getElementById('q-text');
+    const elOptions = document.getElementById('options-list');
+    const elExplanation = document.getElementById('explanation');
+    const elPalette = document.getElementById('palette');
+    const saveIndicator = document.getElementById('save-indicator');
 
-        window.onbeforeunload = () => "Exam in progress. Progress will be lost!";
+    function initQuiz() {
+      window.addEventListener('beforeunload', function (e) {
+        if (!quizSubmitted && document.getElementById('quiz-ui').style.display === 'grid') {
+          e.preventDefault(); e.returnValue = '';
+        }
+      });
+
+      const savedData = localStorage.getItem('it_officer_mains_day4');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          if (parsed && parsed.timeRemaining > 0 && !parsed.quizSubmitted) {
+            userAnswers = parsed.userAnswers;
+            timeRemaining = parsed.timeRemaining;
+            currentQ = parsed.currentQ;
+            
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-header').style.display = 'flex';
+            document.getElementById('quiz-ui').style.display = 'grid';
+            
+            buildPalette();
+            loadQuestion(currentQ);
+            startTimer(true);
+            return;
+          }
+        } catch(e) { console.error("Error loading save state"); }
+      }
+    }
+
+    function startExamFromSetup() {
+      timeRemaining = selectedTimeMinutes * 60;
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      
+      buildPalette();
+      loadQuestion(0);
+      triggerAutoSave();
+      startTimer(false);
     }
 
     function buildPalette() {
-        const grid = document.getElementById('palette-grid');
-        grid.innerHTML = '';
-        questions.forEach((q, index) => {
-            grid.innerHTML += `<button class="palette-btn" id="pal-${index}" onclick="jumpToQuestion(${index})">${index + 1}</button>`;
-        });
+      for (let i = 0; i < 50; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'p-btn';
+        btn.innerText = i + 1;
+        btn.onclick = () => jumpToQuestion(i);
+        elPalette.appendChild(btn);
+      }
     }
 
-    function updatePaletteUI() {
-        questions.forEach((q, index) => {
-            const btn = document.getElementById(`pal-${index}`);
-            btn.className = 'palette-btn'; // Reset
-            if (status[index] !== 'notvisited') {
-                btn.classList.add(status[index]);
-            }
-            if (index === currentIndex) {
-                btn.classList.add('active');
-            }
-        });
+    function triggerAutoSave() {
+      if(quizSubmitted) return;
+      const state = { currentQ, userAnswers, timeRemaining, quizSubmitted };
+      localStorage.setItem('it_officer_mains_day4', JSON.stringify(state));
+      saveIndicator.classList.add('show');
+      setTimeout(() => saveIndicator.classList.remove('show'), 1500);
+    }
+
+    function resetQuiz() {
+      if(confirm("Are you sure you want to reset the entire quiz? All progress will be lost forever.")) {
+        localStorage.removeItem('it_officer_mains_day4');
+        location.reload();
+      }
+    }
+
+    function startTimer(isResume) {
+      const elTimer = document.getElementById('timer');
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining % 10 === 0) triggerAutoSave(); 
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          elTimer.innerHTML = `<i data-lucide="clock"></i> 00:00`;
+          submitQuiz(true); 
+        } else {
+          const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+          const s = (timeRemaining % 60).toString().padStart(2, '0');
+          elTimer.innerHTML = `<i data-lucide="clock"></i> ${m}:${s}`;
+        }
+      }, 1000);
     }
 
     function loadQuestion(index) {
-        // Mark previous question as unanswered if visited but no answer chosen
-        if (status[currentIndex] === 'notvisited' && answers[currentIndex] === undefined) {
-            status[currentIndex] = 'unanswered';
+      currentQ = index;
+      const q = questions[index];
+      
+      elTopic.innerText = `Topic: ${q.topic}`;
+      elCounter.innerText = `Question ${index + 1} of 50`;
+      elText.innerHTML = q.text; 
+
+      elOptions.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (userAnswers[index] === i) btn.classList.add('selected');
+        
+        if (isReviewMode) {
+          btn.disabled = true;
+          if (i === q.correct) btn.classList.add('correct-opt');
+          if (userAnswers[index] === i && i !== q.correct) btn.classList.add('wrong-opt');
         }
+
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> ${opt}`;
+        if (!isReviewMode) btn.onclick = () => selectOption(i);
+        elOptions.appendChild(btn);
+      });
+
+      document.getElementById('btn-clear').style.display = (!isReviewMode && userAnswers[index] !== null) ? 'block' : 'none';
+      
+      if (isReviewMode) {
+        elExplanation.style.display = 'block';
+        elExplanation.innerHTML = `<strong>Explanation:</strong> ${q.explanation}`;
+      } else {
+        elExplanation.style.display = 'none';
+      }
+      updatePaletteUI();
+    }
+
+    function selectOption(optIndex) {
+      userAnswers[currentQ] = optIndex;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function clearSelection() {
+      userAnswers[currentQ] = null;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function nextQuestion() { if (currentQ < 49) loadQuestion(currentQ + 1); }
+    function prevQuestion() { if (currentQ > 0) loadQuestion(currentQ - 1); }
+    function jumpToQuestion(index) { loadQuestion(index); }
+
+    function updatePaletteUI() {
+      const btns = elPalette.children;
+      for (let i = 0; i < 50; i++) {
+        btns[i].className = 'p-btn';
+        if (isReviewMode) {
+          if (userAnswers[i] === questions[i].correct) btns[i].classList.add('review-correct');
+          else if (userAnswers[i] !== null) btns[i].classList.add('review-wrong');
+        } else {
+          if (userAnswers[i] !== null) btns[i].classList.add('answered');
+        }
+        if (i === currentQ) btns[i].classList.add('active');
+      }
+    }
+
+    let generatedAnalyticsData = {}; 
+
+    function submitQuiz(force = false) {
+      if (!force && !confirm("Are you sure you want to submit the quiz?")) return;
+      
+      quizSubmitted = true;
+      clearInterval(timerInterval);
+      localStorage.removeItem('it_officer_mains_day4');
+
+      document.getElementById('quiz-ui').style.display = 'none';
+      document.getElementById('scorecard').style.display = 'block';
+      document.getElementById('main-header').style.display = 'none';
+
+      let correct = 0, wrong = 0, unattempted = 0;
+      let topicStats = {};
+      let wrongLog = [], skippedLog = [];
+
+      for (let i = 0; i < 50; i++) {
+        let q = questions[i];
+        let baseTopic = q.topic.replace("NUMERICAL: ", "").replace("DIAGRAM: ", "").replace("MATCHING: ", "");
         
-        currentIndex = index;
-        const q = questions[index];
+        if(!topicStats[baseTopic]) {
+            topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+        }
+        topicStats[baseTopic].total++;
+
+        if (userAnswers[i] === null) {
+          unattempted++; topicStats[baseTopic].skipped++;
+          skippedLog.push({ qNum: i+1, topic: baseTopic, text: q.text });
+        } else if (userAnswers[i] === q.correct) {
+          correct++; topicStats[baseTopic].correct++;
+        } else {
+          wrong++; topicStats[baseTopic].wrong++;
+          wrongLog.push({
+             qNum: i+1, topic: baseTopic, text: q.text, 
+             userAnswer: q.options[userAnswers[i]], correctAnswer: q.options[q.correct]
+          });
+        }
+      }
+
+      const score = (correct * 2) - (wrong * 0.5);
+      document.getElementById('score-total').innerText = score;
+      document.getElementById('score-correct').innerText = correct;
+      document.getElementById('score-wrong').innerText = wrong;
+      document.getElementById('score-unattempted').innerText = unattempted;
+
+      const tbBody = document.getElementById('topic-breakdown-body');
+      tbBody.innerHTML = '';
+      for (const [topic, stats] of Object.entries(topicStats)) {
+          const acc = Math.round((stats.correct / stats.total) * 100);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
+          tbBody.appendChild(tr);
+      }
+
+      generatedAnalyticsData = {
+        quizDay: 4, 
+        quizTitle: "IT Officer Mains: Day 4",
+        difficultyLevel: 2,
+        difficultyName: "Easy to Moderate",
+        focusArea: "DBMS, Code Snippets & Architectures",
+        date: new Date().toISOString(),
+        totalQuestions: 50,
+        correct: correct, incorrect: wrong, unattempted: unattempted, score: score,
+        topicBreakdown: topicStats, wrongQuestions: wrongLog, skippedQuestions: skippedLog
+      };
+
+      autoSaveToServer(generatedAnalyticsData);
+    }
+
+    function reviewAnswers() {
+      isReviewMode = true;
+      document.getElementById('scorecard').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      document.querySelector('.btn-submit').style.display = 'none';
+      document.querySelector('.btn-danger').style.display = 'none';
+      loadQuestion(0);
+    }
+
+    function autoSaveToServer(data) {
+      try {
+        const storageKey = `quiz_result_day_${data.quizDay}`;
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        console.log("Result saved locally!");
         
-        // Mark current as visited if it was completely untouched
-        if (status[index] === 'notvisited') status[index] = 'unanswered';
+        if (window.parent && window.parent.loadDataFromBackend) {
+          window.parent.loadDataFromBackend();
+        }
+      } catch (err) {
+        console.error("Error saving result locally.", err);
+      }
+    }
 
-        document.getElementById('q-number-title').innerText = `Question ${index + 1} of ${questions.length}`;
-        document.getElementById('q-topic-title').innerText = `[${q.topic}]`;
-
-        let mediaHtml = '';
-        if (q.svg) mediaHtml += `<div class="svg-container">${q.svg}</div>`;
-        if (q.code) mediaHtml += `<pre><code>${q.code}</code></pre>`;
-        if (q.matchTable) mediaHtml += `<table class="match-table">${q.matchTable}</table>`;
-
-        let optionsHtml = q.options.map((opt, i) => `
-            <label class="option-label" onclick="selectOption(${index}, ${i})">
-                <input type="radio" name="currentQ" value="${i}" ${answers[index] === i ? 'checked' : ''}>
-                ${opt}
-            </label>
-        `).join('');
-
-        document.getElementById('question-content').innerHTML = `
-            <div class="question-text">${q.text}</div>
-            ${mediaHtml}
-            <div class="options-grid">${optionsHtml}</div>
+    function generateAndPrintPDF() {
+        const printArea = document.getElementById('pdf-export-area');
+        let htmlContent = `
+            <div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; color: #000;">
+                <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">IT Officer Mains: Day 4 - Answer Key</h1>
+                <p><strong>Difficulty:</strong> Easy to Moderate | <strong>Focus:</strong> DBMS, Code Snippets & Architectures</p>
+                <hr style="margin-bottom: 30px;">
         `;
 
-        updatePaletteUI();
-    }
+        questions.forEach((q, i) => {
+            const uAns = userAnswers[i];
+            let statusBadge = "";
+            if (uAns === null) statusBadge = "<span style='color: orange;'>[Skipped]</span>";
+            else if (uAns === q.correct) statusBadge = "<span style='color: green;'>[Correct]</span>";
+            else statusBadge = "<span style='color: red;'>[Wrong]</span>";
 
-    function selectOption(qIndex, optIndex) {
-        answers[qIndex] = optIndex;
-        status[qIndex] = 'answered';
-        updatePaletteUI();
-    }
-
-    function clearResponse() {
-        delete answers[currentIndex];
-        status[currentIndex] = 'unanswered';
-        const radios = document.querySelectorAll('input[name="currentQ"]');
-        radios.forEach(r => r.checked = false);
-        updatePaletteUI();
-    }
-
-    function nextQuestion() {
-        if (currentIndex < questions.length - 1) loadQuestion(currentIndex + 1);
-    }
-
-    function prevQuestion() {
-        if (currentIndex > 0) loadQuestion(currentIndex - 1);
-    }
-
-    function jumpToQuestion(index) {
-        loadQuestion(index);
-        // On mobile, automatically close palette after jumping
-        if (window.innerWidth <= 768) {
-            document.getElementById('side-panel').classList.remove('open');
-        }
-    }
-
-    function toggleMobilePalette() {
-        document.getElementById('side-panel').classList.toggle('open');
-    }
-
-    function startTimer() {
-        timerInterval = setInterval(() => {
-            timeRemaining--;
-            let m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
-            let s = (timeRemaining % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${m}:${s}`;
+            htmlContent += `
+                <div class="pdf-question">
+                    <h3>Q${i+1}. ${q.text} ${statusBadge}</h3>
+                    <p style="font-size: 0.9em; color: #555;">Topic: ${q.topic}</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+            `;
             
-            if (timeRemaining <= 0) {
-                clearInterval(timerInterval);
-                submitQuiz();
-            }
-        }, 1000);
+            q.options.forEach((opt, optIndex) => {
+                let prefix = "[ ]";
+                let style = "";
+                if(optIndex === q.correct) {
+                    prefix = "[✓]"; style = "color: green; font-weight: bold;";
+                } else if (uAns === optIndex) {
+                    prefix = "[✗]"; style = "color: red; text-decoration: line-through;";
+                }
+                htmlContent += `<li style="margin-bottom: 5px; ${style}">${prefix} ${String.fromCharCode(65 + optIndex)}. ${opt}</li>`;
+            });
+
+            htmlContent += `
+                    </ul>
+                    <div style="background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin-top: 10px;">
+                        <strong>Explanation:</strong> ${q.explanation}
+                    </div>
+                </div>
+            `;
+        });
+
+        htmlContent += `</div>`;
+        printArea.innerHTML = htmlContent;
+        window.print();
     }
 
-    function submitQuiz() {
-        if(confirm("Are you sure you want to submit the exam?")) {
-            window.onbeforeunload = null;
-            alert("Quiz submitted! (Analytics pipeline to be attached here based on your existing setup)");
-            // Here you will paste the JSON generation logic you already have for the dashboard.
-        }
-    }
-</script>
-
+    window.onload = initQuiz;
+  </script>
 </body>
 </html>

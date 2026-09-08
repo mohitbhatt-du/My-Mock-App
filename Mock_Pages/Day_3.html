@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="difficulty-level" content="2">
-  <meta name="quiz-difficulty" content="Level 2 (Moderate to Hard)">
+  <meta name="quiz-difficulty" content="Moderate to Hard">
   <title>IT Officer Mains: Day 3</title>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
@@ -110,7 +110,7 @@
     
     <div class="time-options">
       <div class="time-btn" onclick="selectTime(20, this)">20 Minutes<span class="time-desc">Speed Run</span></div>
-      <div class="time-btn selected" onclick="selectTime(35, this)">35 Minutes<span class="time-desc">Actual Exam Time</span></div>
+      <div class="time-btn selected" onclick="selectTime(40, this)">40 Minutes<span class="time-desc">Actual Exam Time</span></div>
       <div class="time-btn" onclick="selectTime(45, this)">45 Minutes<span class="time-desc">Relaxed Pacing</span></div>
       <div class="time-btn" onclick="selectTime(60, this)">60 Minutes<span class="time-desc">Deep Analysis</span></div>
     </div>
@@ -190,7 +190,7 @@
   <script>
     lucide.createIcons();
 
-    let selectedTimeMinutes = 35; // Default
+    let selectedTimeMinutes = 40; // Default
 
     function selectTime(minutes, element) {
       selectedTimeMinutes = minutes;
@@ -558,28 +558,54 @@
       }
     }
 
-    function generateAndPrintPDF() {
+      function generateAndPrintPDF() {
         const printArea = document.getElementById('pdf-export-area');
-        let htmlContent = `<div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; color: #000;"><h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">IT Officer Mains: Day 3 - Answer Key</h1><hr style="margin-bottom: 30px;">`;
+        let htmlContent = `
+            <div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; color: #000;">
+                <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">IT Officer Mains: Day 3 - Answer Key</h1>
+                <p><strong>Difficulty:</strong> Moderate to Hard | <strong>Focus:</strong> Balanced Full Syllabus</p>
+                <hr style="margin-bottom: 30px;">
+        `;
 
         questions.forEach((q, i) => {
             const uAns = userAnswers[i];
-            let statusBadge = uAns === null ? "<span style='color: orange;'>[Skipped]</span>" : (uAns === q.correct ? "<span style='color: green;'>[Correct]</span>" : "<span style='color: red;'>[Wrong]</span>");
-            
-            // Render text containing SVGs and Tables cleanly for PDF
-            htmlContent += `<div class="pdf-question"><h3>Q${i+1}. ${q.text} ${statusBadge}</h3><p style="font-size: 0.9em; color: #555;">Topic: ${q.topic}</p><ul style="list-style-type: none; padding-left: 0;">`;
+            let statusBadge = "";
+            if (uAns === null) statusBadge = "<span style='color: orange;'>[Skipped]</span>";
+            else if (uAns === q.correct) statusBadge = "<span style='color: green;'>[Correct]</span>";
+            else statusBadge = "<span style='color: red;'>[Wrong]</span>";
+
+            htmlContent += `
+                <div class="pdf-question">
+                    <h3>Q${i+1}. ${q.text} ${statusBadge}</h3>
+                    <p style="font-size: 0.9em; color: #555;">Topic: ${q.topic}</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+            `;
             
             q.options.forEach((opt, optIndex) => {
-                let prefix = "[ ]", style = "";
-                if(optIndex === q.correct) { prefix = "[✓]"; style = "color: green; font-weight: bold;"; } 
-                else if (uAns === optIndex) { prefix = "[✗]"; style = "color: red; text-decoration: line-through;"; }
+                let prefix = "[ ]";
+                let style = "";
+                if(optIndex === q.correct) {
+                    prefix = "[✓]"; style = "color: green; font-weight: bold;";
+                } else if (uAns === optIndex) {
+                    prefix = "[✗]"; style = "color: red; text-decoration: line-through;";
+                }
                 htmlContent += `<li style="margin-bottom: 5px; ${style}">${prefix} ${String.fromCharCode(65 + optIndex)}. ${opt}</li>`;
             });
-            htmlContent += `</ul><div style="background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin-top: 10px;"><strong>Explanation:</strong> ${q.explanation}</div></div>`;
+
+            htmlContent += `
+                    </ul>
+                    <div style="background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin-top: 10px;">
+                        <strong>Explanation:</strong> ${q.explanation}
+                    </div>
+                </div>
+            `;
         });
-        printArea.innerHTML = htmlContent + `</div>`;
+
+        htmlContent += `</div>`;
+        printArea.innerHTML = htmlContent;
         window.print();
     }
+
 
     window.onload = initQuiz;
   </script>
