@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="difficulty-level" content="2">
+  <meta name="quiz-difficulty" content="Level 2 (Moderate to Hard)">
+  <title>IT Officer Mains: Day 2</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a; --card-bg: #1e293b; --border-color: #334155;
+      --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-blue: #38bdf8; --accent-green: #4ade80; 
+      --accent-red: #f87171; --accent-yellow: #facc15; --accent-indigo: #818cf8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 20px; }
+
+    header {
+      max-width: 1100px; margin: 0 auto 20px; display: flex; justify-content: space-between;
+      align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);
+    }
+    h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .badge-diff { background: rgba(250, 204, 21, 0.15); color: var(--accent-yellow); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-left: 10px; }
+    .timer { font-size: 1.1rem; font-weight: 600; color: var(--accent-yellow); display: flex; align-items: center; gap: 6px; }
+
+    /* Setup Screen */
+    .setup-screen { max-width: 600px; margin: 80px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 40px; text-align: center; }
+    .setup-screen h2 { font-size: 1.8rem; margin-bottom: 12px; }
+    .setup-screen p { color: var(--text-muted); margin-bottom: 30px; }
+    .time-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+    .time-btn { background: #0f172a; border: 2px solid var(--border-color); color: var(--text-main); padding: 16px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: 0.2s; }
+    .time-btn:hover { border-color: var(--accent-blue); }
+    .time-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); }
+    .time-desc { display: block; font-size: 0.8rem; font-weight: 400; color: var(--text-muted); margin-top: 4px; }
+    .btn-start-exam { background: var(--accent-green); color: #0f172a; font-size: 1.2rem; font-weight: 700; width: 100%; padding: 16px; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-start-exam:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .quiz-container { max-width: 1100px; margin: 0 auto; display: none; grid-template-columns: 1fr 320px; gap: 20px; }
+    
+    .main-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
+    .question-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
+    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+    
+    .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .option-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 18px; border-radius: 8px; text-align: left; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+    .option-btn:hover:not(:disabled) { border-color: var(--accent-blue); background: #1e293b; }
+    .option-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); font-weight: 600; }
+    .option-btn.correct-opt { border-color: var(--accent-green) !important; background: rgba(74, 222, 128, 0.15) !important; font-weight: 600; }
+    .option-btn.wrong-opt { border-color: var(--accent-red) !important; background: rgba(248, 113, 113, 0.15) !important; }
+
+    .sidebar { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; height: fit-content; }
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+    .p-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 0; border-radius: 6px; font-weight: 600; cursor: pointer; text-align: center; font-size: 0.85rem; transition: 0.2s; }
+    .p-btn.answered { background: var(--accent-blue); color: #0f172a; border-color: var(--accent-blue); }
+    .p-btn.active { border: 2px solid #ffffff; }
+    .p-btn.review-correct { background: var(--accent-green); color: #0f172a; border-color: var(--accent-green); }
+    .p-btn.review-wrong { background: var(--accent-red); color: #0f172a; border-color: var(--accent-red); }
+
+    .nav-btns { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+    .btn { background: var(--accent-blue); color: #0f172a; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-submit { background: var(--accent-green); color: #0f172a; }
+    .btn-danger { background: var(--accent-red); color: #0f172a; }
+
+    .scorecard { display: none; max-width: 900px; margin: 20px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; }
+    .score-header { text-align: center; margin-bottom: 24px; }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; text-align: center; }
+    .stat-box { background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .stat-val { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .topic-table-container { margin-top: 24px; background: #0f172a; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+    .topic-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .topic-table th, .topic-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+    .topic-table th { background: var(--card-bg); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+    
+    .scorecard-actions { display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+    .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-blue); border-radius: 4px; font-size: 0.95rem; line-height: 1.5; }
+    .save-indicator { position: absolute; top: 24px; right: 24px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #pdf-export-area, #pdf-export-area * { visibility: visible; }
+      #pdf-export-area { position: absolute; left: 0; top: 0; width: 100%; color: black; background: white; padding: 20px; }
+      .pdf-question { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pdf-export-area" style="display:none;"></div>
+
+  <!-- Pre-Test Setup Screen -->
+  <div class="setup-screen" id="setup-screen">
+    <i data-lucide="settings" style="width: 48px; height: 48px; color: var(--accent-blue); margin-bottom: 16px;"></i>
+    <h2>Configure Your Exam</h2>
+    <p>Select your desired time limit for the 50-question test.</p>
+    
+    <div class="time-options">
+      <div class="time-btn" onclick="selectTime(20, this)">20 Minutes<span class="time-desc">Speed Run</span></div>
+      <div class="time-btn selected" onclick="selectTime(35, this)">35 Minutes<span class="time-desc">Actual Exam Time</span></div>
+      <div class="time-btn" onclick="selectTime(45, this)">45 Minutes<span class="time-desc">Relaxed Pacing</span></div>
+      <div class="time-btn" onclick="selectTime(60, this)">60 Minutes<span class="time-desc">Deep Analysis</span></div>
+    </div>
+    
+    <button class="btn-start-exam" onclick="startExamFromSetup()">
+      Begin Exam <i data-lucide="arrow-right"></i>
+    </button>
+  </div>
+
+  <header id="main-header" style="display: none;">
+    <h1>
+      <i data-lucide="award"></i> IT Officer Mains: Day 2
+      <span class="badge-diff">Level 2 (Moderate to Hard)</span>
+    </h1>
+    <div class="timer" id="timer"><i data-lucide="clock"></i> 00:00</div>
+  </header>
+
+  <div class="quiz-container" id="quiz-ui">
+    <div class="main-card">
+      <div class="save-indicator" id="save-indicator"><i data-lucide="cloud-lightning" size="16"></i> Auto-saved</div>
+      <div class="question-header">
+        <span id="q-topic">Topic: Loading...</span>
+        <span id="q-counter">Question 1 of 50</span>
+      </div>
+      <div class="question-text" id="q-text">Loading question...</div>
+      <div class="options-list" id="options-list"></div>
+      <div class="explanation" id="explanation"></div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" onclick="prevQuestion()" id="btn-prev"><i data-lucide="chevron-left"></i> Previous</button>
+        <button class="btn" onclick="clearSelection()" id="btn-clear" style="display:none;">Clear Response</button>
+        <button class="btn" onclick="nextQuestion()" id="btn-next">Next <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <h3 style="font-size: 1rem; margin-bottom: 12px; text-align: center;">Question Palette</h3>
+      <div class="palette-grid" id="palette"></div>
+      <button class="btn btn-submit" style="width: 100%; justify-content: center; margin-top: 24px;" onclick="submitQuiz()">
+        <i data-lucide="check-circle"></i> Submit Quiz
+      </button>
+      <button class="btn btn-danger" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="resetQuiz()">
+        <i data-lucide="rotate-ccw"></i> Reset All
+      </button>
+    </div>
+  </div>
+
+  <div class="scorecard" id="scorecard">
+    <div class="score-header">
+      <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Quiz Completed!</h2>
+      <p style="color: var(--text-muted);">IT Officer Mains: Day 2 — 15% Numerical Focus Included</p>
+    </div>
+    
+    <div class="score-grid">
+      <div class="stat-box"><div class="stat-val" id="score-total" style="color: var(--accent-blue);">0</div><div class="stat-label">Total Score</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-correct" style="color: var(--accent-green);">0</div><div class="stat-label">Correct (+2)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-wrong" style="color: var(--accent-red);">0</div><div class="stat-label">Incorrect (-0.5)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-unattempted" style="color: var(--accent-yellow);">0</div><div class="stat-label">Skipped</div></div>
+    </div>
+
+    <div class="topic-table-container">
+      <table class="topic-table">
+        <thead>
+          <tr><th>Topic</th><th>Attempted</th><th>Correct</th><th>Incorrect</th><th>Accuracy</th></tr>
+        </thead>
+        <tbody id="topic-breakdown-body"></tbody>
+      </table>
+    </div>
+
+    <div class="scorecard-actions">
+      <button class="btn btn-secondary" onclick="reviewAnswers()"><i data-lucide="search"></i> Review Answers</button>
+      <button class="btn" onclick="saveResultJSON()"><i data-lucide="download"></i> Save Detailed JSON</button>
+      <button class="btn" style="background: var(--accent-indigo); color: #000;" onclick="generateAndPrintPDF()"><i data-lucide="file-text"></i> Download PDF</button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let selectedTimeMinutes = 35; // Default
+
+    function selectTime(minutes, element) {
+      selectedTimeMinutes = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    // 50 Questions Data (Day 2 - 8 Numericals + 4 Misc + 38 Core Jumbled)
+    const questions = [
+      { topic: "Computer Networks", text: "NUMERICAL: An organization is granted the block 130.56.0.0/16. The administrator wants to create 1024 subnets. Find the subnet mask and the number of hosts in each subnet.", options: ["255.255.255.192 and 62 hosts", "255.255.255.192 and 64 hosts", "255.255.255.0 and 254 hosts", "255.255.255.128 and 126 hosts"], correct: 0, explanation: "To create 1024 subnets, we need 10 bits (2^10 = 1024). The original mask is /16. New mask = /26 (255.255.255.192). Remaining host bits = 32 - 26 = 6. Hosts per subnet = 2^6 - 2 = 62." },
+      { topic: "Database Systems", text: "Which normal form deals with the elimination of multi-valued dependencies?", options: ["Boyce-Codd Normal Form (BCNF)", "Third Normal Form (3NF)", "Fourth Normal Form (4NF)", "Fifth Normal Form (5NF)"], correct: 2, explanation: "Fourth Normal Form (4NF) ensures that a table does not contain two or more independent multi-valued facts about an entity." },
+      { topic: "Java Programming", text: "In Java, what is the purpose of the 'transient' keyword?", options: ["To mark a method that cannot be overridden.", "To prevent a variable from being serialized.", "To allow a variable to be modified by multiple threads safely.", "To define a variable that is stored only in the cache."], correct: 1, explanation: "The 'transient' keyword in Java prevents a field from being serialized when the object is converted into a byte stream." },
+      { topic: "Computer Architecture", text: "NUMERICAL: A computer has a 32-bit memory address space and a 64 KB direct-mapped cache with a block size of 16 bytes. How many bits are required for the Tag, Line, and Word fields respectively?", options: ["16, 12, 4", "18, 10, 4", "14, 14, 4", "16, 10, 6"], correct: 0, explanation: "Word = log2(16 bytes) = 4 bits. Number of lines = 64KB / 16B = 4096 = 2^12. Line = 12 bits. Tag = Total (32) - Line (12) - Word (4) = 16 bits." },
+      { topic: "Operating Systems", text: "Which of the following IPC (Inter-Process Communication) mechanisms operates over network boundaries, unlike shared memory?", options: ["Pipes", "Message Queues", "Sockets", "Semaphores"], correct: 2, explanation: "Sockets provide a point-to-point, two-way communication mechanism between processes that can reside on different machines over a network." },
+      { topic: "Miscellaneous (IT Acts)", text: "Under the Information Technology Act 2000, which section mandates corporate bodies to pay damages by way of compensation for failure to protect sensitive personal data?", options: ["Section 43", "Section 43A", "Section 66", "Section 72"], correct: 1, explanation: "Section 43A makes corporate bodies handling sensitive personal data liable for damages if they are negligent in implementing reasonable security practices." },
+      { topic: "Information Security", text: "NUMERICAL: In the RSA algorithm, if p = 5, q = 11, and the public exponent e = 7, calculate the private key d.", options: ["23", "15", "27", "33"], correct: 0, explanation: "n = p*q = 55. φ(n) = (5-1)*(11-1) = 40. We need d such that (e * d) % 40 = 1. (7 * 23) = 161. 161 % 40 = 1. So, d = 23." },
+      { topic: "Data Structures", text: "Which traversal of a Binary Search Tree (BST) visits the nodes in ascending (sorted) order?", options: ["Pre-order", "In-order", "Post-order", "Level-order"], correct: 1, explanation: "An In-order traversal (Left, Root, Right) of a BST outputs the values in strictly ascending sorted order." },
+      { topic: "Algorithms", text: "Which algorithm uses the 'relaxation' technique to find the shortest path from a single source but FAILS if the graph contains a negative weight cycle?", options: ["Dijkstra's Algorithm", "Bellman-Ford Algorithm", "Floyd-Warshall Algorithm", "Kruskal's Algorithm"], correct: 1, explanation: "Bellman-Ford works with negative weights but detects and fails on negative weight cycles. Dijkstra fails on negative weights entirely." },
+      { topic: "Digital Logic", text: "NUMERICAL: Convert the hexadecimal number (1A.C)16 to its Octal equivalent.", options: ["32.6", "32.14", "26.6", "32.5"], correct: 0, explanation: "1A.C in Binary: 1 = 0001, A = 1010, C = 1100 -> 00011010.1100. Grouping by 3 for Octal: 011 010 . 110 = 32.6." },
+      { topic: "Software Engineering", text: "In software testing, 'Statement Coverage' is a metric most closely associated with which type of testing?", options: ["Black-box Testing", "White-box Testing", "Acceptance Testing", "Integration Testing"], correct: 1, explanation: "Statement coverage is a structural/white-box testing metric that ensures every statement in the code has been executed at least once." },
+      { topic: "Miscellaneous (Latest Tech)", text: "In the context of Large Language Models (LLMs) like GPT, what does the term 'Hallucination' refer to?", options: ["When the AI generates syntactically incorrect code.", "When the AI confidently generates false or fabricated information.", "When the model crashes due to excessive token limits.", "When the AI refuses to answer a safe prompt."], correct: 1, explanation: "Hallucination in AI refers to the generation of output that is plausible but factually incorrect or completely fabricated." },
+      { topic: "Operating Systems", text: "NUMERICAL: Consider 3 processes arriving at time 0 with burst times P1=4, P2=3, P3=5. Using First Come First Serve (FCFS) scheduling in order P1, P2, P3, what is the average turnaround time?", options: ["6.66", "7.66", "8.66", "9.00"], correct: 1, explanation: "Completion Times: P1=4, P2=7 (4+3), P3=12 (7+5). Turnaround Time = Completion - Arrival. Avg = (4 + 7 + 12) / 3 = 23 / 3 = 7.66." },
+      { topic: "Database Systems", text: "Which of the ACID properties ensures that once a transaction has been committed, it will remain so, even in the event of a power loss or system crash?", options: ["Atomicity", "Consistency", "Isolation", "Durability"], correct: 3, explanation: "Durability guarantees that the results of committed transactions are permanently recorded in the non-volatile storage (like a hard drive)." },
+      { topic: "Web Technologies", text: "Which HTTP status code is used to indicate that the server understands the request but refuses to authorize it (Forbidden)?", options: ["400", "401", "403", "404"], correct: 2, explanation: "HTTP 403 Forbidden indicates the client does not have access rights to the content. 401 means Unauthorized (lacks valid authentication credentials)." },
+      { topic: "Compiler Design", text: "Left Recursion in a grammar must be eliminated to prevent infinite loops in which type of parser?", options: ["Bottom-up Parser", "LR Parser", "Top-down (Predictive) Parser", "Operator Precedence Parser"], correct: 2, explanation: "Top-down parsers (like Recursive Descent or LL(1)) can enter an infinite loop if the grammar contains left recursion." },
+      { topic: "Python Programming", text: "In Python, what is the primary difference between a list comprehension and a generator expression?", options: ["List comprehensions are faster but generator expressions allow infinite loops.", "Generator expressions evaluate lazily yielding one item at a time, saving memory.", "List comprehensions use parentheses (), generator expressions use brackets [].", "They are identical under the hood."], correct: 1, explanation: "A generator expression uses () and evaluates lazily (saving memory), whereas a list comprehension uses [] and loads the entire list into memory immediately." },
+      { topic: "Algorithms", text: "NUMERICAL: Using the Master Theorem, determine the time complexity of the recurrence relation T(n) = 2T(n/2) + O(n).", options: ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"], correct: 1, explanation: "a=2, b=2, f(n)=n^1. log_b(a) = log_2(2) = 1. Since f(n) = n^log_b(a), this falls in Case 2. Complexity is O(n^d * log n) = O(n log n), classic Merge Sort." },
+      { topic: "Computer Networks", text: "In IPv4, what is the purpose of the 'Time to Live' (TTL) field in the IP header?", options: ["To define the exact time a packet can remain in cache.", "To prevent packets from circulating indefinitely in routing loops.", "To ensure the packet reaches its destination within a specific millisecond limit.", "To specify the priority of the packet."], correct: 1, explanation: "TTL is decremented by 1 at each router. If it reaches 0, the packet is discarded, preventing it from looping forever in the network." },
+      { topic: "Miscellaneous (Banking GK)", text: "What is the fixed length of an IFSC (Indian Financial System Code) used for NEFT/RTGS transactions, and what does the 5th character represent?", options: ["11 characters, 5th is always '0'", "12 characters, 5th is the bank code", "10 characters, 5th is a check digit", "11 characters, 5th is always '1'"], correct: 0, explanation: "IFSC is an 11-character alphanumeric code. The first 4 represent the bank, the 5th is reserved and is always '0', and the last 6 represent the branch." },
+      { topic: "Object Oriented Programming", text: "In OOP, the concept where a function or method operates differently based on the object it is acting upon at runtime is known as:", options: ["Compile-time Polymorphism", "Static Binding", "Dynamic Method Dispatch (Late Binding)", "Encapsulation"], correct: 2, explanation: "Dynamic Method Dispatch is the mechanism by which a call to an overridden method is resolved at runtime, achieving runtime polymorphism." },
+      { topic: "Information Security", text: "A 'Hash Collision' in cryptography occurs when:", options: ["Two different hash functions produce the same digest for the same input.", "A single hash function produces the same digest for two different inputs.", "An attacker successfully decrypts a hashed password.", "A hash function generates an output larger than the specified block size."], correct: 1, explanation: "A collision happens when two distinct inputs yield the exact same hash output, compromising the integrity of the hash algorithm." },
+      { topic: "Data Structures", text: "In a Max-Heap containing N elements, what is the worst-case time complexity for extracting the maximum element?", options: ["O(1)", "O(n)", "O(log n)", "O(n log n)"], correct: 2, explanation: "Extracting the max takes O(1) to find, but removing it requires replacing the root with the last element and calling heapify down, which takes O(log n) time." },
+      { topic: "Operating Systems", text: "What is the primary difference between a Mutex and a Binary Semaphore?", options: ["Mutexes can count above 1.", "A Mutex has the concept of ownership; only the thread that locked it can unlock it.", "Semaphores are hardware-based, Mutexes are software-based.", "There is no difference; they are exactly the same."], correct: 1, explanation: "A Mutex provides mutual exclusion and has 'thread ownership' (only the locking thread can unlock it). A binary semaphore is just a signaling mechanism and can be signaled by any thread." },
+      { topic: "Computer Networks", text: "NUMERICAL: Calculate the transmission delay for a packet of size 1500 Bytes over a link with a bandwidth of 10 Mbps.", options: ["1.2 ms", "12 ms", "0.12 ms", "150 ms"], correct: 0, explanation: "Transmission Delay = Length / Bandwidth = (1500 * 8 bits) / (10 * 10^6 bits/sec) = 12000 / 10000000 = 0.0012 seconds = 1.2 ms." },
+      { topic: "Software Engineering", text: "Which software development model focuses heavily on Risk Analysis before moving to the next iteration?", options: ["Waterfall Model", "V-Model", "Spiral Model", "RAD Model"], correct: 2, explanation: "The Spiral Model combines iterative development with systematic, controlled aspects of the waterfall model, with a primary focus on risk assessment in every loop." },
+      { topic: "Digital Logic", text: "NUMERICAL: What is the 8-bit two's complement representation of the decimal number -23?", options: ["11101001", "11101000", "00010111", "11111001"], correct: 0, explanation: "Binary of +23 is 00010111. 1's complement (invert bits) = 11101000. Add 1 for 2's complement = 11101001." },
+      { topic: "Miscellaneous (ISO Standards)", text: "Which ISO/IEC standard is an extension to ISO 27001, providing specific guidelines for Privacy Information Management (PIMS)?", options: ["ISO 27002", "ISO 27701", "ISO 22301", "ISO 31000"], correct: 1, explanation: "ISO/IEC 27701 is the privacy extension to ISO 27001, designed to help organizations manage personally identifiable information (PII) and comply with privacy laws like GDPR." },
+      { topic: "Java Programming", text: "Introduced in Java 8, which feature allows interfaces to have concrete implementations of methods without breaking existing classes that implement the interface?", options: ["Abstract methods", "Static initialization blocks", "Default methods", "Anonymous inner classes"], correct: 2, explanation: "Default methods (using the 'default' keyword) allow interfaces to have method bodies, providing backward compatibility for old interfaces to adopt new features." },
+      { topic: "Database Systems", text: "In SQL, a LEFT OUTER JOIN returns:", options: ["Only the rows that have matching values in both tables.", "All rows from the left table, and matched rows from the right table. NULLs otherwise.", "All rows from the right table, and matched rows from the left table.", "A Cartesian product of both tables."], correct: 1, explanation: "A LEFT JOIN returns all records from the left table (table1), and the matched records from the right table (table2). The result is 0 records from the right side if there is no match (represented by NULLs)." },
+      { topic: "Web Technologies", text: "In a JWT (JSON Web Token), what are the three distinct parts separated by dots (.)?", options: ["Header, Body, Footer", "Header, Payload, Signature", "Method, URI, Protocol", "Token, Secret, Hash"], correct: 1, explanation: "A JWT is structured as: Header (algorithm & type), Payload (the claims/data), and Signature (to verify token integrity)." },
+      { topic: "Computer Architecture", text: "Which architectural approach emphasizes executing complex, multi-step instructions using variable-length instruction formats?", options: ["RISC (Reduced Instruction Set Computer)", "CISC (Complex Instruction Set Computer)", "VLIW (Very Long Instruction Word)", "Superscalar"], correct: 1, explanation: "CISC architecture provides a vast array of complex instructions (like memory-to-memory operations) and uses variable-length instruction encodings (e.g., x86)." },
+      { topic: "Algorithms", text: "What is the worst-case time complexity of the Insertion Sort algorithm?", options: ["O(n log n)", "O(n)", "O(n^2)", "O(1)"], correct: 2, explanation: "In the worst case (when the array is reverse sorted), Insertion Sort must compare and shift every element, resulting in an O(n^2) time complexity." },
+      { topic: "Data Structures", text: "In a balanced AVL tree, what is the maximum allowable 'balance factor' (difference in height between left and right subtrees) for any node?", options: ["0", "1", "2", "log(n)"], correct: 1, explanation: "The balance factor is strictly maintained at -1, 0, or 1. If an insertion/deletion causes a factor of 2 or -2, rotations are performed to restore balance." },
+      { topic: "Information Security", text: "What type of malware is designed to lock the user's system or encrypt their files, demanding a payment to restore access?", options: ["Spyware", "Adware", "Ransomware", "Rootkit"], correct: 2, explanation: "Ransomware encrypts the victim's files and demands a ransom (usually in cryptocurrency) in exchange for the decryption key." },
+      { topic: "Python Programming", text: "In Python Object-Oriented Programming, what is the role of the '__new__' method compared to '__init__'?", options: ["__new__ initializes the object; __init__ destroys it.", "__new__ creates the object instance; __init__ initializes its state.", "They are exactly the same and can be used interchangeably.", "__new__ is only used for multiple inheritance."], correct: 1, explanation: "__new__ is a static method responsible for actually creating and returning the new object instance, while __init__ is called afterward to initialize its attributes." },
+      { topic: "Operating Systems", text: "Which memory allocation strategy allocates the smallest hole that is big enough to satisfy the request?", options: ["First-fit", "Worst-fit", "Best-fit", "Next-fit"], correct: 2, explanation: "Best-fit searches the entire list of free partitions and allocates the smallest one that is large enough, minimizing leftover wasted space in that specific block." },
+      { topic: "Computer Networks", text: "Which application layer protocol is used for dynamically assigning IP addresses to devices on a network?", options: ["DNS", "DHCP", "ARP", "NAT"], correct: 1, explanation: "DHCP (Dynamic Host Configuration Protocol) automatically assigns IP addresses and network configurations to devices connecting to the network." },
+      { topic: "Database Systems", text: "What is the primary purpose of a 'Trigger' in a database management system?", options: ["To speed up data retrieval.", "To enforce referential integrity automatically.", "To automatically execute a specified batch of SQL code in response to an INSERT, UPDATE, or DELETE event.", "To create backups of the database periodically."], correct: 2, explanation: "A trigger is a special type of stored procedure that automatically runs when an event occurs in the database server, useful for auditing or complex business rules." },
+      { topic: "Object Oriented Programming", text: "Which SOLID principle states that 'A class should have one, and only one, reason to change'?", options: ["Single Responsibility Principle", "Open-Closed Principle", "Interface Segregation Principle", "Dependency Inversion Principle"], correct: 0, explanation: "The Single Responsibility Principle (SRP) ensures that a class is focused entirely on a single functional task." },
+      { topic: "Software Engineering", text: "In the context of version control (like Git), what is a 'Merge Conflict'?", options: ["When the server goes offline during a push.", "When a branch is deleted accidentally.", "When two branches have competing changes on the same lines of a file, requiring manual resolution.", "When a pull request is rejected by the administrator."], correct: 2, explanation: "A merge conflict occurs when Git cannot automatically merge changes because the exact same line of code was edited differently in two branches." },
+      { topic: "Digital Logic", text: "Which logic gate provides an output of 1 ONLY when its two inputs are different from each other?", options: ["AND", "OR", "XOR", "NAND"], correct: 2, explanation: "The XOR (Exclusive OR) gate outputs true (1) only if one input is true and the other is false (an odd number of 1s)." },
+      { topic: "Compiler Design", text: "During the compilation process, the Symbol Table is primarily maintained and populated by which phase?", options: ["Lexical and Syntax Analysis", "Code Generation", "Code Optimization", "Target Code Execution"], correct: 0, explanation: "The Symbol Table is a data structure created and maintained primarily during lexical and syntax analysis to store identifiers and their attributes (types, scope, etc.)." },
+      { topic: "Algorithms", text: "Which algorithm approach does the 'Merge Sort' algorithm primarily utilize?", options: ["Greedy", "Dynamic Programming", "Divide and Conquer", "Backtracking"], correct: 2, explanation: "Merge Sort recursively divides the array into halves until they are trivially small, then merges them back together in sorted order (Divide and Conquer)." },
+      { topic: "Java Programming", text: "In Java, what happens if a 'catch' block throws a new exception while there is a 'finally' block present?", options: ["The finally block is bypassed entirely.", "The program terminates immediately with a Fatal Error.", "The finally block executes normally before the exception propagates up the call stack.", "The JVM ignores the new exception."], correct: 2, explanation: "The 'finally' block is guaranteed to execute regardless of whether an exception is caught, unhandled, or a new exception is thrown within the catch block." },
+      { topic: "Web Technologies", text: "Which HTML5 API allows a web page to store data locally within the user's browser with NO expiration date?", options: ["SessionStorage", "Cookies", "LocalStorage", "IndexedDB"], correct: 2, explanation: "LocalStorage stores data with no expiration date, surviving browser restarts. SessionStorage clears when the page session ends." },
+      { topic: "Computer Architecture", text: "In a computer system, what is a 'Page Fault'?", options: ["A physical error on the hard drive platter.", "An interrupt that occurs when a program requests a page of memory that is not currently loaded in RAM.", "A security violation where a process accesses memory outside its bounds.", "A failure in the L1 Cache."], correct: 1, explanation: "A page fault happens when the CPU attempts to access a virtual memory page that is mapped but currently swapped out to the disk, triggering the OS to fetch it." },
+      { topic: "Operating Systems", text: "In a Linux/Unix environment, what command is used to change the permissions of a file or directory?", options: ["chown", "chmod", "chgrp", "sudo"], correct: 1, explanation: "The 'chmod' (change mode) command is used to set the read, write, and execute permissions for the owner, group, and others." },
+      { topic: "Data Structures", text: "Which data structure is most appropriate for implementing an Undo/Redo feature in a text editor?", options: ["Queue", "Stack", "Linked List", "Hash Table"], correct: 1, explanation: "A Stack follows the Last-In-First-Out (LIFO) principle, which exactly matches the behavior of undoing the most recent action first." },
+      { topic: "Information Security", text: "In a network security context, what is the purpose of a 'DMZ' (Demilitarized Zone)?", options: ["To completely block all incoming traffic.", "To host internal databases securely away from the internet.", "To expose public-facing services (like web/email servers) to the internet while keeping the internal network secure.", "To track employee internet usage."], correct: 2, explanation: "A DMZ acts as a buffer zone. Public-facing servers are placed here so external users can access them, but if compromised, the attacker still cannot easily access the internal LAN." }
+    ];
+
+    let currentQ = 0;
+    let userAnswers = new Array(50).fill(null);
+    let isReviewMode = false;
+    let quizSubmitted = false;
+    let timeRemaining = 0;
+    let timerInterval;
+
+    const elTopic = document.getElementById('q-topic');
+    const elCounter = document.getElementById('q-counter');
+    const elText = document.getElementById('q-text');
+    const elOptions = document.getElementById('options-list');
+    const elExplanation = document.getElementById('explanation');
+    const elPalette = document.getElementById('palette');
+    const saveIndicator = document.getElementById('save-indicator');
+
+    function initQuiz() {
+      window.addEventListener('beforeunload', function (e) {
+        if (!quizSubmitted && document.getElementById('quiz-ui').style.display === 'grid') {
+          e.preventDefault(); e.returnValue = '';
+        }
+      });
+
+      const savedData = localStorage.getItem('it_officer_mains_day2');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          if (parsed && parsed.timeRemaining > 0 && !parsed.quizSubmitted) {
+            userAnswers = parsed.userAnswers;
+            timeRemaining = parsed.timeRemaining;
+            currentQ = parsed.currentQ;
+            
+            // Skip setup screen, jump to quiz
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-header').style.display = 'flex';
+            document.getElementById('quiz-ui').style.display = 'grid';
+            
+            buildPalette();
+            loadQuestion(currentQ);
+            startTimer(true);
+            return;
+          }
+        } catch(e) { console.error("Error loading save state"); }
+      }
+    }
+
+    function startExamFromSetup() {
+      timeRemaining = selectedTimeMinutes * 60;
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      
+      buildPalette();
+      loadQuestion(0);
+      triggerAutoSave();
+      startTimer(false);
+    }
+
+    function buildPalette() {
+      for (let i = 0; i < 50; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'p-btn';
+        btn.innerText = i + 1;
+        btn.onclick = () => jumpToQuestion(i);
+        elPalette.appendChild(btn);
+      }
+    }
+
+    function triggerAutoSave() {
+      if(quizSubmitted) return;
+      const state = { currentQ, userAnswers, timeRemaining, quizSubmitted };
+      localStorage.setItem('it_officer_mains_day2', JSON.stringify(state));
+      
+      saveIndicator.classList.add('show');
+      setTimeout(() => saveIndicator.classList.remove('show'), 1500);
+    }
+
+    function resetQuiz() {
+      if(confirm("Are you sure you want to reset the entire quiz? All progress will be lost forever.")) {
+        localStorage.removeItem('it_officer_mains_day2');
+        location.reload();
+      }
+    }
+
+    function startTimer(isResume) {
+      const elTimer = document.getElementById('timer');
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining % 10 === 0) triggerAutoSave(); 
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          elTimer.innerHTML = `<i data-lucide="clock"></i> 00:00`;
+          submitQuiz(true); 
+        } else {
+          const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+          const s = (timeRemaining % 60).toString().padStart(2, '0');
+          elTimer.innerHTML = `<i data-lucide="clock"></i> ${m}:${s}`;
+        }
+      }, 1000);
+    }
+
+    function loadQuestion(index) {
+      currentQ = index;
+      const q = questions[index];
+      
+      elTopic.innerText = `Topic: ${q.topic}`;
+      elCounter.innerText = `Question ${index + 1} of 50`;
+      elText.innerText = q.text;
+
+      elOptions.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (userAnswers[index] === i) btn.classList.add('selected');
+        
+        if (isReviewMode) {
+          btn.disabled = true;
+          if (i === q.correct) btn.classList.add('correct-opt');
+          if (userAnswers[index] === i && i !== q.correct) btn.classList.add('wrong-opt');
+        }
+
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> ${opt}`;
+        if (!isReviewMode) btn.onclick = () => selectOption(i);
+        elOptions.appendChild(btn);
+      });
+
+      document.getElementById('btn-clear').style.display = (!isReviewMode && userAnswers[index] !== null) ? 'block' : 'none';
+      
+      if (isReviewMode) {
+        elExplanation.style.display = 'block';
+        elExplanation.innerHTML = `<strong>Explanation:</strong> ${q.explanation}`;
+      } else {
+        elExplanation.style.display = 'none';
+      }
+
+      updatePaletteUI();
+    }
+
+    function selectOption(optIndex) {
+      userAnswers[currentQ] = optIndex;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function clearSelection() {
+      userAnswers[currentQ] = null;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function nextQuestion() { if (currentQ < 49) loadQuestion(currentQ + 1); }
+    function prevQuestion() { if (currentQ > 0) loadQuestion(currentQ - 1); }
+    function jumpToQuestion(index) { loadQuestion(index); }
+
+    function updatePaletteUI() {
+      const btns = elPalette.children;
+      for (let i = 0; i < 50; i++) {
+        btns[i].className = 'p-btn';
+        if (isReviewMode) {
+          if (userAnswers[i] === questions[i].correct) btns[i].classList.add('review-correct');
+          else if (userAnswers[i] !== null) btns[i].classList.add('review-wrong');
+        } else {
+          if (userAnswers[i] !== null) btns[i].classList.add('answered');
+        }
+        if (i === currentQ) btns[i].classList.add('active');
+      }
+    }
+
+    let generatedAnalyticsData = {}; 
+
+    function submitQuiz(force = false) {
+      if (!force && !confirm("Are you sure you want to submit the quiz?")) return;
+      
+      quizSubmitted = true;
+      clearInterval(timerInterval);
+      localStorage.removeItem('it_officer_mains_day2');
+
+      document.getElementById('quiz-ui').style.display = 'none';
+      document.getElementById('scorecard').style.display = 'block';
+      document.getElementById('main-header').style.display = 'none';
+
+      let correct = 0, wrong = 0, unattempted = 0;
+      let topicStats = {};
+      let wrongLog = [], skippedLog = [];
+
+      for (let i = 0; i < 50; i++) {
+        let q = questions[i];
+        let baseTopic = q.topic.replace("NUMERICAL: ", "");
+        
+        if(!topicStats[baseTopic]) {
+            topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+        }
+        topicStats[baseTopic].total++;
+
+        if (userAnswers[i] === null) {
+          unattempted++; topicStats[baseTopic].skipped++;
+          skippedLog.push({ qNum: i+1, topic: baseTopic, text: q.text });
+        } else if (userAnswers[i] === q.correct) {
+          correct++; topicStats[baseTopic].correct++;
+        } else {
+          wrong++; topicStats[baseTopic].wrong++;
+          wrongLog.push({
+             qNum: i+1, topic: baseTopic, text: q.text, 
+             userAnswer: q.options[userAnswers[i]], correctAnswer: q.options[q.correct]
+          });
+        }
+      }
+
+      const score = (correct * 2) - (wrong * 0.5);
+
+      document.getElementById('score-total').innerText = score;
+      document.getElementById('score-correct').innerText = correct;
+      document.getElementById('score-wrong').innerText = wrong;
+      document.getElementById('score-unattempted').innerText = unattempted;
+
+      const tbBody = document.getElementById('topic-breakdown-body');
+      tbBody.innerHTML = '';
+      for (const [topic, stats] of Object.entries(topicStats)) {
+          const acc = Math.round((stats.correct / stats.total) * 100);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
+          tbBody.appendChild(tr);
+      }
+
+      generatedAnalyticsData = {
+        quizDay: 2,
+        quizTitle: "IT Officer Mains: Day 2",
+        difficultyLevel: 2,
+        difficultyName: "Moderate to Hard",
+        focusArea: "Balanced + 15% Numerical",
+        date: new Date().toISOString(),
+        totalQuestions: 50,
+        correct: correct, incorrect: wrong, unattempted: unattempted, score: score,
+        topicBreakdown: topicStats, wrongQuestions: wrongLog, skippedQuestions: skippedLog
+      };
+    }
+
+    function reviewAnswers() {
+      isReviewMode = true;
+      document.getElementById('scorecard').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      document.querySelector('.btn-submit').style.display = 'none';
+      document.querySelector('.btn-danger').style.display = 'none';
+      loadQuestion(0);
+    }
+
+    async function saveResultJSON() {
+      try {
+        const response = await fetch('/api/save-result', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(generatedAnalyticsData)
+        });
+        
+        if(response.ok) {
+          alert("Result saved successfully to the server! You can close the player.");
+          // Inform the dashboard to refresh the charts
+          if (window.parent && window.parent.loadDataFromBackend) {
+            window.parent.loadDataFromBackend();
+          }
+        } else {
+          alert("Failed to save result to server.");
+        }
+      } catch (err) {
+        alert("Error saving result. Ensure your Flask server is running.");
+      }
+    }
+
+    function generateAndPrintPDF() {
+        const printArea = document.getElementById('pdf-export-area');
+        let htmlContent = `<div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; color: #000;"><h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">IT Officer Mains: Day 2 - Answer Key</h1><hr style="margin-bottom: 30px;">`;
+
+        questions.forEach((q, i) => {
+            const uAns = userAnswers[i];
+            let statusBadge = uAns === null ? "<span style='color: orange;'>[Skipped]</span>" : (uAns === q.correct ? "<span style='color: green;'>[Correct]</span>" : "<span style='color: red;'>[Wrong]</span>");
+            htmlContent += `<div class="pdf-question"><h3>Q${i+1}. ${q.text} ${statusBadge}</h3><p style="font-size: 0.9em; color: #555;">Topic: ${q.topic}</p><ul style="list-style-type: none; padding-left: 0;">`;
+            
+            q.options.forEach((opt, optIndex) => {
+                let prefix = "[ ]", style = "";
+                if(optIndex === q.correct) { prefix = "[✓]"; style = "color: green; font-weight: bold;"; } 
+                else if (uAns === optIndex) { prefix = "[✗]"; style = "color: red; text-decoration: line-through;"; }
+                htmlContent += `<li style="margin-bottom: 5px; ${style}">${prefix} ${String.fromCharCode(65 + optIndex)}. ${opt}</li>`;
+            });
+            htmlContent += `</ul><div style="background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin-top: 10px;"><strong>Explanation:</strong> ${q.explanation}</div></div>`;
+        });
+        printArea.innerHTML = htmlContent + `</div>`;
+        window.print();
+    }
+
+    window.onload = initQuiz;
+  </script>
+</body>
+</html>
