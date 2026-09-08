@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Analytics OS | Daily Mock Performance</title>
+  <title>IT Officer Mock Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -112,7 +112,7 @@
   </div>
 
   <header>
-    <h1><i data-lucide="hexagon"></i> Analytics OS</h1>
+    <h1><i data-lucide="hexagon"></i> ExamMatrix IT</h1>
     <span style="color: var(--accent-emerald); font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 6px;">
       <i data-lucide="check-circle" size="16"></i> Server Connected
     </span>
@@ -160,18 +160,25 @@
     </div>
   </div>
 <!-- FOOTER -->
-<footer>
-  <div class="footer-left">
-    <!-- REPLACE THE HREF WITH YOUR ACTUAL GITHUB LINK -->
-    <a href="https://github.com/mohitbhatt-du/My-Mock-App" target="_blank">
-  <i data-lucide="git-hub"></i> View Project on GitHub
-  </a>
-  </div>
-  <div class="footer-right">
-    <i data-lucide="users" size="18"></i> 
-    Unique Visitors: <span id="visitor-counter" class="visitor-count">...</span>
-  </div>
-</footer>
+  <footer>
+    <div class="footer-left">
+      <a href="https://github.com/mohitbhatt-du/My-Mock-App" target="_blank">
+        <i data-lucide="git-hub"></i> View Project on GitHub
+      </a>
+    </div>
+    
+    <!-- Added Star Counter & Visitor Counter Container -->
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <div class="footer-right">
+        <i data-lucide="star" size="18" style="color: #f59e0b;"></i> 
+        Stars: <span id="star-counter" class="visitor-count">...</span>
+      </div>
+      <div class="footer-right">
+        <i data-lucide="users" size="18"></i> 
+        Unique Visitors: <span id="visitor-counter" class="visitor-count">...</span>
+      </div>
+    </div>
+  </footer>
   <script>
     lucide.createIcons();
     Chart.defaults.color = '#a1a1aa';
@@ -194,28 +201,37 @@
     };
 
     async function loadDataFromBackend() {
-      try {
-        // Fetch Quizzes and Visitor Count from Server
-        const [quizRes, visitorRes] = await Promise.all([
-          fetch('/api/quizzes'),
-          fetch('/api/visitors')
-        ]);
-        
-        globalQuizzes = await quizRes.json();
-        const visitorData = await visitorRes.json();
-        document.getElementById('visitor-counter').innerText = visitorData.count;
-        
-        // Load private results from the user's browser memory
-        const results = loadResultsFromLocalStorage();
-        
-        processDataAndRenderAnalytics(results);
-        renderQuizHub(globalQuizzes, results);
-      } catch (err) {
-        console.error("Backend connection failed.", err);
-        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Connection Issue</h3></div></td></tr>`;
-        lucide.createIcons();
-      }
-    }
+          try {
+            // Fetch Quizzes, Visitor Count, AND GitHub Stars simultaneously
+            const [quizRes, visitorRes, githubRes] = await Promise.all([
+              fetch('/api/quizzes'),
+              fetch('/api/visitors'),
+              fetch('https://api.github.com/repos/mohitbhatt-du/My-Mock-App').catch(() => null)
+            ]);
+            
+            globalQuizzes = await quizRes.json();
+            const visitorData = await visitorRes.json();
+            document.getElementById('visitor-counter').innerText = visitorData.count;
+            
+            // Parse GitHub Stars if the request succeeded
+            if (githubRes && githubRes.ok) {
+              const repoData = await githubRes.json();
+              document.getElementById('star-counter').innerText = repoData.stargazers_count || 0;
+            } else {
+              document.getElementById('star-counter').innerText = '0';
+            }
+            
+            // Load private results from the user's browser memory
+            const results = loadResultsFromLocalStorage();
+            
+            processDataAndRenderAnalytics(results);
+            renderQuizHub(globalQuizzes, results);
+          } catch (err) {
+            console.error("Backend connection failed.", err);
+            document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Connection Issue</h3></div></td></tr>`;
+            lucide.createIcons();
+          }
+        }
 
     function loadResultsFromLocalStorage() {
       const results = [];
