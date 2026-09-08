@@ -324,7 +324,7 @@
 
     function processDataAndRenderAnalytics(results) {
       let totalQuizzes = results.length, totalQuestions = 0, totalCorrect = 0, totalIncorrect = 0, totalUnattempted = 0;
-      let highestScore = 0, scoreSum = 0;
+      let highestScoreVal = 0, totalCorrectSum = 0;
       const labels = [], scorePercentages = [], topicMastery = {};
       const tableBody = document.getElementById('history-rows');
       tableBody.innerHTML = '';
@@ -338,11 +338,19 @@
         const title = res.quizTitle || `Quiz ${idx + 1}`;
         const total = res.totalQuestions || 50;
         const correct = res.correct || 0, incorrect = res.incorrect || 0, unattempted = res.unattempted || (total - correct - incorrect);
+        
+        // Use raw score or percentage depending on how your quiz saves it, 
+        // allowing decimals like 68.75 from your data model
+        const rawScore = res.score !== undefined ? res.score : correct;
+        
         const scorePct = total > 0 ? Math.round((correct / total) * 100) : 0;
         const dateStr = res.date ? new Date(res.date).toLocaleDateString() : 'N/A';
 
         totalQuestions += total; totalCorrect += correct; totalIncorrect += incorrect; totalUnattempted += unattempted;
-        scoreSum += scorePct; if (scorePct > highestScore) highestScore = scorePct;
+        totalCorrectSum += correct; 
+        
+        // Track the highest numerical score encountered (supports decimals up to 2 places)
+        if (rawScore > highestScoreVal) highestScoreVal = rawScore;
 
         labels.push(res.quizDay ? `Day ${res.quizDay}` : `Q${idx + 1}`);
         scorePercentages.push(scorePct);
@@ -363,9 +371,16 @@
       });
 
       document.getElementById('kpi-total').textContent = totalQuizzes;
-      document.getElementById('kpi-avg').textContent = Math.round(scoreSum / totalQuizzes) + '%';
-      document.getElementById('kpi-high').textContent = highestScore + '%';
-      document.getElementById('kpi-questions').textContent = totalQuestions;
+      
+      // Average score (up to 2 decimals, stripping trailing zeros)
+      const avgCorrect = (totalCorrectSum / totalQuizzes).toFixed(2);
+      document.getElementById('kpi-avg').textContent = parseFloat(avgCorrect);
+
+      // Highest score numerical value (supports decimals like 68.75)
+      const formattedHigh = parseFloat(highestScoreVal.toFixed(2));
+      document.getElementById('kpi-high').textContent = formattedHigh;
+      
+      document.getElementById('kpi-questions').textContent = totalCorrect;
 
       renderTrendChart(labels, scorePercentages);
       renderAccuracyChart(totalCorrect, totalIncorrect, totalUnattempted);
@@ -399,7 +414,7 @@
 
     async function loadDataFromBackend() {
       try {
-        // Fetch only Quizzes and Visitor Count from Server (Results are local now)
+        // Fetch Quizzes and Visitor Count from your Flask backend
         const [quizRes, visitorRes] = await Promise.all([
           fetch('/api/quizzes'),
           fetch('/api/visitors')
@@ -408,6 +423,20 @@
         globalQuizzes = await quizRes.json();
         const visitorData = await visitorRes.json();
         document.getElementById('visitor-counter').innerText = visitorData.count;
+
+        // Fetch GitHub Stars separately so it won't break the page if it fails
+        try {
+          const githubRes = await fetch('https://api.github.com/repos/mohitbhatt-du/My-Mock-App');
+          if (githubRes.ok) {
+            const repoData = await githubRes.json();
+            document.getElementById('star-counter').innerText = repoData.stargazers_count ?? 0;
+          } else {
+            document.getElementById('star-counter').innerText = '0';
+          }
+        } catch (gitErr) {
+          console.warn("Could not fetch GitHub stars:", gitErr);
+          document.getElementById('star-counter').innerText = '0';
+        }
         
         // Load private results from the user's browser memory
         const results = loadResultsFromLocalStorage();
@@ -416,7 +445,7 @@
         renderQuizHub(globalQuizzes, results);
       } catch (err) {
         console.error("Backend connection failed.", err);
-        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"><h3>Server Connection Issue</h3></div></td></tr>`;
+        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Connection Issue</h3></div></td></tr>`;
         lucide.createIcons();
       }
     }

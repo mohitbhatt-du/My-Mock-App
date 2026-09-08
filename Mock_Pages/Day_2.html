@@ -493,25 +493,17 @@
       loadQuestion(0);
     }
 
-    async function autoSaveToServer(data) {
+    function autoSaveToServer(data) {
       try {
-        const response = await fetch('/api/save-result', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
+        const storageKey = `quiz_result_day_${data.quizDay}`;
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        console.log("Result saved locally!");
         
-        if(response.ok) {
-          alert("Result automatically saved to backend!");
-          // If launched inside the Dashboard iframe, tell the dashboard to refresh!
-          if (window.parent && window.parent.loadDataFromBackend) {
-            window.parent.loadDataFromBackend();
-          }
-        } else {
-          alert("Failed to auto-save to server.");
+        if (window.parent && window.parent.loadDataFromBackend) {
+          window.parent.loadDataFromBackend();
         }
       } catch (err) {
-        console.error("Error saving result. Ensure your Flask server is running.", err);
+        console.error("Error saving result locally.", err);
       }
     }
 
