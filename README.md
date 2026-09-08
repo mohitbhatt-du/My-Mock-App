@@ -6,6 +6,7 @@
 ![Flask](https://img.shields.io/badge/Flask-Backend-green?style=for-the-badge&logo=flask&logoColor=white)
 ![Chart.js](https://img.shields.io/badge/Chart.js-Analytics-orange?style=for-the-badge&logo=chart.js&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
+[![Live Demo](https://img.shields.io/badge/Live-Website-emerald?style=for-the-badge&logo=render&logoColor=white)](https://my-mock-app.onrender.com)
 
 A professional, automated mock exam operating system and performance dashboard built specifically for **IBPS SO IT Officer (Scale-I)** and technical banking examination preparation.
 
@@ -15,7 +16,7 @@ A professional, automated mock exam operating system and performance dashboard b
 
 ## 🌟 Overview
 
-**Analytics OS** is designed to bridge the gap between static question banks and dynamic performance tracking. Moving away from manual file management and traditional PDF scoring, this platform provides a robust server-backed, distraction-free environment to take daily sectional and full-length mock exams, visualize core technical strengths, and track your readiness for competitive IT mains examinations.
+**ExamMatrix IT** is designed to bridge the gap between static question banks and dynamic performance tracking. Moving away from manual file management and traditional PDF scoring, this platform provides a robust server-backed, distraction-free environment to take daily IT Officer full-length mock exams, visualize core technical strengths, and track your readiness for competitive IT mains examinations.
 
 ---
 
@@ -40,10 +41,11 @@ A professional, automated mock exam operating system and performance dashboard b
 
 ---
 
+
 ## 📂 Project Directory Structure
 
 ```text
-/Analytics-OS
+/My-Mock-App
 │
 ├── app.py                  # Flask backend server & API routing
 ├── index.html              # Main Analytics OS Dashboard & Quiz Hub
@@ -56,3 +58,8 @@ A professional, automated mock exam operating system and performance dashboard b
 │   └── ...
 │
 └── /Result                 # Local/Cloud data records
+```
+
+## 💡 Developer Disclaimer
+
+* This project was built in the trenches to solve a personal exam preparation problem not to win architectural awards. If you look under the hood and find messy scripts, spaghetti DOM manipulation, or unconventional Flask routes, congratulations! You've found a feature built entirely out of caffeine, deadlines, and pure survival instinct. Pull requests for cleaner code are welcome! 🚀
