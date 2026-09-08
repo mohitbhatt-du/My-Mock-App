@@ -163,9 +163,9 @@
 <footer>
   <div class="footer-left">
     <!-- REPLACE THE HREF WITH YOUR ACTUAL GITHUB LINK -->
-    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO_NAME" target="_blank">
-      <i data-lucide="github"></i> View Project on GitHub
-    </a>
+    <a href="https://github.com/mohitbhatt-du/My-Mock-App" target="_blank">
+  <i data-lucide="git-hub"></i> View Project on GitHub
+  </a>
   </div>
   <div class="footer-right">
     <i data-lucide="users" size="18"></i> 
@@ -193,29 +193,45 @@
       await loadDataFromBackend();
     };
 
-    
     async function loadDataFromBackend() {
       try {
-        // Fetch Quizzes and Results from Python Server
-        const [quizRes, resultRes] = await Promise.all([
+        // Fetch Quizzes and Visitor Count from Server
+        const [quizRes, visitorRes] = await Promise.all([
           fetch('/api/quizzes'),
-          fetch('/api/results')
+          fetch('/api/visitors')
         ]);
         
         globalQuizzes = await quizRes.json();
-        const results = await resultRes.json();
+        const visitorData = await visitorRes.json();
+        document.getElementById('visitor-counter').innerText = visitorData.count;
         
-        // Sort results by date
-        results.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+        // Load private results from the user's browser memory
+        const results = loadResultsFromLocalStorage();
         
         processDataAndRenderAnalytics(results);
         renderQuizHub(globalQuizzes, results);
       } catch (err) {
         console.error("Backend connection failed.", err);
-        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Offline</h3><p>Ensure your Flask backend is running.</p></div></td></tr>`;
+        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Connection Issue</h3></div></td></tr>`;
         lucide.createIcons();
       }
     }
+
+    function loadResultsFromLocalStorage() {
+      const results = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('quiz_result_')) {
+          try {
+            results.push(JSON.parse(localStorage.getItem(key)));
+          } catch (e) {}
+        }
+      }
+      results.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+      return results;
+    }
+
+
 
     function renderQuizHub(quizzes, results) {
       const grid = document.getElementById('quiz-grid');
@@ -367,54 +383,45 @@
 
     async function loadDataFromBackend() {
       try {
-        // Fetch Quizzes, Results, AND Visitor Count from Python Server
-        const [quizRes, resultRes, visitorRes] = await Promise.all([
+        // Fetch only Quizzes and Visitor Count from Server (Results are local now)
+        const [quizRes, visitorRes] = await Promise.all([
           fetch('/api/quizzes'),
-          fetch('/api/results'),
-          fetch('/api/visitors') // <-- Added this
+          fetch('/api/visitors')
         ]);
         
         globalQuizzes = await quizRes.json();
-        const results = await resultRes.json();
-        const visitorData = await visitorRes.json(); // <-- Added this
-        
-        // Update the footer text
+        const visitorData = await visitorRes.json();
         document.getElementById('visitor-counter').innerText = visitorData.count;
         
-        // Sort results by date
-        results.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+        // Load private results from the user's browser memory
+        const results = loadResultsFromLocalStorage();
         
         processDataAndRenderAnalytics(results);
         renderQuizHub(globalQuizzes, results);
       } catch (err) {
         console.error("Backend connection failed.", err);
-        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Offline</h3><p>Ensure your Flask backend is running.</p></div></td></tr>`;
+        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"><h3>Server Connection Issue</h3></div></td></tr>`;
         lucide.createIcons();
       }
     }
 
 
     async function resetAllProgress() {
-      // 1. Show a strict confirmation dialog
-      const confirmed = confirm("⚠️ WARNING: Are you sure you want to delete ALL your mock test results? This action cannot be undone and will reset your analytics to zero.");
-      
-      if (confirmed) {
-        try {
-          // 2. Call the Flask backend to delete the files
-          const response = await fetch('/api/reset-results', { method: 'POST' });
-          
-          if (response.ok) {
-            alert("All progress has been wiped clean.");
-            // 3. Automatically reload the dashboard to show the empty state
-            loadDataFromBackend(); 
-          } else {
-            alert("Failed to reset progress. Check server console.");
+          const confirmed = confirm("⚠️ WARNING: This will delete all your local mock test results on this device.");
+          if (confirmed) {
+            // Clear only quiz results from this browser
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+              const key = localStorage.key(i);
+              if (key.startsWith('quiz_result_')) keysToRemove.push(key);
+            }
+            keysToRemove.forEach(k => localStorage.removeItem(k));
+            
+            alert("Your local progress has been reset.");
+            loadDataFromBackend();
           }
-        } catch (err) {
-          alert("Error contacting server. Ensure Flask is running.");
         }
-      }
-    }
+      
   </script>
 </body>
 </html>
