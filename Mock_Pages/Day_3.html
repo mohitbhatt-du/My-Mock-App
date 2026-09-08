@@ -544,7 +544,7 @@
       loadQuestion(0);
     }
 
-        function autoSaveToServer(data) {
+    function autoSaveToServer(data) {
       try {
         const storageKey = `quiz_result_day_${data.quizDay}`;
         localStorage.setItem(storageKey, JSON.stringify(data));
