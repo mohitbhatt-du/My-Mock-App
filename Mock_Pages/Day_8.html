@@ -602,7 +602,7 @@
         }
       });
 
-      const finalResult = localStorage.getItem('quiz_result_day_9');
+      const finalResult = localStorage.getItem('quiz_result_day_8');
       if (finalResult) {
         try {
           const parsedResult = JSON.parse(finalResult);
@@ -624,7 +624,7 @@
         } catch(e) {}
       }
 
-      const savedData = localStorage.getItem('it_officer_mains_day9');
+      const savedData = localStorage.getItem('it_officer_mains_day8');
       if (savedData) {
         try {
           const parsed = JSON.parse(savedData);
@@ -715,15 +715,15 @@
     function triggerAutoSave() {
       if(quizSubmitted) return;
       const state = { currentQ, userAnswers, timeRemaining, quizSubmitted };
-      localStorage.setItem('it_officer_mains_day9', JSON.stringify(state));
+      localStorage.setItem('it_officer_mains_day8', JSON.stringify(state));
       saveIndicator.classList.add('show');
       setTimeout(() => saveIndicator.classList.remove('show'), 1500);
     }
 
     function resetQuiz() {
       if(confirm("Are you sure you want to reset this quiz? Your score will be overwritten.")) {
-        localStorage.removeItem('it_officer_mains_day9');
-        localStorage.removeItem('quiz_result_day_9');
+        localStorage.removeItem('it_officer_mains_day8');
+        localStorage.removeItem('quiz_result_day_8');
         location.reload();
       }
     }
@@ -872,7 +872,7 @@
       
       quizSubmitted = true;
       clearInterval(timerInterval);
-      localStorage.removeItem('it_officer_mains_day9');
+      localStorage.removeItem('it_officer_mains_day8');
 
       document.getElementById('quiz-ui').style.display = 'none';
       document.getElementById('scorecard').style.display = 'block';
@@ -921,7 +921,7 @@
       }
 
       generatedAnalyticsData = {
-        quizDay: 9, 
+        quizDay: 8, 
         quizTitle: "IT Officer Mains: Day 8",
         difficultyLevel: 2,
         difficultyName: "Moderate",

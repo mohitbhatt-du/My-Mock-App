@@ -324,7 +324,10 @@
 
     function processDataAndRenderAnalytics(results) {
       let totalQuizzes = results.length, totalQuestions = 0, totalCorrect = 0, totalIncorrect = 0, totalUnattempted = 0;
-      let highestScoreVal = 0, totalCorrectSum = 0;
+      
+      // FIXED 1: Changed totalCorrectSum to totalScoreSum
+      let highestScoreVal = 0, totalScoreSum = 0; 
+      
       const labels = [], scorePercentages = [], topicMastery = {};
       const tableBody = document.getElementById('history-rows');
       tableBody.innerHTML = '';
@@ -347,7 +350,9 @@
         const dateStr = res.date ? new Date(res.date).toLocaleDateString() : 'N/A';
 
         totalQuestions += total; totalCorrect += correct; totalIncorrect += incorrect; totalUnattempted += unattempted;
-        totalCorrectSum += correct; 
+        
+        // FIXED 2: Add rawScore to the sum instead of correct answers
+        totalScoreSum += rawScore; 
         
         // Track the highest numerical score encountered (supports decimals up to 2 places)
         if (rawScore > highestScoreVal) highestScoreVal = rawScore;
@@ -372,9 +377,9 @@
 
       document.getElementById('kpi-total').textContent = totalQuizzes;
       
-      // Average score (up to 2 decimals, stripping trailing zeros)
-      const avgCorrect = (totalCorrectSum / totalQuizzes).toFixed(2);
-      document.getElementById('kpi-avg').textContent = parseFloat(avgCorrect);
+      // FIXED 3: Calculate average raw score and lock strictly to 2 decimal places
+      const avgScore = totalQuizzes > 0 ? (totalScoreSum / totalQuizzes).toFixed(2) : "0.00";
+      document.getElementById('kpi-avg').textContent = avgScore;
 
       // Highest score numerical value (supports decimals like 68.75)
       const formattedHigh = parseFloat(highestScoreVal.toFixed(2));
