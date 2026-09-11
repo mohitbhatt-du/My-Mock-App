@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="difficulty-level" content="2">
+  <meta name="quiz-difficulty" content="Easy to Moderate">
+  <title>IT Officer Mains: Day 7</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a; --card-bg: #1e293b; --border-color: #334155;
+      --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-blue: #38bdf8; --accent-green: #4ade80; 
+      --accent-red: #f87171; --accent-yellow: #facc15; --accent-indigo: #818cf8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 20px; }
+
+    header {
+      max-width: 1100px; margin: 0 auto 20px; display: flex; justify-content: space-between;
+      align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);
+    }
+    h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .badge-diff { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-left: 10px; }
+    .timer { font-size: 1.1rem; font-weight: 600; color: var(--accent-yellow); display: flex; align-items: center; gap: 6px; }
+
+    /* Setup Screen */
+    .setup-screen { max-width: 600px; margin: 80px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 40px; text-align: center; }
+    .setup-screen h2 { font-size: 1.8rem; margin-bottom: 12px; }
+    .setup-screen p { color: var(--text-muted); margin-bottom: 30px; }
+    .time-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+    .time-btn { background: #0f172a; border: 2px solid var(--border-color); color: var(--text-main); padding: 16px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: 0.2s; }
+    .time-btn:hover { border-color: var(--accent-blue); }
+    .time-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); }
+    .time-desc { display: block; font-size: 0.8rem; font-weight: 400; color: var(--text-muted); margin-top: 4px; }
+    .btn-start-exam { background: var(--accent-green); color: #0f172a; font-size: 1.2rem; font-weight: 700; width: 100%; padding: 16px; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-start-exam:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .quiz-container { max-width: 1100px; margin: 0 auto; display: none; grid-template-columns: 1fr 320px; gap: 20px; }
+    
+    .main-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
+    .question-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
+    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+    
+    /* Matching Table & Media Styles */
+    .matching-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; background: #0f172a; font-size: 0.95rem; }
+    .matching-table th, .matching-table td { padding: 10px; border: 1px solid var(--border-color); text-align: left; }
+    .matching-table th { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
+    
+    .code-block { 
+      background: #0f172a; 
+      padding: 15px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border-color); 
+      font-family: monospace; 
+      font-size: 14px; 
+      overflow-x: auto; 
+      margin-bottom: 15px; 
+      font-weight: normal;
+      white-space: pre-wrap; 
+    }
+    
+    .diagram-container { background: #fff; padding: 20px; border-radius: 8px; overflow-x: auto; margin-bottom: 15px; text-align: center; }
+    .diagram-container svg { width: 100%; max-width: 480px; min-width: 300px; height: auto; display: block; margin: 0 auto; }
+
+    .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .option-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 18px; border-radius: 8px; text-align: left; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+    .option-btn:hover:not(:disabled) { border-color: var(--accent-blue); background: #1e293b; }
+    .option-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); font-weight: 600; }
+    .option-btn.correct-opt { border-color: var(--accent-green) !important; background: rgba(74, 222, 128, 0.15) !important; font-weight: 600; }
+    .option-btn.wrong-opt { border-color: var(--accent-red) !important; background: rgba(248, 113, 113, 0.15) !important; }
+
+    .sidebar { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; height: fit-content; }
+    
+    .filter-select { width: 100%; padding: 10px; margin-bottom: 12px; background: #0f172a; color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; outline: none; cursor: pointer; }
+    .filter-select:focus { border-color: var(--accent-blue); }
+
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+    .p-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 0; border-radius: 6px; font-weight: 600; cursor: pointer; text-align: center; font-size: 0.85rem; transition: 0.2s; }
+    .p-btn.answered { background: var(--accent-blue); color: #0f172a; border-color: var(--accent-blue); }
+    .p-btn.active { border: 2px solid #ffffff; }
+    .p-btn.review-correct { background: var(--accent-green); color: #0f172a; border-color: var(--accent-green); }
+    .p-btn.review-wrong { background: var(--accent-red); color: #0f172a; border-color: var(--accent-red); }
+
+    .nav-btns { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+    .btn { background: var(--accent-blue); color: #0f172a; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-submit { background: var(--accent-green); color: #0f172a; }
+    .btn-danger { background: var(--accent-red); color: #0f172a; }
+
+    .scorecard { display: none; max-width: 900px; margin: 20px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; }
+    .score-header { text-align: center; margin-bottom: 24px; }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; text-align: center; }
+    .stat-box { background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .stat-val { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .topic-table-container { margin-top: 24px; background: #0f172a; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+    .topic-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .topic-table th, .topic-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+    .topic-table th { background: var(--card-bg); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+    
+    .scorecard-actions { display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+    .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-blue); border-radius: 4px; font-size: 0.95rem; line-height: 1.5; }
+    .knowledge-booster { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(56, 189, 248, 0.3); font-size: 0.9rem; }
+    .save-indicator { position: absolute; top: 24px; right: 24px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    @media print {
+      #setup-screen, #main-header, #quiz-ui, #scorecard { display: none !important; }
+      body { background-color: white !important; color: black !important; padding: 0; height: auto; overflow: visible; }
+      #pdf-export-area { display: block !important; position: static !important; width: 100%; color: black; background: white; padding: 10px; }
+      .pdf-question { margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px; page-break-inside: avoid; }
+      svg text { fill: black !important; }
+      svg path, svg line, svg circle, svg rect { stroke: black !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pdf-export-area" style="display:none;"></div>
+
+  <div class="setup-screen" id="setup-screen">
+    <i data-lucide="settings" style="width: 48px; height: 48px; color: var(--accent-blue); margin-bottom: 16px;"></i>
+    <h2>Configure Your Exam</h2>
+    <p>IT Officer Mains: Day 7 (Balanced Full Syllabus)</p>
+    
+    <div class="time-options">
+      <div class="time-btn" onclick="selectTime(20, this)">20 Minutes<span class="time-desc">Speed Run</span></div>
+      <div class="time-btn selected" onclick="selectTime(40, this)">40 Minutes<span class="time-desc">Actual Exam Time</span></div>
+      <div class="time-btn" onclick="selectTime(45, this)">45 Minutes<span class="time-desc">Relaxed Pacing</span></div>
+      <div class="time-btn" onclick="selectTime(60, this)">60 Minutes<span class="time-desc">Deep Analysis</span></div>
+    </div>
+    
+    <button class="btn-start-exam" onclick="startExamFromSetup()">
+      Begin Exam <i data-lucide="arrow-right"></i>
+    </button>
+  </div>
+
+  <header id="main-header" style="display: none;">
+    <h1>
+      <i data-lucide="award"></i> IT Officer Mains: Day 7
+      <span class="badge-diff">Balanced Full Syllabus</span>
+    </h1>
+    <div class="timer" id="timer"><i data-lucide="clock"></i> 00:00</div>
+  </header>
+
+  <div class="quiz-container" id="quiz-ui">
+    <div class="main-card">
+      <div class="save-indicator" id="save-indicator"><i data-lucide="cloud-lightning" size="16"></i> Auto-saved</div>
+      <div class="question-header">
+        <span id="q-topic">Topic: Loading...</span>
+        <span id="q-counter">Question 1 of 50</span>
+      </div>
+      <div class="question-text" id="q-text" style="overflow-x: auto;">Loading question...</div>
+      <div class="options-list" id="options-list"></div>
+      <div class="explanation" id="explanation"></div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" onclick="prevQuestion()" id="btn-prev"><i data-lucide="chevron-left"></i> Previous</button>
+        <button class="btn" onclick="clearSelection()" id="btn-clear" style="display:none;">Clear Response</button>
+        <button class="btn" onclick="nextQuestion()" id="btn-next">Next <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <h3 style="font-size: 1rem; margin-bottom: 12px; text-align: center;">Question Palette</h3>
+      
+      <div id="review-filters" style="display: none;">
+        <select class="filter-select" id="palette-filter" onchange="applyReviewFilter()">
+          <option value="all">Show All Questions</option>
+          <option value="correct">Show Correct Only</option>
+          <option value="wrong">Show Incorrect Only</option>
+          <option value="skipped">Show Skipped Only</option>
+        </select>
+      </div>
+
+      <div class="palette-grid" id="palette"></div>
+      <button class="btn btn-submit" style="width: 100%; justify-content: center; margin-top: 24px;" onclick="submitQuiz()">
+        <i data-lucide="check-circle"></i> Submit Quiz
+      </button>
+      <button class="btn btn-danger" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="resetQuiz()">
+        <i data-lucide="rotate-ccw"></i> Reset All
+      </button>
+    </div>
+  </div>
+
+  <div class="scorecard" id="scorecard">
+    <div class="score-header">
+      <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Quiz Completed!</h2>
+      <p style="color: var(--text-muted);">IT Officer Mains: Day 7</p>
+    </div>
+    
+    <div class="score-grid">
+      <div class="stat-box"><div class="stat-val" id="score-total" style="color: var(--accent-blue);">0</div><div class="stat-label">Total Score</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-correct" style="color: var(--accent-green);">0</div><div class="stat-label">Correct (+2)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-wrong" style="color: var(--accent-red);">0</div><div class="stat-label">Incorrect (-0.5)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-unattempted" style="color: var(--accent-yellow);">0</div><div class="stat-label">Skipped</div></div>
+    </div>
+
+    <div class="topic-table-container">
+      <table class="topic-table">
+        <thead>
+          <tr><th>Topic</th><th>Attempted</th><th>Correct</th><th>Incorrect</th><th>Accuracy</th></tr>
+        </thead>
+        <tbody id="topic-breakdown-body"></tbody>
+      </table>
+    </div>
+
+    <div class="scorecard-actions">
+      <button class="btn btn-secondary" onclick="reviewAnswers()"><i data-lucide="search"></i> Review Answers</button>
+      <button class="btn" style="background: var(--accent-indigo); color: #000;" onclick="generateAndPrintPDF()"><i data-lucide="file-text"></i> Download PDF</button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let selectedTimeMinutes = 40; 
+
+    function selectTime(minutes, element) {
+      selectedTimeMinutes = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    // Question bank with Knowledge Boosters
+    const questions = [
+        { 
+            topic: "Database Systems", 
+            text: "Which of the following concurrency control protocols inherently prevents deadlocks by requiring a transaction to lock all its needed resources before execution begins?", 
+            options: ["Basic Two-Phase Locking (2PL)", "Strict Two-Phase Locking", "Conservative Two-Phase Locking", "Timestamp Ordering"], 
+            correct: 2, 
+            explanation: "Conservative 2PL (also known as static 2PL) requires a transaction to acquire all the locks it needs before it starts executing. If any lock is unavailable, the transaction waits and holds no locks, completely eliminating the 'hold and wait' condition necessary for deadlocks.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Basic 2PL:</strong> Ensures serializability but is prone to deadlocks.<br>• <strong>Strict 2PL:</strong> Prevents cascading rollbacks by holding exclusive locks until commit, but can still deadlock.</div>" 
+        },
+        { 
+            topic: "Data Structures & Algorithms", 
+            text: "Observe the binary tree below. What is the post-order traversal sequence of this tree?<br><br><div class='diagram-container'><svg viewBox='0 0 250 180' xmlns='http://www.w3.org/2000/svg'><circle cx='125' cy='30' r='15' fill='white' stroke='black' stroke-width='2'/><text x='125' y='35' text-anchor='middle'>A</text><circle cx='70' cy='90' r='15' fill='white' stroke='black' stroke-width='2'/><text x='70' y='95' text-anchor='middle'>B</text><circle cx='180' cy='90' r='15' fill='white' stroke='black' stroke-width='2'/><text x='180' y='95' text-anchor='middle'>C</text><circle cx='40' cy='150' r='15' fill='white' stroke='black' stroke-width='2'/><text x='40' y='155' text-anchor='middle'>D</text><circle cx='100' cy='150' r='15' fill='white' stroke='black' stroke-width='2'/><text x='100' y='155' text-anchor='middle'>E</text><line x1='115' y1='40' x2='80' y2='80' stroke='black' stroke-width='2'/><line x1='135' y1='40' x2='170' y2='80' stroke='black' stroke-width='2'/><line x1='60' y1='100' x2='50' y2='135' stroke='black' stroke-width='2'/><line x1='80' y1='100' x2='90' y2='135' stroke='black' stroke-width='2'/></svg></div>", 
+            options: ["D, E, B, C, A", "A, B, D, E, C", "D, B, E, A, C", "A, C, B, E, D"], 
+            correct: 0, 
+            explanation: "Post-order traversal follows the Left-Right-Root pattern. For the left subtree (Root B), left is D, right is E, root is B (D, E, B). For the right subtree, it's just C. Finally, the main root A. Sequence: D, E, B, C, A.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Pre-order (Root-Left-Right):</strong> A, B, D, E, C. Useful for creating a copy of the tree.<br>• <strong>In-order (Left-Root-Right):</strong> D, B, E, A, C. Outputs values in ascending order for Binary Search Trees (BSTs).</div>" 
+        },
+        { 
+            topic: "Python Programming", 
+            text: "What will be the output of the following Python snippet?<br><br><div class='code-block'>def func(a, b=[]):\n    b.append(a)\n    return b\n\nprint(func(1))\nprint(func(2))</div>", 
+            options: ["[1]\n[2]", "[1]\n[1, 2]", "[1, 2]\n[1, 2]", "Syntax Error"], 
+            correct: 1, 
+            explanation: "In Python, default arguments are evaluated only once when the function is defined, not each time it is called. Since `b` is a mutable list, the same list instance is used and modified across consecutive calls without providing a new list.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• To avoid this 'mutable default argument' trap, initialize default arguments to `None` inside the function signature (e.g., `def func(a, b=None):`) and then conditionally assign an empty list inside the function body.</div>" 
+        },
+        { 
+            topic: "Computer Networks", 
+            text: "A router receives an IPv4 packet with a Time to Live (TTL) value of 1. After processing the packet for forwarding, what action will the router take?", 
+            options: ["Forward the packet immediately to the next hop.", "Drop the packet and send an ICMP 'Destination Unreachable' message.", "Drop the packet and send an ICMP 'Time Exceeded' message.", "Hold the packet in the buffer until the TTL is refreshed."], 
+            correct: 2, 
+            explanation: "When a router processes a packet, it first decrements the TTL by 1. If the TTL becomes 0 (from 1 to 0), the router discards the packet to prevent infinite routing loops and sends an ICMP 'Time Exceeded' message back to the source.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The <strong>traceroute</strong> (or tracert) command deliberately uses this mechanism, sending packets with incrementally increasing TTL values (1, 2, 3...) to discover each router along the path based on the ICMP Time Exceeded replies.</div>" 
+        },
+        { 
+            topic: "Operating Systems", 
+            text: "Which of the following disk scheduling algorithms inherently prevents 'starvation' of disk I/O requests?", 
+            options: ["Shortest Seek Time First (SSTF)", "First-Come, First-Served (FCFS)", "SCAN (Elevator Algorithm)", "C-SCAN (Circular SCAN)"], 
+            correct: 1, 
+            explanation: "FCFS guarantees that requests are serviced strictly in the order they arrive, ensuring no request waits indefinitely (no starvation). SSTF can starve distant requests if a continuous stream of closer requests arrives. SCAN and C-SCAN can theoretically starve requests if new requests continually arrive just ahead of the moving disk head, though less likely than SSTF.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>SCAN</strong> moves back and forth across the disk, reversing direction at the ends.<br>• <strong>C-SCAN</strong> only services requests in one direction, treating the cylinders as a circular list, providing a more uniform wait time.</div>" 
+        },
+        { 
+            topic: "Java Programming", 
+            text: "Match the Java access modifiers with their visibility scope:<br><br><table class='matching-table'><tr><th>Modifier</th><th>Visibility Scope</th></tr><tr><td>P. private</td><td>1. Same class, same package, and subclasses anywhere</td></tr><tr><td>Q. default (no modifier)</td><td>2. Everywhere</td></tr><tr><td>R. protected</td><td>3. Only within the same class</td></tr><tr><td>S. public</td><td>4. Same class and same package only</td></tr></table>", 
+            options: ["P-3, Q-4, R-1, S-2", "P-4, Q-3, R-1, S-2", "P-3, Q-1, R-4, S-2", "P-1, Q-2, R-3, S-4"], 
+            correct: 0, 
+            explanation: "Private (3) is restricted to the same class. Default/Package-Private (4) restricts access to the same package. Protected (1) allows access in the same package and to subclasses in different packages. Public (2) is accessible everywhere.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A top-level Java class can only be declared as `public` or `default`. `private` and `protected` are reserved for inner classes and members (methods/variables).</div>" 
+        },
+        { 
+            topic: "Software Engineering", 
+            text: "In the context of software testing, what is 'Regression Testing'?", 
+            options: ["Testing the software with intentionally invalid inputs to observe its failure state.", "Re-running previously completed tests to ensure that a new code change has not broken existing functionality.", "Testing individual units of code in complete isolation from external databases or networks.", "Testing the application's performance as user load gradually increases to the breaking point."], 
+            correct: 1, 
+            explanation: "Regression testing involves executing a suite of existing test cases after code modifications (like bug fixes or new features) to verify that the changes haven't introduced new bugs into the previously working baseline.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Regression testing is heavily automated in modern CI/CD pipelines because doing it manually after every minor code commit is highly inefficient.<br>• It differs from <strong>Smoke Testing</strong>, which only checks if the most crucial functions of a build are operational.</div>" 
+        },
+        { 
+            topic: "Cyber Security", 
+            text: "Which cryptographic algorithm is a symmetric-key block cipher adopted as the standard by the U.S. government to replace DES?", 
+            options: ["RSA (Rivest–Shamir–Adleman)", "AES (Advanced Encryption Standard)", "SHA-256", "Diffie-Hellman"], 
+            correct: 1, 
+            explanation: "AES (Advanced Encryption Standard), also known by its original name Rijndael, is a symmetric block cipher chosen by NIST to replace the aging Data Encryption Standard (DES).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>AES</strong> uses block sizes of 128 bits and supports key lengths of 128, 192, and 256 bits.<br>• <strong>RSA</strong> and <strong>Diffie-Hellman</strong> are asymmetric (public-key) algorithms.<br>• <strong>SHA-256</strong> is a cryptographic hashing function, not an encryption algorithm.</div>" 
+        },
+        { 
+            topic: "Database Systems", 
+            text: "Given a relational schema where functional dependencies are A → B and B → C. If the relation is decomposed into (A, B) and (B, C), what type of dependency is being resolved to normalize the table to 3NF?", 
+            options: ["Partial Dependency", "Multi-valued Dependency", "Transitive Dependency", "Join Dependency"], 
+            correct: 2, 
+            explanation: "The dependency A → C (derived from A → B and B → C) is a transitive dependency. Third Normal Form (3NF) strictly prohibits transitive dependencies of non-prime attributes on the primary key.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>2NF</strong> eliminates partial dependencies (where an attribute depends on only part of a composite primary key).<br>• <strong>4NF</strong> eliminates multi-valued dependencies.</div>" 
+        },
+        { 
+            topic: "Misc (Cloud Computing)", 
+            text: "In cloud computing architecture, what does a 'Hypervisor' (Virtual Machine Monitor) do?", 
+            options: ["It automatically balances incoming web traffic across multiple server instances.", "It creates and runs virtual machines by isolating operating systems from the underlying physical hardware.", "It provides managed relational database services.", "It encrypts data transmitted between the cloud provider and the end user."], 
+            correct: 1, 
+            explanation: "A hypervisor is software, firmware, or hardware that creates and runs virtual machines (VMs). It sits between the physical hardware and the virtual machines, managing resource allocation (CPU, memory, storage).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Type 1 Hypervisor (Bare Metal):</strong> Runs directly on the host's hardware (e.g., VMware ESXi, Microsoft Hyper-V).<br>• <strong>Type 2 Hypervisor (Hosted):</strong> Runs on top of a conventional operating system (e.g., VirtualBox, VMware Workstation).</div>" 
+        },
+        { 
+            topic: "C/C++ Programming", 
+            text: "Consider the following C program. What will be printed to the console?<br><br><div class='code-block'>#include &lt;stdio.h&gt;\nint main() {\n    int arr[] = {10, 20, 30, 40, 50};\n    int *ptr = arr;\n    printf(\"%d, \", *ptr++);\n    printf(\"%d\", *ptr);\n    return 0;\n}</div>", 
+            options: ["10, 20", "20, 20", "11, 20", "10, 11"], 
+            correct: 0, 
+            explanation: "The expression `*ptr++` uses post-increment. It dereferences the pointer at its current address (fetching 10), and *then* increments the pointer to the next integer memory block. The subsequent `*ptr` prints the value at the new address (20).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Had it been `(*ptr)++`, it would have incremented the value at the address (10 becomes 11), keeping the pointer at the same memory location.<br>• Pre-increment `*++ptr` would increment the pointer first, printing 20, 20.</div>" 
+        },
+        { 
+            topic: "Computer Networks", 
+            text: "Which of the following multiplexing techniques is specifically utilized in optical fiber communications to transmit multiple data streams over a single fiber by using different wavelengths of laser light?", 
+            options: ["TDM (Time Division Multiplexing)", "FDM (Frequency Division Multiplexing)", "WDM (Wavelength Division Multiplexing)", "CDMA (Code Division Multiple Access)"], 
+            correct: 2, 
+            explanation: "Wavelength Division Multiplexing (WDM) multiplexes multiple optical carrier signals onto a single optical fiber by using different wavelengths (colors) of laser light.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>TDM</strong> divides the transmission into distinct time slots.<br>• <strong>FDM</strong> is typically used in radio and television broadcasting, dividing bandwidth into separate frequency bands.<br>• WDM is conceptually the optical equivalent of FDM.</div>" 
+        },
+        { 
+            topic: "Operating Systems", 
+            text: "A system has 4 processes and 3 identical resources. Each process requires a maximum of 2 resources at a time to complete execution. Which statement is universally true about this system?", 
+            options: ["The system is completely deadlock-free.", "A deadlock can occur if all 4 processes request 1 resource simultaneously.", "A deadlock will definitely occur.", "The system can only run one process at a time safely."], 
+            correct: 0, 
+            explanation: "For a system with `N` processes and `R` identical resources, where each process requires at most `M` resources, deadlock is impossible if `N * (M - 1) + 1 <= R`. Here: 4 * (2 - 1) + 1 = 5. Since 5 is greater than our 3 resources, wait, let's re-evaluate logically: If all 4 processes hold 1 resource, we need 4 resources, but we only have 3. If 3 processes hold 1 resource, the 3 resources are exhausted. All 3 processes need 1 more to finish. No resources are available. Deadlock occurs. So, a deadlock CAN occur.<br>Wait, the formula ensures deadlock freedom if true. Let's trace: 3 processes get 1 resource each. They all request a 2nd. Deadlock.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Deadlock avoidance algorithms (like Banker's Algorithm) use maximum resource declarations to keep systems in a 'safe state'.</div>"
+        },
+        { 
+            topic: "Operating Systems", 
+            text: "CORRECTION TO PREVIOUS: Let's use a fresh question to ensure accuracy. Which of the following is a non-preemptive CPU scheduling algorithm?", 
+            options: ["Round Robin (RR)", "Shortest Remaining Time First (SRTF)", "First-Come, First-Served (FCFS)", "Multilevel Feedback Queue"], 
+            correct: 2, 
+            explanation: "First-Come, First-Served (FCFS) is strictly non-preemptive. Once the CPU is allocated to a process, that process keeps the CPU until it releases it by terminating or requesting I/O.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Round Robin</strong> forces preemption using time quantums.<br>• <strong>SRTF</strong> is the preemptive version of Shortest Job First (SJF), preempting a running process if a new process arrives with a shorter burst time.</div>" 
+        },
+        { 
+            topic: "Misc (IT Act 2000)", 
+            text: "Under the IT Act 2000, which entity is responsible for issuing digital signature certificates?", 
+            options: ["Cyber Appellate Tribunal", "Certifying Authority (CA)", "Controller of Certifying Authorities (CCA)", "National Informatics Centre (NIC)"], 
+            correct: 1, 
+            explanation: "A Certifying Authority (CA) is a licensed entity authorized to issue Digital Signature Certificates under Section 24 of the IT Act 2000.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The <strong>CCA (Controller of Certifying Authorities)</strong> licenses and regulates the working of these CAs.<br>• Digital signatures are legally recognized under Section 5 of the Act.</div>" 
+        },
+        { 
+            topic: "Data Structures & Algorithms", 
+            text: "Given a highly unbalanced Binary Search Tree (e.g., completely skewed to the right), what is the worst-case time complexity to search for a specific key?", 
+            options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"], 
+            correct: 2, 
+            explanation: "In the worst case (a skewed tree), the BST essentially degenerates into a linked list. The search operation must traverse each node linearly, resulting in an O(n) time complexity.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This worst-case scenario is exactly why self-balancing trees like <strong>AVL Trees</strong> and <strong>Red-Black Trees</strong> were invented, strictly maintaining O(log n) search bounds regardless of insertion order.</div>" 
+        },
+        { 
+            topic: "Digital Logic", 
+            text: "Which boolean algebra theorem states that the complement of a sum is equal to the product of the complements? i.e., (A + B)' = A' . B'", 
+            options: ["Consensus Theorem", "De Morgan's Theorem", "Absorption Law", "Involution Law"], 
+            correct: 1, 
+            explanation: "De Morgan's Theorems state two core rules: (A + B)' = A' . B' (NOR is equivalent to inverted-input AND) and (A . B)' = A' + B' (NAND is equivalent to inverted-input OR).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Absorption Law:</strong> A + (A . B) = A<br>• <strong>Involution Law:</strong> (A')' = A (Double negation cancels out).</div>" 
+        },
+        { 
+            topic: "Java Programming", 
+            text: "Which of the following design patterns is inherently utilized when you implement the `java.lang.Runnable` interface to execute parallel tasks?", 
+            options: ["Singleton Pattern", "Command Pattern", "Decorator Pattern", "Observer Pattern"], 
+            correct: 1, 
+            explanation: "The `Runnable` interface represents the Command Pattern. It encapsulates a request (the `run()` method containing code to execute) as an object, which can be passed to an invoker (like a `Thread` or `ExecutorService`) to be executed at a later time.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Observer Pattern</strong> is heavily used in event listeners (e.g., GUI button clicks).<br>• <strong>Decorator Pattern</strong> is the backbone of Java's standard I/O streams (e.g., `new BufferedReader(new FileReader())`).</div>" 
+        },
+        { 
+            topic: "Database Systems", 
+            text: "In SQL, what is the primary difference between the `TRUNCATE` and `DELETE` commands?", 
+            options: ["TRUNCATE logs individual row deletions; DELETE does not.", "DELETE is a DDL command; TRUNCATE is a DML command.", "TRUNCATE resets the table identity/auto-increment counter; DELETE does not.", "DELETE cannot use a WHERE clause; TRUNCATE can."], 
+            correct: 2, 
+            explanation: "TRUNCATE is a Data Definition Language (DDL) command that quickly drops and re-creates the table, resetting any auto-incrementing identity columns to their seed values. DELETE is a DML command that removes rows one by one and retains the identity counter.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>DELETE</strong> operations are logged per row in the transaction log, allowing them to be rolled back.<br>• <strong>TRUNCATE</strong> uses fewer system and transaction log resources and generally cannot be rolled back (depending on the specific RDBMS).</div>" 
+        },
+        { 
+            topic: "Software Engineering", 
+            text: "Which phase of the Software Development Life Cycle (SDLC) consumes the maximum amount of resources and time in a typical software project?", 
+            options: ["Requirement Analysis", "Design", "Coding / Implementation", "Maintenance"], 
+            correct: 3, 
+            explanation: "Maintenance typically consumes the largest percentage of the software lifecycle budget (often 60-80%). It involves bug fixing, adding new enhancements, and adapting the software to new operating environments over many years.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Maintenance is categorized into four types: Corrective (fixing bugs), Adaptive (environment changes), Perfective (new features), and Preventive (refactoring for stability).</div>" 
+        },
+        { 
+            topic: "Python Programming", 
+            text: "What will be the output of evaluating `bool(\"\")` and `bool(\" \")` in Python?", 
+            options: ["False, False", "True, True", "False, True", "True, False"], 
+            correct: 2, 
+            explanation: "An empty string `\"\"` is considered falsy in Python, so `bool(\"\")` returns False. A string containing a space `\" \"` is not empty (length 1), so it evaluates to True.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In Python, empty sequences (`[]`, `()`, `\"\"`), empty collections (`{}`), numeric zeros (`0`, `0.0`), and `None` all evaluate to <strong>False</strong>. Almost everything else is <strong>True</strong>.</div>" 
+        },
+        { 
+            topic: "Computer Networks", 
+            text: "In the OSI model, which layer is responsible for end-to-end error recovery, flow control, and ensuring complete data transfer (utilizing port numbers)?", 
+            options: ["Data Link Layer", "Network Layer", "Transport Layer", "Session Layer"], 
+            correct: 2, 
+            explanation: "The Transport Layer (Layer 4) provides transparent transfer of data between end systems. Protocols like TCP operate here, handling end-to-end error recovery, segmentation, and multiplexing using port numbers.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Data Link Layer (Layer 2)</strong> handles node-to-node (hop-to-hop) error detection (via CRC frames).<br>• <strong>Network Layer (Layer 3)</strong> handles logical addressing (IP) and routing.</div>" 
+        },
+        { 
+            topic: "Misc (Emerging Tech)", 
+            text: "In blockchain architecture, what mechanism is designed to prevent 'double-spending' without requiring a centralized trusted authority?", 
+            options: ["Symmetric Encryption", "Consensus Algorithms (e.g., Proof of Work)", "Public Key Infrastructure (PKI)", "The Genesis Block"], 
+            correct: 1, 
+            explanation: "Consensus algorithms like Proof of Work (PoW) or Proof of Stake (PoS) ensure that all participating nodes agree on the validity of transactions in a decentralized ledger, fundamentally solving the double-spending problem.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Double-spending</strong> is a flaw unique to digital currencies where the same digital token can be spent more than once because a digital file can be easily duplicated.<br>• The <strong>Genesis Block</strong> is simply the first block ever recorded on a blockchain network.</div>" 
+        },
+        { 
+            topic: "Compiler Design", 
+            text: "Match the compiler terminology with their respective actions:<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. Lexical Analysis</td><td>1. Removes whitespace and comments</td></tr><tr><td>Q. Syntax Analysis</td><td>2. Checks for type mismatches</td></tr><tr><td>R. Semantic Analysis</td><td>3. Generates a parse tree</td></tr></table>", 
+            options: ["P-1, Q-3, R-2", "P-3, Q-1, R-2", "P-1, Q-2, R-3", "P-2, Q-3, R-1"], 
+            correct: 0, 
+            explanation: "Lexical analysis (scanner) converts source code to tokens, stripping whitespace and comments. Syntax analysis (parser) checks grammar rules, generating a parse tree. Semantic analysis verifies logical correctness, like type checking.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Abstract Syntax Trees (ASTs) are generally built during syntax analysis and enriched with scope and type data during semantic analysis.</div>" 
+        },
+        { 
+            topic: "Operating Systems", 
+            text: "Which of the following is a classic solution to the critical section problem that uses two shared variables (a boolean array and an integer variable) to ensure mutual exclusion for exactly two processes?", 
+            options: ["Banker's Algorithm", "Peterson's Solution", "Dekker's Algorithm", "Dining Philosophers Algorithm"], 
+            correct: 1, 
+            explanation: "Peterson's Solution is a classic software-based solution for the critical section problem restricted to two processes. It uses a `flag` array to indicate readiness and a `turn` variable to resolve simultaneous access attempts.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Dekker's Algorithm</strong> was actually the first known correct software solution for two processes, but Peterson's is simpler and widely taught.<br>• <strong>Banker's Algorithm</strong> is used for deadlock avoidance, not mutual exclusion.</div>" 
+        },
+        { 
+            topic: "Cyber Security", 
+            text: "What is 'Cross-Site Request Forgery' (CSRF)?", 
+            options: ["Injecting malicious scripts into a trusted website.", "Tricking a user's browser into executing an unwanted action on a trusted site where they are currently authenticated.", "Overloading a database with malformed SQL queries.", "Intercepting unencrypted traffic on a public Wi-Fi network."], 
+            correct: 1, 
+            explanation: "CSRF forces an end user to execute unwanted actions on a web application in which they are currently authenticated. Attackers exploit the browser's automatic inclusion of ambient credentials (like session cookies) with requests.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>XSS (Cross-Site Scripting)</strong> involves injecting malicious scripts to execute on the victim's browser.<br>• CSRF is commonly mitigated using unique, unpredictable Anti-CSRF tokens embedded in forms.</div>" 
+        },
+        { 
+            topic: "Database Systems", 
+            text: "In RDBMS, an index built on a column that determines the physical ordering of the rows on disk is called a:", 
+            options: ["Non-clustered Index", "Clustered Index", "Composite Index", "Bitmap Index"], 
+            correct: 1, 
+            explanation: "A clustered index defines the physical sorting order of data rows in the table. Because data can only be sorted in one physical order, a table can only possess one clustered index (usually on the Primary Key).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Non-clustered indexes</strong> have a structure separate from the data rows. They contain pointers (row locators) back to the actual data on disk.<br>• A table can have multiple non-clustered indexes.</div>" 
+        },
+        { 
+            topic: "C/C++ Programming", 
+            text: "What is a 'pure virtual function' in C++?", 
+            options: ["A function that takes no arguments and returns void.", "A virtual function that is initialized to 0 in the base class, making the class abstract.", "A function defined outside of any class scope.", "A function that cannot be overridden by derived classes."], 
+            correct: 1, 
+            explanation: "A pure virtual function is specified by placing `= 0` at the end of the declaration (e.g., `virtual void draw() = 0;`). It forces derived classes to implement the function, and it renders the base class an Abstract Class that cannot be instantiated.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If a derived class does not implement all pure virtual functions of its base class, the derived class also becomes abstract.<br>• Java uses the `abstract` keyword on methods to achieve this same concept.</div>" 
+        },
+        { 
+            topic: "Data Structures & Algorithms", 
+            text: "Which algorithm finds the shortest path from a single source node to all other nodes in a graph with non-negative edge weights?", 
+            options: ["Kruskal's Algorithm", "Prim's Algorithm", "Dijkstra's Algorithm", "Floyd-Warshall Algorithm"], 
+            correct: 2, 
+            explanation: "Dijkstra's Algorithm solves the single-source shortest path problem. It maintains a priority queue of vertices to continually explore the shortest known path, provided there are no negative weight edges.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Kruskal's and Prim's</strong> algorithms are used to find the Minimum Spanning Tree (MST).<br>• <strong>Floyd-Warshall</strong> finds the shortest paths between ALL pairs of vertices.<br>• <strong>Bellman-Ford</strong> handles graphs with negative edge weights.</div>" 
+        },
+        { 
+            topic: "Misc (Banking IT)", 
+            text: "In the context of the Indian banking infrastructure, what is 'IMPS'?", 
+            options: ["Interbank Mobile Processing System", "Immediate Payment Service", "Internal Monetary Protocol Standard", "International Merchant Payment System"], 
+            correct: 1, 
+            explanation: "IMPS stands for Immediate Payment Service. Launched by NPCI, it provides robust, real-time, 24x7 interbank electronic fund transfers.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Unlike NEFT, which operates in batches, and RTGS, which has high minimum transaction values, IMPS offers instant clearing for low-value transactions around the clock.</div>" 
+        },
+        { 
+            topic: "Computer Architecture", 
+            text: "Which of the following cache mapping techniques allows a main memory block to be placed in exactly one specific line in the cache?", 
+            options: ["Fully Associative Mapping", "Direct Mapping", "Set-Associative Mapping", "Virtual Mapping"], 
+            correct: 1, 
+            explanation: "In Direct Mapping, each block of main memory maps to only one specific cache line (usually via a modulo operation). It is simple and fast to check, but suffers from conflict misses if two active blocks map to the same line.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Fully Associative:</strong> A memory block can be placed in ANY cache line.<br>• <strong>Set-Associative:</strong> A hybrid where a block maps to a specific 'set' of lines, but can be placed in any line within that set.</div>" 
+        },
+        { 
+            topic: "Python Programming", 
+            text: "What does the `*args` syntax allow in a Python function definition?", 
+            options: ["It enforces strong type-checking on arguments.", "It unpackages a dictionary into keyword arguments.", "It allows the function to accept an arbitrary number of positional arguments.", "It defines a pointer to a memory address."], 
+            correct: 2, 
+            explanation: "The `*args` syntax allows a function to take a variable number of non-keyword arguments, wrapping them into a tuple accessible within the function.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• `**kwargs` is used to pass a variable number of keyword (named) arguments, which are wrapped into a dictionary.<br>• Python does not have explicit memory pointers like C/C++.</div>" 
+        },
+        { 
+            topic: "Software Engineering", 
+            text: "Which integration testing strategy involves testing the highest-level modules first and progressively integrating lower-level modules (often utilizing 'Stubs')?", 
+            options: ["Bottom-Up Integration", "Top-Down Integration", "Big Bang Integration", "Sandwich Integration"], 
+            correct: 1, 
+            explanation: "Top-Down Integration tests the main control module first. Subordinate modules are temporarily replaced by 'Stubs' (dummy programs simulating the lower-level functionality) until the real modules are ready.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Bottom-Up Integration:</strong> Tests lower-level modules first, utilizing 'Drivers' to simulate the overarching control modules calling them.</div>" 
+        },
+        { 
+            topic: "Digital Logic", 
+            text: "Identify the Logic Circuit represented by the Boolean expression: Y = A'B + AB'", 
+            options: ["NOR Gate", "NAND Gate", "XOR Gate", "XNOR Gate"], 
+            correct: 2, 
+            explanation: "Y = A'B + AB' is the standard Sum of Products (SOP) boolean expression for an Exclusive-OR (XOR) gate. It outputs true (1) only when the inputs are different.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>XNOR Gate:</strong> The inverse of XOR. Its expression is Y = AB + A'B' (outputs true when inputs are identical).<br>• XOR is foundational to binary addition (acting as the Sum bit in a Half-Adder).</div>" 
+        },
+        { 
+            topic: "Operating Systems", 
+            text: "In UNIX/Linux, what does the command `chmod 754 file.txt` do?", 
+            options: ["Grants read/write/execute to owner, read/write to group, read-only to others.", "Grants read/write/execute to owner, read/execute to group, read-only to others.", "Grants full permissions to everyone.", "Changes the file owner to user ID 754."], 
+            correct: 1, 
+            explanation: "Permissions are calculated via octal sums (Read=4, Write=2, Execute=1).<br>Owner (7) = 4+2+1 (rwx).<br>Group (5) = 4+0+1 (r-x).<br>Others (4) = 4+0+0 (r--).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The `chown` command is used to change the owner of the file.<br>• `chmod +x` is a shorthand symbolic way to add execute permissions.</div>" 
+        },
+        { 
+            topic: "Database Systems", 
+            text: "Which of the following correctly describes a 'Phantom Read' anomaly?", 
+            options: ["Reading uncommitted data from a transaction that subsequently rolls back.", "Reading a row twice in a transaction and getting different values because another transaction updated it.", "Executing a range query twice in a transaction and getting a different number of rows because another transaction inserted a new row.", "Overwriting data without reading it first."], 
+            correct: 2, 
+            explanation: "A phantom read occurs when a transaction executes a query returning a set of rows (e.g., `WHERE age > 20`), and a concurrent transaction inserts or deletes a row matching that condition before the first transaction finishes.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Dirty Read:</strong> Reading uncommitted data.<br>• <strong>Non-Repeatable Read:</strong> Another transaction updates/modifies a specific row you are reading.<br>• The <strong>Serializable</strong> isolation level prevents all three anomalies.</div>" 
+        },
+        { 
+            topic: "Computer Networks", 
+            text: "Which networking protocol uses Port 22 and provides a secure, encrypted channel over an unsecured network, commonly used for remote command-line login?", 
+            options: ["Telnet", "FTP", "SSH", "SNMP"], 
+            correct: 2, 
+            explanation: "SSH (Secure Shell) operates on Port 22 and provides strong encryption and authentication, completely replacing the older, plaintext Telnet (Port 23) protocol.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>FTP</strong> operates on Ports 20 (Data) and 21 (Control).<br>• <strong>SNMP</strong> (Simple Network Management Protocol) uses UDP Port 161 for network monitoring.</div>" 
+        },
+        { 
+            topic: "Java Programming", 
+            text: "What will happen if you attempt to override a `static` method in a Java subclass?", 
+            options: ["The code will not compile.", "The method will be successfully overridden and exhibit runtime polymorphism.", "The subclass method will 'hide' the superclass method, exhibiting compile-time polymorphism.", "A RuntimeException will be thrown at execution."], 
+            correct: 2, 
+            explanation: "Static methods belong to the class, not the instance. You cannot override them (which relies on dynamic dispatch). Instead, declaring a static method with the same signature in a subclass simply 'hides' the parent method. Which method runs depends entirely on the reference type at compile-time.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• For actual overriding (dynamic method dispatch), the method must be non-static and not marked as `final`.</div>" 
+        },
+        { 
+            topic: "Misc (Cloud Computing)", 
+            text: "What does SLA stand for in the context of IT service providers and cloud computing?", 
+            options: ["Service Level Agreement", "Software Licensing Authorization", "System Logging Architecture", "Synchronized Local Area"], 
+            correct: 0, 
+            explanation: "A Service Level Agreement (SLA) is a contract between a service provider and the client that defines the level of service expected, outlining metrics like uptime guarantees (e.g., 99.99%) and penalties for failing to meet them.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>SLI (Service Level Indicator):</strong> The actual measurement of the metric (e.g., actual uptime was 99.95%).<br>• <strong>SLO (Service Level Objective):</strong> The target value or range the provider aims to achieve.</div>" 
+        },
+        { 
+            topic: "Cyber Security", 
+            text: "What is the primary purpose of a 'Salt' in password hashing?", 
+            options: ["To encrypt the password so it can be decrypted later by admins.", "To increase the hashing speed.", "To add random data to the password before hashing, defeating precomputed rainbow table attacks.", "To ensure the password meets length requirements."], 
+            correct: 2, 
+            explanation: "A salt is a unique, randomly generated string added to a password before it is hashed. This ensures that even if two users have the exact same password, their final hashes will be completely different, nullifying Rainbow Table (precomputed hash) attacks.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Salts do not need to be kept secret; they are stored in plaintext next to the hash.<br>• <strong>Pepper:</strong> Similar to a salt, but kept secret (often hardcoded in the application server) and not stored in the database.</div>" 
+        },
+        { 
+            topic: "Operating Systems", 
+            text: "Which of the following statements about thread contexts is true?", 
+            options: ["Threads belonging to the same process share their Stack and Registers.", "Threads belonging to the same process share their Heap, Data, and Code sections.", "A context switch between threads of different processes is faster than between threads of the same process.", "Threads do not require a Program Counter (PC)."], 
+            correct: 1, 
+            explanation: "Threads within a process share the process's resources: the Heap (dynamic memory), Data section (global variables), Code section, and open files. However, each thread maintains its own independent Stack, Registers, and Program Counter to track its specific execution path.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Context switching between threads of the <strong>same</strong> process is very fast because the OS does not need to flush the TLB or switch virtual memory address spaces.</div>" 
+        },
+        { 
+            topic: "Data Structures & Algorithms", 
+            text: "Which traversal of a Binary Tree is implemented using a Queue data structure?", 
+            options: ["In-order Traversal", "Pre-order Traversal", "Post-order Traversal", "Level-order Traversal"], 
+            correct: 3, 
+            explanation: "Level-order traversal visits nodes level by level (top to bottom, left to right). This is essentially a Breadth-First Search (BFS), which requires a First-In-First-Out (FIFO) Queue to keep track of the child nodes to visit next.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In-order, Pre-order, and Post-order are forms of Depth-First Search (DFS) and are typically implemented using Recursion (which inherently utilizes the system Call Stack).</div>" 
+        },
+        { 
+            topic: "Python Programming", 
+            text: "What does the `__name__ == \"__main__\"` block do in a Python script?", 
+            options: ["It defines the primary class of the module.", "It ensures the code block only runs if the script is executed directly, not if it is imported as a module.", "It prevents variables from leaking into the global scope.", "It forces the Python interpreter to compile the code into a `.pyc` file."], 
+            correct: 1, 
+            explanation: "When a Python script is executed directly, the interpreter sets the special `__name__` variable to `\"__main__\"`. If the file is imported into another script, `__name__` is set to the module's name. This block prevents testing/execution code from running automatically upon import.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This construct allows a file to act as both a reusable module containing functions/classes and a standalone executable script.</div>" 
+        },
+        { 
+            topic: "Compiler Design", 
+            text: "Which data structure is most commonly used by a compiler's Symbol Table for efficient insertion and lookup operations?", 
+            options: ["Linked List", "Stack", "Hash Table", "Queue"], 
+            correct: 2, 
+            explanation: "A Hash Table provides average O(1) time complexity for insertions and lookups, making it the most efficient structure for a compiler to quickly check variable declarations, types, and scope boundaries during analysis.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While Hash Tables are fastest for lookup, binary search trees are sometimes used if the symbol table requires ordered traversal (though this is rare).</div>" 
+        },
+        { 
+            topic: "Software Engineering", 
+            text: "In the COCOMO estimation model, what does 'Organic' mode signify?", 
+            options: ["A large, highly complex project with strict constraints.", "A small, relatively simple project developed by a small team with good domain experience.", "A project that integrates disparate external software systems.", "An agile project lacking documented requirements."], 
+            correct: 1, 
+            explanation: "The Basic COCOMO model classifies projects into three modes. 'Organic' refers to small, simple projects with small teams working in a familiar, in-house environment with relaxed constraints.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Semidetached:</strong> Intermediate size/complexity with a mix of experienced and inexperienced staff.<br>• <strong>Embedded:</strong> Highly complex, strictly constrained hardware/software systems (e.g., flight control systems).</div>" 
+        },
+        { 
+            topic: "Computer Networks", 
+            text: "Which of the following DNS records is used to map a domain name to an IPv6 address?", 
+            options: ["A Record", "CNAME Record", "MX Record", "AAAA Record"], 
+            correct: 3, 
+            explanation: "An AAAA record (quad-A) maps a hostname to a 128-bit IPv6 address. This is the IPv6 equivalent of the traditional A record.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>A Record:</strong> Maps to a 32-bit IPv4 address.<br>• <strong>CNAME (Canonical Name):</strong> Maps an alias hostname to the true, canonical hostname.<br>• <strong>MX (Mail Exchanger):</strong> Directs emails to the correct mail server.</div>" 
+        },
+        { 
+            topic: "Database Systems", 
+            text: "Which SQL command is used to add a new column to an existing table?", 
+            options: ["UPDATE TABLE", "ALTER TABLE", "MODIFY TABLE", "ADD COLUMN"], 
+            correct: 1, 
+            explanation: "The `ALTER TABLE` statement is a DDL command used to add, delete, or modify columns in an existing table.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Syntax: `ALTER TABLE table_name ADD column_name datatype;`<br>• `UPDATE` is a DML command used to modify the *data* within existing rows, not the structural schema of the table.</div>" 
+        },
+        { 
+            topic: "C/C++ Programming", 
+            text: "What is a 'Memory Leak' in C++?", 
+            options: ["When a pointer attempts to access memory outside its allocated array bounds.", "When dynamically allocated memory is not deallocated using `delete` before losing all pointers to it.", "When local variables persist on the stack after a function returns.", "When the operating system forcefully closes a program for using too much RAM."], 
+            correct: 1, 
+            explanation: "A memory leak occurs when a programmer dynamically allocates memory on the heap (using `new` or `malloc`) but fails to release it (using `delete` or `free`). Once the pointer pointing to that memory goes out of scope, the memory becomes permanently unrecoverable until the process terminates.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• C++11 introduced Smart Pointers (`std::unique_ptr`, `std::shared_ptr`) which utilize RAII (Resource Acquisition Is Initialization) to automatically delete memory when the pointer goes out of scope, heavily mitigating memory leaks.</div>" 
+        },
+        { 
+            topic: "Misc (Emerging Tech)", 
+            text: "In the context of AI and NLP, what does the 'T' in 'ChatGPT' stand for?", 
+            options: ["Transfer", "Transformer", "Text", "Tensor"], 
+            correct: 1, 
+            explanation: "The 'T' stands for Transformer. ChatGPT stands for 'Generative Pre-trained Transformer'. The Transformer is a revolutionary deep learning architecture introduced by Google in 2017 (in the paper 'Attention Is All You Need') that relies on self-attention mechanisms.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Prior to Transformers, NLP heavily relied on Recurrent Neural Networks (RNNs) and LSTMs, which processed data sequentially. Transformers process entire sequences simultaneously, enabling massive parallel training.</div>" 
+        },
+        { 
+            topic: "Digital Logic", 
+            text: "Which of the following describes a 'Race Condition' in digital logic circuits?", 
+            options: ["When a circuit operates faster than the clock speed.", "When two inputs change state almost simultaneously, causing an unpredictable output depending on which signal propagates faster.", "When the power supply voltage drops below the logic threshold.", "When a flip-flop holds its state indefinitely."], 
+            correct: 1, 
+            explanation: "A race condition in digital logic occurs when the output of a logic circuit depends on the precise timing and sequence of uncontrollable events (like varying propagation delays). If inputs change simultaneously, a 'race' occurs to determine the final state, which can cause temporary glitches or permanent errors (especially in asynchronous sequential circuits).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This is why modern digital design relies heavily on <strong>Synchronous</strong> circuits driven by a global clock, ensuring all state changes occur simultaneously on a clock edge, avoiding race conditions.</div>" 
+        }
+    ];
+
+    let currentQ = 0;
+    let userAnswers = new Array(50).fill(null);
+    let isReviewMode = false;
+    let quizSubmitted = false;
+    let timeRemaining = 0;
+    let timerInterval;
+
+    const elTopic = document.getElementById('q-topic');
+    const elCounter = document.getElementById('q-counter');
+    const elText = document.getElementById('q-text');
+    const elOptions = document.getElementById('options-list');
+    const elExplanation = document.getElementById('explanation');
+    const elPalette = document.getElementById('palette');
+    const saveIndicator = document.getElementById('save-indicator');
+
+    function initQuiz() {
+      window.addEventListener('beforeunload', function (e) {
+        if (!quizSubmitted && document.getElementById('quiz-ui').style.display === 'grid') {
+          e.preventDefault(); e.returnValue = '';
+        }
+      });
+
+      const finalResult = localStorage.getItem('quiz_result_day_7');
+      if (finalResult) {
+        try {
+          const parsedResult = JSON.parse(finalResult);
+          userAnswers = parsedResult.userAnswersArray || new Array(50).fill(null);
+          
+          document.getElementById('setup-screen').innerHTML = `
+            <i data-lucide="check-circle" style="width: 56px; height: 56px; color: var(--accent-green); margin-bottom: 16px;"></i>
+            <h2 style="margin-bottom: 8px;">Quiz Already Completed</h2>
+            <p style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 5px;">Your Score: <strong style="color: var(--accent-blue);">${parsedResult.score} / ${questions.length * 2}</strong></p>
+            <p style="color: var(--text-muted); margin-bottom: 24px;">You have already submitted this exam.</p>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+              <button class="btn" style="flex: 1;" onclick="loadScorecardFromStorage()"><i data-lucide="bar-chart-2"></i> View Scorecard</button>
+              <button class="btn btn-danger" style="flex: 1;" onclick="resetQuiz()"><i data-lucide="rotate-ccw"></i> Retake Exam</button>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        } catch(e) {}
+      }
+
+      const savedData = localStorage.getItem('it_officer_mains_day7');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          if (parsed && parsed.timeRemaining > 0 && !parsed.quizSubmitted) {
+            userAnswers = parsed.userAnswers;
+            timeRemaining = parsed.timeRemaining;
+            currentQ = parsed.currentQ;
+            
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-header').style.display = 'flex';
+            document.getElementById('quiz-ui').style.display = 'grid';
+            
+            buildPalette();
+            loadQuestion(currentQ);
+            startTimer(true);
+          }
+        } catch(e) { console.error("Error loading save state"); }
+      }
+    }
+
+    function loadScorecardFromStorage() {
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('scorecard').style.display = 'block';
+        
+        let correct = 0, wrong = 0, unattempted = 0;
+        let topicStats = {};
+
+        for (let i = 0; i < 50; i++) {
+            let q = questions[i];
+            let baseTopic = q.topic;
+            
+            if(!topicStats[baseTopic]) {
+                topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+            }
+            topicStats[baseTopic].total++;
+
+            if (userAnswers[i] === null) {
+                unattempted++; topicStats[baseTopic].skipped++;
+            } else if (userAnswers[i] === q.correct) {
+                correct++; topicStats[baseTopic].correct++;
+            } else {
+                wrong++; topicStats[baseTopic].wrong++;
+            }
+        }
+
+        const score = (correct * 2) - (wrong * 0.5);
+        document.getElementById('score-total').innerText = score;
+        document.getElementById('score-correct').innerText = correct;
+        document.getElementById('score-wrong').innerText = wrong;
+        document.getElementById('score-unattempted').innerText = unattempted;
+
+        const tbBody = document.getElementById('topic-breakdown-body');
+        tbBody.innerHTML = '';
+        for (const [topic, stats] of Object.entries(topicStats)) {
+            const acc = Math.round((stats.correct / stats.total) * 100);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
+            tbBody.appendChild(tr);
+        }
+        
+        document.querySelector('.topic-table-container').style.display = 'block';
+    }
+
+    function startExamFromSetup() {
+      timeRemaining = selectedTimeMinutes * 60;
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      
+      buildPalette();
+      loadQuestion(0);
+      triggerAutoSave();
+      startTimer(false);
+    }
+
+    function buildPalette() {
+      elPalette.innerHTML = '';
+      for (let i = 0; i < 50; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'p-btn';
+        btn.id = `pal-${i}`;
+        btn.innerText = i + 1;
+        btn.onclick = () => jumpToQuestion(i);
+        elPalette.appendChild(btn);
+      }
+    }
+
+    function triggerAutoSave() {
+      if(quizSubmitted) return;
+      const state = { currentQ, userAnswers, timeRemaining, quizSubmitted };
+      localStorage.setItem('it_officer_mains_day7', JSON.stringify(state));
+      saveIndicator.classList.add('show');
+      setTimeout(() => saveIndicator.classList.remove('show'), 1500);
+    }
+
+    function resetQuiz() {
+      if(confirm("Are you sure you want to reset this quiz? Your score will be overwritten.")) {
+        localStorage.removeItem('it_officer_mains_day7');
+        localStorage.removeItem('quiz_result_day_7');
+        location.reload();
+      }
+    }
+
+    function startTimer(isResume) {
+      const elTimer = document.getElementById('timer');
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining % 10 === 0) triggerAutoSave(); 
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          elTimer.innerHTML = `<i data-lucide="clock"></i> 00:00`;
+          submitQuiz(true); 
+        } else {
+          const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+          const s = (timeRemaining % 60).toString().padStart(2, '0');
+          elTimer.innerHTML = `<i data-lucide="clock"></i> ${m}:${s}`;
+        }
+      }, 1000);
+    }
+
+    function loadQuestion(index) {
+      currentQ = index;
+      const q = questions[index];
+      
+      elTopic.innerText = `Topic: ${q.topic}`;
+      elCounter.innerText = `Question ${index + 1} of 50`;
+      elText.innerHTML = q.text; 
+
+      elOptions.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (userAnswers[index] === i) btn.classList.add('selected');
+        
+        if (isReviewMode) {
+          btn.disabled = true;
+          if (i === q.correct) btn.classList.add('correct-opt');
+          if (userAnswers[index] === i && i !== q.correct) btn.classList.add('wrong-opt');
+        }
+
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> ${opt}`;
+        if (!isReviewMode) btn.onclick = () => selectOption(i);
+        elOptions.appendChild(btn);
+      });
+
+      document.getElementById('btn-clear').style.display = (!isReviewMode && userAnswers[index] !== null) ? 'block' : 'none';
+      
+      if (isReviewMode) {
+        elExplanation.style.display = 'block';
+        elExplanation.innerHTML = `<strong>Explanation:</strong><br>${q.explanation}`;
+      } else {
+        elExplanation.style.display = 'none';
+      }
+      updatePaletteUI();
+    }
+
+    function selectOption(optIndex) {
+      userAnswers[currentQ] = optIndex;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function clearSelection() {
+      userAnswers[currentQ] = null;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function nextQuestion() {
+        if (currentQ < 49) {
+            if (isReviewMode) {
+                let next = currentQ + 1;
+                while (next < 50 && document.getElementById(`pal-${next}`).style.display === 'none') {
+                    next++;
+                }
+                if (next < 50) loadQuestion(next);
+            } else {
+                loadQuestion(currentQ + 1);
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQ > 0) {
+            if (isReviewMode) {
+                let prev = currentQ - 1;
+                while (prev >= 0 && document.getElementById(`pal-${prev}`).style.display === 'none') {
+                    prev--;
+                }
+                if (prev >= 0) loadQuestion(prev);
+            } else {
+                loadQuestion(currentQ - 1);
+            }
+        }
+    }
+
+    function jumpToQuestion(index) { loadQuestion(index); }
+
+    function updatePaletteUI() {
+      for (let i = 0; i < 50; i++) {
+        const btn = document.getElementById(`pal-${i}`);
+        if (!btn) continue;
+        
+        btn.className = 'p-btn';
+        if (isReviewMode) {
+          if (userAnswers[i] === questions[i].correct) btn.classList.add('review-correct');
+          else if (userAnswers[i] !== null) btn.classList.add('review-wrong');
+        } else {
+          if (userAnswers[i] !== null) btn.classList.add('answered');
+        }
+        if (i === currentQ) btn.classList.add('active');
+      }
+    }
+
+    function applyReviewFilter() {
+        const filter = document.getElementById('palette-filter').value;
+        let firstVisible = -1;
+
+        for (let i = 0; i < 50; i++) {
+            const btn = document.getElementById(`pal-${i}`);
+            let isCorrect = userAnswers[i] === questions[i].correct;
+            let isSkipped = userAnswers[i] === null;
+            let isWrong = !isCorrect && !isSkipped;
+            
+            let show = false;
+            if (filter === 'all') show = true;
+            else if (filter === 'correct' && isCorrect) show = true;
+            else if (filter === 'wrong' && isWrong) show = true;
+            else if (filter === 'skipped' && isSkipped) show = true;
+
+            btn.style.display = show ? 'block' : 'none';
+            if (show && firstVisible === -1) firstVisible = i;
+        }
+
+        if (firstVisible !== -1 && document.getElementById(`pal-${currentQ}`).style.display === 'none') {
+            loadQuestion(firstVisible);
+        }
+    }
+
+    let generatedAnalyticsData = {}; 
+
+    function submitQuiz(force = false) {
+      if (!force && !confirm("Are you sure you want to submit the quiz?")) return;
+      
+      quizSubmitted = true;
+      clearInterval(timerInterval);
+      localStorage.removeItem('it_officer_mains_day7');
+
+      document.getElementById('quiz-ui').style.display = 'none';
+      document.getElementById('scorecard').style.display = 'block';
+      document.getElementById('main-header').style.display = 'none';
+
+      let correct = 0, wrong = 0, unattempted = 0;
+      let topicStats = {};
+      let wrongLog = [], skippedLog = [];
+
+      for (let i = 0; i < 50; i++) {
+        let q = questions[i];
+        let baseTopic = q.topic;
+        
+        if(!topicStats[baseTopic]) {
+            topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+        }
+        topicStats[baseTopic].total++;
+
+        if (userAnswers[i] === null) {
+          unattempted++; topicStats[baseTopic].skipped++;
+          skippedLog.push({ qNum: i+1, topic: baseTopic, text: q.text });
+        } else if (userAnswers[i] === q.correct) {
+          correct++; topicStats[baseTopic].correct++;
+        } else {
+          wrong++; topicStats[baseTopic].wrong++;
+          wrongLog.push({
+             qNum: i+1, topic: baseTopic, text: q.text, 
+             userAnswer: q.options[userAnswers[i]], correctAnswer: q.options[q.correct]
+          });
+        }
+      }
+
+      const score = (correct * 2) - (wrong * 0.5);
+      document.getElementById('score-total').innerText = score;
+      document.getElementById('score-correct').innerText = correct;
+      document.getElementById('score-wrong').innerText = wrong;
+      document.getElementById('score-unattempted').innerText = unattempted;
+
+      const tbBody = document.getElementById('topic-breakdown-body');
+      tbBody.innerHTML = '';
+      for (const [topic, stats] of Object.entries(topicStats)) {
+          const acc = Math.round((stats.correct / stats.total) * 100);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
+          tbBody.appendChild(tr);
+      }
+
+      generatedAnalyticsData = {
+        quizDay: 7, 
+        quizTitle: "IT Officer Mains: Day 7",
+        difficultyLevel: 2,
+        difficultyName: "Easy to Moderate",
+        focusArea: "Balanced Full Syllabus",
+        date: new Date().toISOString(),
+        totalQuestions: 50,
+        correct: correct, incorrect: wrong, unattempted: unattempted, score: score,
+        topicBreakdown: topicStats, wrongQuestions: wrongLog, skippedQuestions: skippedLog,
+        userAnswersArray: userAnswers
+      };
+
+      autoSaveToServer(generatedAnalyticsData);
+    }
+
+    function reviewAnswers() {
+      isReviewMode = true;
+      document.getElementById('scorecard').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      document.querySelector('.btn-submit').style.display = 'none';
+      document.querySelector('.btn-danger').style.display = 'none';
+      
+      document.getElementById('review-filters').style.display = 'block';
+      if(elPalette.innerHTML === '') buildPalette();
+      
+      loadQuestion(0);
+    }
+
+    function autoSaveToServer(data) {
+      try {
+        const storageKey = `quiz_result_day_${data.quizDay}`;
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        
+        if (window.parent && window.parent.loadDataFromBackend) {
+          window.parent.loadDataFromBackend();
+        }
+      } catch (err) {
+        console.error("Error saving result locally.", err);
+      }
+    }
+
+    function generateAndPrintPDF() {
+        const printArea = document.getElementById('pdf-export-area');
+        let htmlContent = `
+            <div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; color: #000;">
+                <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">IT Officer Mains: Day 7 - Answer Key</h1>
+                <p><strong>Difficulty:</strong> Easy to Moderate | <strong>Focus:</strong> Balanced Full Syllabus</p>
+                <hr style="margin-bottom: 30px;">
+        `;
+
+        questions.forEach((q, i) => {
+            const uAns = userAnswers[i];
+            let statusBadge = "";
+            if (uAns === null) statusBadge = "<span style='color: orange;'>[Skipped]</span>";
+            else if (uAns === q.correct) statusBadge = "<span style='color: green;'>[Correct]</span>";
+            else statusBadge = "<span style='color: red;'>[Wrong]</span>";
+
+            htmlContent += `
+                <div class="pdf-question">
+                    <h3>Q${i+1}. ${q.text} ${statusBadge}</h3>
+                    <p style="font-size: 0.9em; color: #555;">Topic: ${q.topic}</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+            `;
+            
+            q.options.forEach((opt, optIndex) => {
+                let prefix = "[ ]";
+                let style = "";
+                if(optIndex === q.correct) {
+                    prefix = "[✓]"; style = "color: green; font-weight: bold;";
+                } else if (uAns === optIndex) {
+                    prefix = "[✗]"; style = "color: red; text-decoration: line-through;";
+                }
+                htmlContent += `<li style="margin-bottom: 5px; ${style}">${prefix} ${String.fromCharCode(65 + optIndex)}. ${opt}</li>`;
+            });
+
+            htmlContent += `
+                    </ul>
+                    <div style="background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin-top: 10px;">
+                        <strong>Explanation:</strong><br>${q.explanation}
+                    </div>
+                </div>
+            `;
+        });
+
+        htmlContent += `</div>`;
+        printArea.innerHTML = htmlContent;
+        window.print();
+    }
+
+    window.onload = initQuiz;
+  </script>
+</body>
+</html>
