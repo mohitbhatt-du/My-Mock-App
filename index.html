@@ -260,6 +260,7 @@
       }
       
       quizzes.sort((a, b) => a.title.localeCompare(b.title));
+      quizzes.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
 
       quizzes.forEach((quiz, index) => {
         const matchingResult = results.slice().reverse().find(r => r.quizTitle === quiz.title);
