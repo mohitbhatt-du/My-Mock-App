@@ -97,6 +97,17 @@
       color: var(--text-muted);
     }
     .visitor-count { color: var(--accent-emerald); font-weight: 700; font-size: 1.1rem; }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--border-light);
+      width: auto;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
   </style>
 
 </head>
@@ -125,12 +136,30 @@
 
   <!-- ANALYTICS VIEW -->
   <div id="view-analytics" class="view-section active">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    
+    <!-- UPDATED HEADER WITH BUTTON GROUP -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
       <p style="color: var(--text-muted);">Visualize your daily mock performance and topic mastery.</p>
-      <button class="btn btn-danger" onclick="resetAllProgress()">
-        <i data-lucide="trash-2"></i> Reset Progress
-      </button>
+      
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <!-- Backup Button -->
+        <button class="btn btn-secondary" onclick="exportLocalStorage()">
+          <i data-lucide="download"></i> Backup
+        </button>
+        
+        <!-- Restore Button (Hidden Input + Button) -->
+        <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importLocalStorage(event)">
+        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+          <i data-lucide="upload"></i> Restore
+        </button>
+        
+        <!-- Existing Reset Button -->
+        <button class="btn btn-danger" onclick="resetAllProgress()">
+          <i data-lucide="trash-2"></i> Reset Progress
+        </button>
+      </div>
     </div>
+    <!-- END UPDATED HEADER -->
     <section class="kpi-grid">
       <div class="glass-card kpi-card"><span class="kpi-title"><i data-lucide="target"></i> Quizzes Attempted</span><div class="kpi-value" id="kpi-total">0</div></div>
       <div class="glass-card kpi-card"><span class="kpi-title"><i data-lucide="bar-chart-2"></i> Average Score</span><div class="kpi-value" id="kpi-avg" style="color: var(--accent-cyan);">0%</div></div>
@@ -472,7 +501,56 @@
             loadDataFromBackend();
           }
         }
+
+
+      function exportLocalStorage() {
+        let backup = {};
+        let hasData = false;
+        
+        // Loop through memory and ONLY backup quiz results
+        for (let i = 0; i < localStorage.length; i++) {
+          let key = localStorage.key(i);
+          if (key.startsWith('quiz_result_')) {
+            backup[key] = localStorage.getItem(key);
+            hasData = true;
+          }
+        }
       
+        if (!hasData) {
+          alert("No completed quizzes found to backup!");
+          return;
+        }
+
+        let blob = new Blob([JSON.stringify(backup, null, 2)], {type: "application/json"});
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `ExamMatrix_Backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+      }
+
+    function importLocalStorage(event) {
+      let file = event.target.files[0];
+      if (!file) return;
+      
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          let backup = JSON.parse(e.target.result);
+          // Restore the data into memory
+          Object.keys(backup).forEach(key => {
+            if (key.startsWith('quiz_result_')) {
+              localStorage.setItem(key, backup[key]);
+            }
+          });
+          alert("Progress restored successfully! Refreshing dashboard...");
+          location.reload();
+        } catch (err) {
+          alert("Invalid backup file! Please select a valid ExamMatrix JSON backup.");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = ''; // Reset the input
+    }
   </script>
 </body>
 </html>
