@@ -109,6 +109,9 @@
     <i data-lucide="refresh-cw" style="width: 48px; height: 48px; color: var(--accent-indigo); margin-bottom: 16px;"></i>
     <h2>Dynamic Revision Mock</h2>
     <p id="setup-subtitle">Loading your custom question pool...</p>
+    <p style="color: var(--accent-yellow); font-weight: 600; margin-bottom: 24px; display: flex; justify-content: center; align-items: center; gap: 8px;">
+      <i data-lucide="database"></i> Accumulated Question Pool: <span id="total-pool-count">0</span>
+    </p>
     
     <div class="time-options" id="time-options" style="display: none;">
       <div class="time-btn" onclick="selectTime(10, this)">10 Minutes<span class="time-desc">Quick Burst</span></div>
@@ -221,6 +224,7 @@
 
     function initQuiz() {
       // Prevent accidental reload if active
+      updatePoolCounter();
       window.addEventListener('beforeunload', function (e) {
         if (!quizSubmitted && document.getElementById('quiz-ui').style.display === 'grid') {
           e.preventDefault(); e.returnValue = '';
@@ -255,6 +259,7 @@
       } catch (err) {
           console.error("Error parsing revision data", err);
       }
+      lucide.createIcons();
     }
 
     function selectTime(minutes, element) {
@@ -538,6 +543,33 @@
         }
     }
 
+    function updatePoolCounter() {
+    let totalAvailable = 0;
+    
+    // Loop through all items saved in the browser
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        
+        // Only look at our daily exam result files
+        if (key && key.startsWith('quiz_result_day_')) {
+            try {
+                let dayData = JSON.parse(localStorage.getItem(key));
+                // If the day has mistakes saved, add their count to the total
+                if (dayData && dayData.playableMistakes) {
+                    totalAvailable += dayData.playableMistakes.length;
+                }
+            } catch (e) {
+                console.error("Error parsing saved day data", e);
+            }
+        }
+    }
+    
+    // Update the HTML span with the final number
+    const countElement = document.getElementById('total-pool-count');
+    if (countElement) {
+        countElement.innerText = totalAvailable;
+    }
+  }
     window.onload = initQuiz;
   </script>
 </body>
