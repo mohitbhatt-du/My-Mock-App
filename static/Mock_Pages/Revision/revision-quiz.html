@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IT Officer Mains: Dynamic Revision Mock</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a; --card-bg: #1e293b; --border-color: #334155;
+      --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-blue: #38bdf8; --accent-green: #4ade80; 
+      --accent-red: #f87171; --accent-yellow: #facc15; --accent-indigo: #818cf8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 20px; }
+
+    header {
+      max-width: 1100px; margin: 0 auto 20px; display: flex; justify-content: space-between;
+      align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);
+    }
+    h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--accent-indigo); }
+    .badge-diff { background: rgba(129, 140, 248, 0.15); color: var(--accent-indigo); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-left: 10px; border: 1px solid rgba(129, 140, 248, 0.3); }
+    .timer { font-size: 1.1rem; font-weight: 600; color: var(--accent-yellow); display: flex; align-items: center; gap: 6px; }
+
+    /* Setup Screen */
+    .setup-screen { max-width: 600px; margin: 80px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 40px; text-align: center; }
+    .setup-screen h2 { font-size: 1.8rem; margin-bottom: 12px; }
+    .setup-screen p { color: var(--text-muted); margin-bottom: 30px; }
+    .time-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+    .time-btn { background: #0f172a; border: 2px solid var(--border-color); color: var(--text-main); padding: 16px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: 0.2s; }
+    .time-btn:hover { border-color: var(--accent-indigo); }
+    .time-btn.selected { border-color: var(--accent-indigo); background: rgba(129, 140, 248, 0.15); }
+    .time-desc { display: block; font-size: 0.8rem; font-weight: 400; color: var(--text-muted); margin-top: 4px; }
+    .btn-start-exam { background: var(--accent-indigo); color: #000; font-size: 1.2rem; font-weight: 700; width: 100%; padding: 16px; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-start-exam:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .quiz-container { max-width: 1100px; margin: 0 auto; display: none; grid-template-columns: 1fr 320px; gap: 20px; }
+    
+    .main-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
+    .question-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
+    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+    
+    .matching-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; background: #0f172a; font-size: 0.95rem; }
+    .matching-table th, .matching-table td { padding: 10px; border: 1px solid var(--border-color); text-align: left; }
+    .matching-table th { background: rgba(129, 140, 248, 0.1); color: var(--accent-indigo); }
+    
+    .code-block { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); font-family: monospace; font-size: 14px; overflow-x: auto; margin-bottom: 15px; font-weight: normal; white-space: pre-wrap; }
+    .diagram-container { background: #fff; padding: 20px; border-radius: 8px; overflow-x: auto; margin-bottom: 15px; text-align: center; }
+    .diagram-container svg { width: 100%; max-width: 480px; min-width: 300px; height: auto; display: block; margin: 0 auto; }
+
+    .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .option-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 18px; border-radius: 8px; text-align: left; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+    .option-btn:hover:not(:disabled) { border-color: var(--accent-indigo); background: #1e293b; }
+    .option-btn.selected { border-color: var(--accent-indigo); background: rgba(129, 140, 248, 0.15); font-weight: 600; }
+    .option-btn.correct-opt { border-color: var(--accent-green) !important; background: rgba(74, 222, 128, 0.15) !important; font-weight: 600; }
+    .option-btn.wrong-opt { border-color: var(--accent-red) !important; background: rgba(248, 113, 113, 0.15) !important; }
+
+    .sidebar { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; height: fit-content; }
+    
+    .filter-select { width: 100%; padding: 10px; margin-bottom: 12px; background: #0f172a; color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; outline: none; cursor: pointer; }
+    .filter-select:focus { border-color: var(--accent-indigo); }
+
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+    .p-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 0; border-radius: 6px; font-weight: 600; cursor: pointer; text-align: center; font-size: 0.85rem; transition: 0.2s; }
+    .p-btn.answered { background: var(--accent-indigo); color: #000; border-color: var(--accent-indigo); }
+    .p-btn.active { border: 2px solid #ffffff; }
+    .p-btn.review-correct { background: var(--accent-green); color: #0f172a; border-color: var(--accent-green); }
+    .p-btn.review-wrong { background: var(--accent-red); color: #0f172a; border-color: var(--accent-red); }
+
+    .nav-btns { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+    .btn { background: var(--accent-indigo); color: #000; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-submit { background: var(--accent-green); color: #0f172a; }
+    .btn-danger { background: var(--accent-red); color: #0f172a; }
+
+    .scorecard { display: none; max-width: 900px; margin: 20px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; }
+    .score-header { text-align: center; margin-bottom: 24px; }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; text-align: center; }
+    .stat-box { background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .stat-val { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .topic-table-container { margin-top: 24px; background: #0f172a; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+    .topic-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .topic-table th, .topic-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+    .topic-table th { background: var(--card-bg); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+    
+    .scorecard-actions { display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+    .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(129, 140, 248, 0.1); border-left: 4px solid var(--accent-indigo); border-radius: 4px; font-size: 0.95rem; line-height: 1.5; }
+    .knowledge-booster { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(129, 140, 248, 0.3); font-size: 0.9rem; }
+    
+    @media print {
+      #setup-screen, #main-header, #quiz-ui, #scorecard { display: none !important; }
+      body { background-color: white !important; color: black !important; padding: 0; height: auto; overflow: visible; }
+      #pdf-export-area { display: block !important; position: static !important; width: 100%; color: black; background: white; padding: 10px; }
+      .pdf-question { margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px; page-break-inside: avoid; }
+      svg text { fill: black !important; }
+      svg path, svg line, svg circle, svg rect { stroke: black !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pdf-export-area" style="display:none;"></div>
+
+  <div class="setup-screen" id="setup-screen">
+    <i data-lucide="refresh-cw" style="width: 48px; height: 48px; color: var(--accent-indigo); margin-bottom: 16px;"></i>
+    <h2>Dynamic Revision Mock</h2>
+    <p id="setup-subtitle">Loading your custom question pool...</p>
+    
+    <div class="time-options" id="time-options" style="display: none;">
+      <div class="time-btn" onclick="selectTime(10, this)">10 Minutes<span class="time-desc">Quick Burst</span></div>
+      <div class="time-btn" onclick="selectTime(30, this)">30 Minutes<span class="time-desc">Standard Pace</span></div>
+      <div class="time-btn selected" onclick="selectTime(45, this)">45 Minutes<span class="time-desc">Relaxed Pacing</span></div>
+      <div class="time-btn" onclick="selectTime(60, this)">60 Minutes<span class="time-desc">Deep Analysis</span></div>
+    </div>
+    
+    <div style="display: flex; gap: 12px; margin-top: 16px;">
+      <button class="btn-start-exam" id="btn-start" onclick="startExamFromSetup()" style="display: none; flex: 2;">
+        Begin Revision <i data-lucide="arrow-right"></i>
+      </button>
+      <button class="btn btn-secondary" id="btn-regen" onclick="regeneratePool()" style="display: none; flex: 1; justify-content: center; padding: 16px; font-size: 1.1rem;">
+        <i data-lucide="shuffle"></i> Regenerate
+      </button>
+    </div>
+  </div>
+
+  <header id="main-header" style="display: none;">
+    <h1>
+      <i data-lucide="refresh-cw"></i> Dynamic Revision Mock
+      <span class="badge-diff">Mistakes & Skipped</span>
+    </h1>
+    <div class="timer" id="timer"><i data-lucide="clock"></i> 00:00</div>
+  </header>
+
+  <div class="quiz-container" id="quiz-ui">
+    <div class="main-card">
+      <div class="question-header">
+        <span id="q-topic">Topic: Loading...</span>
+        <span id="q-counter">Question 1 of X</span>
+      </div>
+      <div class="question-text" id="q-text" style="overflow-x: auto;">Loading question...</div>
+      <div class="options-list" id="options-list"></div>
+      <div class="explanation" id="explanation"></div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" onclick="prevQuestion()" id="btn-prev"><i data-lucide="chevron-left"></i> Previous</button>
+        <button class="btn" onclick="clearSelection()" id="btn-clear" style="display:none;">Clear Response</button>
+        <button class="btn" onclick="nextQuestion()" id="btn-next">Next <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <h3 style="font-size: 1rem; margin-bottom: 12px; text-align: center;">Question Palette</h3>
+      
+      <div id="review-filters" style="display: none;">
+        <select class="filter-select" id="palette-filter" onchange="applyReviewFilter()">
+          <option value="all">Show All Questions</option>
+          <option value="correct">Show Correct Only</option>
+          <option value="wrong">Show Incorrect Only</option>
+          <option value="skipped">Show Skipped Only</option>
+        </select>
+      </div>
+
+      <div class="palette-grid" id="palette"></div>
+      <button class="btn btn-submit" style="width: 100%; justify-content: center; margin-top: 24px;" onclick="submitQuiz()">
+        <i data-lucide="check-circle"></i> Submit Revision
+      </button>
+    </div>
+  </div>
+
+  <div class="scorecard" id="scorecard">
+    <div class="score-header">
+      <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Revision Completed!</h2>
+      <p style="color: var(--text-muted);">Dynamic Revision Mock</p>
+    </div>
+    
+    <div class="score-grid">
+      <div class="stat-box"><div class="stat-val" id="score-total" style="color: var(--accent-indigo);">0</div><div class="stat-label">Total Score</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-correct" style="color: var(--accent-green);">0</div><div class="stat-label">Correct (+2)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-wrong" style="color: var(--accent-red);">0</div><div class="stat-label">Incorrect (-0.5)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-unattempted" style="color: var(--accent-yellow);">0</div><div class="stat-label">Skipped</div></div>
+    </div>
+
+    <div class="topic-table-container">
+      <table class="topic-table">
+        <thead>
+          <tr><th>Topic</th><th>Attempted</th><th>Correct</th><th>Incorrect</th><th>Accuracy</th></tr>
+        </thead>
+        <tbody id="topic-breakdown-body"></tbody>
+      </table>
+    </div>
+
+    <div class="scorecard-actions">
+      <button class="btn btn-secondary" onclick="reviewAnswers()"><i data-lucide="search"></i> Review Answers</button>
+      <button class="btn" style="background: var(--accent-indigo); color: #000;" onclick="generateAndPrintPDF()"><i data-lucide="file-text"></i> Download PDF</button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let questions = [];
+    let totalQuestions = 0;
+    let selectedTimeMinutes = 45; 
+    let currentQ = 0;
+    let userAnswers = [];
+    let isReviewMode = false;
+    let quizSubmitted = false;
+    let timeRemaining = 0;
+    let timerInterval;
+
+    const elTopic = document.getElementById('q-topic');
+    const elCounter = document.getElementById('q-counter');
+    const elText = document.getElementById('q-text');
+    const elOptions = document.getElementById('options-list');
+    const elExplanation = document.getElementById('explanation');
+    const elPalette = document.getElementById('palette');
+
+    function initQuiz() {
+      // Prevent accidental reload if active
+      window.addEventListener('beforeunload', function (e) {
+        if (!quizSubmitted && document.getElementById('quiz-ui').style.display === 'grid') {
+          e.preventDefault(); e.returnValue = '';
+        }
+      });
+
+      // Load dynamically generated pool from dashboard memory
+      const storedData = localStorage.getItem('active_revision_exam');
+      
+      if (!storedData) {
+          document.getElementById('setup-subtitle').innerHTML = `<span style="color: var(--accent-red);">Error: No revision data found in memory. Please launch this from the Dashboard.</span>`;
+          return;
+      }
+
+      try {
+          const parsedData = JSON.parse(storedData);
+          questions = parsedData.questions;
+          totalQuestions = questions.length;
+          
+          if (totalQuestions === 0) {
+              document.getElementById('setup-subtitle').innerHTML = `<span style="color: var(--accent-red);">No mistakes found! You need to complete at least one exam (Day 12+) to build a revision pool.</span>`;
+              return;
+          }
+
+          // Initialize variables based on dynamic length
+          userAnswers = new Array(totalQuestions).fill(null);
+          document.getElementById('setup-subtitle').innerText = `${totalQuestions} Questions Prepared from Past Mistakes`;
+          document.getElementById('time-options').style.display = 'grid';
+          document.getElementById('btn-start').style.display = 'flex';
+          document.getElementById('btn-regen').style.display = 'flex';
+
+      } catch (err) {
+          console.error("Error parsing revision data", err);
+      }
+    }
+
+    function selectTime(minutes, element) {
+      selectedTimeMinutes = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startExamFromSetup() {
+      timeRemaining = selectedTimeMinutes * 60;
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      
+      buildPalette();
+      loadQuestion(0);
+      startTimer();
+    }
+
+    function buildPalette() {
+      elPalette.innerHTML = '';
+      for (let i = 0; i < totalQuestions; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'p-btn';
+        btn.id = `pal-${i}`;
+        btn.innerText = i + 1;
+        btn.onclick = () => jumpToQuestion(i);
+        elPalette.appendChild(btn);
+      }
+    }
+
+    function startTimer() {
+      const elTimer = document.getElementById('timer');
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          elTimer.innerHTML = `<i data-lucide="clock"></i> 00:00`;
+          submitQuiz(true); 
+        } else {
+          const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+          const s = (timeRemaining % 60).toString().padStart(2, '0');
+          elTimer.innerHTML = `<i data-lucide="clock"></i> ${m}:${s}`;
+        }
+      }, 1000);
+    }
+
+    function loadQuestion(index) {
+      currentQ = index;
+      const q = questions[index];
+      
+      elTopic.innerText = `Topic: ${q.topic}`;
+      elCounter.innerText = `Question ${index + 1} of ${totalQuestions}`;
+      elText.innerHTML = q.text; 
+
+      elOptions.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (userAnswers[index] === i) btn.classList.add('selected');
+        
+        if (isReviewMode) {
+          btn.disabled = true;
+          if (i === q.correct) btn.classList.add('correct-opt');
+          if (userAnswers[index] === i && i !== q.correct) btn.classList.add('wrong-opt');
+        }
+
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> ${opt}`;
+        if (!isReviewMode) btn.onclick = () => selectOption(i);
+        elOptions.appendChild(btn);
+      });
+
+      document.getElementById('btn-clear').style.display = (!isReviewMode && userAnswers[index] !== null) ? 'block' : 'none';
+      
+      if (isReviewMode) {
+        elExplanation.style.display = 'block';
+        elExplanation.innerHTML = `<strong>Explanation:</strong><br>${q.explanation}`;
+      } else {
+        elExplanation.style.display = 'none';
+      }
+      updatePaletteUI();
+    }
+
+    function selectOption(optIndex) {
+      userAnswers[currentQ] = optIndex;
+      loadQuestion(currentQ);
+    }
+
+    function clearSelection() {
+      userAnswers[currentQ] = null;
+      loadQuestion(currentQ);
+    }
+
+    function nextQuestion() {
+        if (currentQ < totalQuestions - 1) {
+            if (isReviewMode) {
+                let next = currentQ + 1;
+                while (next < totalQuestions && document.getElementById(`pal-${next}`).style.display === 'none') {
+                    next++;
+                }
+                if (next < totalQuestions) loadQuestion(next);
+            } else {
+                loadQuestion(currentQ + 1);
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQ > 0) {
+            if (isReviewMode) {
+                let prev = currentQ - 1;
+                while (prev >= 0 && document.getElementById(`pal-${prev}`).style.display === 'none') {
+                    prev--;
+                }
+                if (prev >= 0) loadQuestion(prev);
+            } else {
+                loadQuestion(currentQ - 1);
+            }
+        }
+    }
+
+    function jumpToQuestion(index) { loadQuestion(index); }
+
+    function updatePaletteUI() {
+      for (let i = 0; i < totalQuestions; i++) {
+        const btn = document.getElementById(`pal-${i}`);
+        if (!btn) continue;
+        
+        btn.className = 'p-btn';
+        if (isReviewMode) {
+          if (userAnswers[i] === questions[i].correct) btn.classList.add('review-correct');
+          else if (userAnswers[i] !== null) btn.classList.add('review-wrong');
+        } else {
+          if (userAnswers[i] !== null) btn.classList.add('answered');
+        }
+        if (i === currentQ) btn.classList.add('active');
+      }
+    }
+
+    function applyReviewFilter() {
+        const filter = document.getElementById('palette-filter').value;
+        let firstVisible = -1;
+
+        for (let i = 0; i < totalQuestions; i++) {
+            const btn = document.getElementById(`pal-${i}`);
+            let isCorrect = userAnswers[i] === questions[i].correct;
+            let isSkipped = userAnswers[i] === null;
+            let isWrong = !isCorrect && !isSkipped;
+            
+            let show = false;
+            if (filter === 'all') show = true;
+            else if (filter === 'correct' && isCorrect) show = true;
+            else if (filter === 'wrong' && isWrong) show = true;
+            else if (filter === 'skipped' && isSkipped) show = true;
+
+            btn.style.display = show ? 'block' : 'none';
+            if (show && firstVisible === -1) firstVisible = i;
+        }
+
+        if (firstVisible !== -1 && document.getElementById(`pal-${currentQ}`).style.display === 'none') {
+            loadQuestion(firstVisible);
+        }
+    }
+
+    function submitQuiz(force = false) {
+      if (!force && !confirm("Submit your revision test?")) return;
+      
+      quizSubmitted = true;
+      clearInterval(timerInterval);
+      
+      // Clean up temporary data
+      localStorage.removeItem('active_revision_exam');
+
+      document.getElementById('quiz-ui').style.display = 'none';
+      document.getElementById('scorecard').style.display = 'block';
+      document.getElementById('main-header').style.display = 'none';
+
+      let correct = 0, wrong = 0, unattempted = 0;
+      let topicStats = {};
+
+      for (let i = 0; i < totalQuestions; i++) {
+        let q = questions[i];
+        let baseTopic = q.topic;
+        
+        if(!topicStats[baseTopic]) {
+            topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+        }
+        topicStats[baseTopic].total++;
+
+        if (userAnswers[i] === null) {
+          unattempted++; topicStats[baseTopic].skipped++;
+        } else if (userAnswers[i] === q.correct) {
+          correct++; topicStats[baseTopic].correct++;
+        } else {
+          wrong++; topicStats[baseTopic].wrong++;
+        }
+      }
+
+      const score = (correct * 2) - (wrong * 0.5);
+      document.getElementById('score-total').innerText = score;
+      document.getElementById('score-correct').innerText = correct;
+      document.getElementById('score-wrong').innerText = wrong;
+      document.getElementById('score-unattempted').innerText = unattempted;
+
+      const tbBody = document.getElementById('topic-breakdown-body');
+      tbBody.innerHTML = '';
+      for (const [topic, stats] of Object.entries(topicStats)) {
+          const acc = Math.round((stats.correct / stats.total) * 100);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
+          tbBody.appendChild(tr);
+      }
+    }
+
+    function reviewAnswers() {
+      isReviewMode = true;
+      document.getElementById('scorecard').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      document.querySelector('.btn-submit').style.display = 'none';
+      
+      document.getElementById('review-filters').style.display = 'block';
+      if(elPalette.innerHTML === '') buildPalette();
+      
+      loadQuestion(0);
+    }
+
+    function generateAndPrintPDF() {
+        const printArea = document.getElementById('pdf-export-area');
+        let htmlContent = `
+            <div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; color: #000;">
+                <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">Dynamic Revision Mock - Answer Key</h1>
+                <p><strong>Questions Attempted:</strong> ${totalQuestions}</p>
+                <hr style="margin-bottom: 30px;">
+        `;
+
+        questions.forEach((q, i) => {
+            const uAns = userAnswers[i];
+            let statusBadge = "";
+            if (uAns === null) statusBadge = "<span style='color: orange;'>[Skipped]</span>";
+            else if (uAns === q.correct) statusBadge = "<span style='color: green;'>[Correct]</span>";
+            else statusBadge = "<span style='color: red;'>[Wrong]</span>";
+
+            htmlContent += `
+                <div class="pdf-question">
+                    <h3>Q${i+1}. ${q.text} ${statusBadge}</h3>
+                    <p style="font-size: 0.9em; color: #555;">Topic: ${q.topic}</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+            `;
+            
+            q.options.forEach((opt, optIndex) => {
+                let prefix = "[ ]";
+                let style = "";
+                if(optIndex === q.correct) {
+                    prefix = "[✓]"; style = "color: green; font-weight: bold;";
+                } else if (uAns === optIndex) {
+                    prefix = "[✗]"; style = "color: red; text-decoration: line-through;";
+                }
+                htmlContent += `<li style="margin-bottom: 5px; ${style}">${prefix} ${String.fromCharCode(65 + optIndex)}. ${opt}</li>`;
+            });
+
+            htmlContent += `
+                    </ul>
+                    <div style="background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin-top: 10px;">
+                        <strong>Explanation:</strong><br>${q.explanation}
+                    </div>
+                </div>
+            `;
+        });
+
+        htmlContent += `</div>`;
+        printArea.innerHTML = htmlContent;
+        window.print();
+    }
+
+    function regeneratePool() {
+        if (window.parent && window.parent.generateAndLaunchRevision) {
+            window.parent.generateAndLaunchRevision();
+            window.location.reload();
+        }
+    }
+
+    window.onload = initQuiz;
+  </script>
+</body>
+</html>

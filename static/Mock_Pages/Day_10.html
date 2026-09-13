@@ -883,6 +883,7 @@
       let correct = 0, wrong = 0, unattempted = 0;
       let topicStats = {};
       let wrongLog = [], skippedLog = [];
+      let playableMistakes = [];
 
       for (let i = 0; i < 50; i++) {
         let q = questions[i];
@@ -896,6 +897,8 @@
         if (userAnswers[i] === null) {
           unattempted++; topicStats[baseTopic].skipped++;
           skippedLog.push({ qNum: i+1, topic: baseTopic, text: q.text });
+          playableMistakes.push(q);
+          
         } else if (userAnswers[i] === q.correct) {
           correct++; topicStats[baseTopic].correct++;
         } else {
@@ -904,6 +907,7 @@
              qNum: i+1, topic: baseTopic, text: q.text, 
              userAnswer: q.options[userAnswers[i]], correctAnswer: q.options[q.correct]
           });
+          playableMistakes.push(q);
         }
       }
 
@@ -932,6 +936,7 @@
         totalQuestions: 50,
         correct: correct, incorrect: wrong, unattempted: unattempted, score: score,
         topicBreakdown: topicStats, wrongQuestions: wrongLog, skippedQuestions: skippedLog,
+        playableMistakes: playableMistakes,
         userAnswersArray: userAnswers
       };
 

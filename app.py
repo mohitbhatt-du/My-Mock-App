@@ -1,74 +1,92 @@
 from flask import Flask, jsonify, request, send_from_directory
-import os, json, re
+import os, json, re, hashlib
+app = Flask(__name__, static_folder='static')
 
-app = Flask(__name__, static_folder='.')
-
-os.makedirs('Mock_Pages', exist_ok=True)
+# Define the new path for your mock pages
+MOCK_PAGES_DIR = os.path.join('static', 'Mock_Pages')
+os.makedirs(MOCK_PAGES_DIR, exist_ok=True)
 
 @app.route('/')
 def home():
-    return send_from_directory('.', 'index.html')
+    # Serve index.html from static/Dashboard
+    return send_from_directory(os.path.join('static', 'Dashboard'), 'index.html')
 
 @app.route('/Mock_Pages/<path:filename>')
 def serve_quiz(filename):
-    return send_from_directory('Mock_Pages', filename)
+    # Serve the actual HTML files from the new location
+    return send_from_directory(MOCK_PAGES_DIR, filename)
 
 # API: Auto-Read Quizzes with Error Handling
 @app.route('/api/quizzes', methods=['GET'])
 def get_quizzes():
     quizzes = []
     try:
-        if os.path.exists('Mock_Pages'):
-            for filename in os.listdir('Mock_Pages'):
+        if os.path.exists(MOCK_PAGES_DIR):
+            for filename in os.listdir(MOCK_PAGES_DIR):
                 if filename.endswith('.html'):
-                    filepath = os.path.join('Mock_Pages', filename)
+                    filepath = os.path.join(MOCK_PAGES_DIR, filename)
                     try:
                         with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
                             content = f.read(2500)
                             
                         title_match = re.search(r'<title>(.*?)</title>', content, re.IGNORECASE)
                         diff_match = re.search(r'<meta name="quiz-difficulty" content="(.*?)">', content, re.IGNORECASE)
+                        tags_match = re.search(r'<meta name="quiz-tags" content="(.*?)">', content, re.IGNORECASE)
                         
                         title = title_match.group(1) if title_match else filename.replace('.html', '')
                         difficulty = diff_match.group(1) if diff_match else 'Unknown Level'
+                        tags = tags_match.group(1) if tags_match else 'Balanced'
                         
                         quizzes.append({
                             "name": filename,
                             "title": title,
                             "difficulty": difficulty,
-                            "url": f"/Mock_Pages/{filename}"
+                            "tags": tags,
+                            # URL remains the same so the frontend dashboard doesn't break
+                            "url": f"/Mock_Pages/{filename}" 
                         })
                     except Exception as file_err:
                         print(f"Error reading {filename}: {file_err}")
+            
+            # Natural Sorting Function
+            def extract_number(quiz):
+                match = re.search(r'\d+', quiz['title'])
+                return int(match.group()) if match else 0
+            
+            quizzes.sort(key=extract_number)
+
     except Exception as e:
         print(f"Error scanning Mock_Pages: {e}")
     return jsonify(quizzes)
 
-# API: Safe Unique Visitor Counter
+# API: Simple Page View Counter (No IP Tracking)
 @app.route('/api/visitors', methods=['GET'])
 def visitor_count():
     visitor_file = 'visitors.json'
-    count = 1
+    count = 0
     try:
-        if not os.path.exists(visitor_file):
-            with open(visitor_file, 'w', encoding='utf-8') as f:
-                json.dump({"unique_ips": []}, f)
+        # Read the current count if the file exists
+        if os.path.exists(visitor_file):
+            with open(visitor_file, 'r', encoding='utf-8') as f:
+                try:
+                    data = json.load(f)
+                    count = data.get('count', 0)
+                except json.JSONDecodeError:
+                    count = 0
                 
-        user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        # Increment the count by 1 for every single reload
+        count += 1
         
-        with open(visitor_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        # Save the new count back to the file
+        with open(visitor_file, 'w', encoding='utf-8') as f:
+            json.dump({"count": count}, f)
             
-        if user_ip not in data.get('unique_ips', []):
-            data['unique_ips'].append(user_ip)
-            with open(visitor_file, 'w', encoding='utf-8') as f:
-                json.dump(data, f)
-                
-        count = len(data['unique_ips'])
     except Exception as e:
         print(f"Visitor counter error: {e}")
+        # Fallback in case of file write issues
+        if count == 0: count = 1 
         
     return jsonify({"count": count})
 
 if __name__ == '__main__':
-    app.run(debug=False, port=5000)
+    app.run(debug=False, port=5001)

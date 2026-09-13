@@ -64,7 +64,7 @@
     #quiz-iframe { flex-grow: 1; border: none; width: 100%; background: var(--bg-base); }
     .btn-danger { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); border: 1px solid rgba(251, 113, 133, 0.3); width: auto; }
     .btn-danger:hover { background: var(--accent-rose); color: #000; box-shadow: 0 0 15px rgba(251, 113, 133, 0.4); transform: translateY(-2px); }
-      /* Footer Styles */
+.badge-custom { background: rgba(167, 139, 250, 0.15); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.3); }    /* Footer Styles */
     footer {
       margin-top: 40px;
       padding: 24px;
@@ -278,12 +278,37 @@
 
 
 
-    function renderQuizHub(quizzes, results) {
+function renderQuizHub(quizzes, results) {
       const grid = document.getElementById('quiz-grid');
       grid.innerHTML = '';
 
+      // === NEW: PINNED DYNAMIC REVISION CARD ===
+      const revisionCard = document.createElement('div');
+      revisionCard.className = 'glass-card quiz-launch-card';
+      revisionCard.style.borderColor = 'var(--accent-indigo)';
+      revisionCard.style.background = 'linear-gradient(145deg, rgba(30,41,59,0.4) 0%, rgba(15,23,42,0.8) 100%)';
+      revisionCard.innerHTML = `
+        <div>
+          <h3 style="color: var(--accent-indigo); display: flex; align-items: center; gap: 8px;">
+            <i data-lucide="refresh-cw"></i> Dynamic Revision Mock
+          </h3>
+          <div class="quiz-meta" style="margin-bottom: 10px;">
+            <span class="badge" style="background: rgba(129, 140, 248, 0.15); color: var(--accent-indigo); border: 1px solid rgba(129, 140, 248, 0.3);">Mistakes & Skipped</span>
+            <span class="badge badge-custom">Up to 50 Qs</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
+            Instantly generates a custom mock test pulling exclusively from your incorrect and unattempted questions across previous exams.
+          </p>
+        </div>
+        <button class="btn" style="background: var(--accent-indigo); color: #000; border: none;" onclick="generateAndLaunchRevision()">
+          <i data-lucide="zap"></i> Generate & Launch
+        </button>
+      `;
+      grid.appendChild(revisionCard);
+      // ==========================================
+
       if (quizzes.length === 0) {
-        grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><i data-lucide="file-x"></i><h3>No Quizzes Found</h3><p>Add HTML files to your Mock_Pages folder.</p></div>`;
+        grid.innerHTML += `<div class="empty-state" style="grid-column: 1 / -1;"><i data-lucide="file-x"></i><h3>No Quizzes Found</h3><p>Add HTML files to your Mock_Pages folder.</p></div>`;
         lucide.createIcons();
         return;
       }
@@ -298,19 +323,22 @@
         let btnText = '<i data-lucide="play"></i> Launch Exam';
 
         if (matchingResult) {
-          // Calculate max score (2 marks per question)
           const totalQs = matchingResult.totalQuestions || 50;
           const maxScore = totalQs * 2;
           const obtainedScore = matchingResult.score || 0;
-          
-          // Determine color based on percentage
           const pct = (obtainedScore / maxScore) * 100;
           let badgeColor = pct >= 75 ? 'badge-success' : (pct >= 50 ? 'badge-warning' : 'badge-danger');
           
-          // Show exact obtained score / max score
           scoreBadge = `<span class="badge ${badgeColor}">Score: ${obtainedScore} / ${maxScore}</span>`;
           btnClass = 'btn btn-retake';
           btnText = '<i data-lucide="rotate-ccw"></i> Retake Exam';
+        }
+
+        let tagsHTML = '';
+        if (quiz.tags) {
+            quiz.tags.split(',').forEach(tag => {
+                tagsHTML += `<span class="badge badge-custom">${tag.trim()}</span>`;
+            });
         }
 
         const card = document.createElement('div');
@@ -320,6 +348,7 @@
             <h3>${quiz.title}</h3>
             <div class="quiz-meta">
               <span class="badge badge-diff">${quiz.difficulty}</span>
+              ${tagsHTML}
               ${scoreBadge}
             </div>
           </div>
@@ -329,7 +358,6 @@
       });
       lucide.createIcons();
     }
-
 
     function launchQuiz(index) {
       const quiz = globalQuizzes[index];
@@ -550,6 +578,53 @@
       };
       reader.readAsText(file);
       event.target.value = ''; // Reset the input
+    }
+
+    function generateAndLaunchRevision() {
+        let mistakePool = [];
+        
+        // 1. Gather all playable mistakes from local storage
+        for (let i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            if (key.startsWith('quiz_result_day_')) {
+                try {
+                    let res = JSON.parse(localStorage.getItem(key));
+                    // We will inject this 'playableMistakes' array in Day 12 and beyond
+                    if (res.playableMistakes && res.playableMistakes.length > 0) {
+                        mistakePool = mistakePool.concat(res.playableMistakes);
+                    }
+                } catch(e) {}
+            }
+        }
+
+        // 2. Alert if the user hasn't generated any mistakes yet
+        if (mistakePool.length === 0) {
+            alert("No data yet! Complete Day 12 (or later) to start collecting incorrect and skipped questions for your revision pool.");
+            return;
+        }
+
+        // 3. Shuffle the pool of mistakes randomly
+        for (let i = mistakePool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [mistakePool[i], mistakePool[j]] = [mistakePool[j], mistakePool[i]];
+        }
+
+        // 4. Cap at 50 questions
+        let finalSet = mistakePool.slice(0, 50);
+
+        // 5. Save the generated exam to memory
+        localStorage.setItem('active_revision_exam', JSON.stringify({
+            questions: finalSet,
+            generatedAt: new Date().toISOString()
+        }));
+
+        // 6. Launch the special player
+        document.getElementById('player-title').innerText = "Dynamic Revision Mock";
+        document.getElementById('quiz-iframe').src = "/Mock_Pages/Revision/revision-quiz.html"; 
+        
+        const overlay = document.getElementById('quiz-player-overlay');
+        overlay.style.display = 'flex'; overlay.style.opacity = '0';
+        setTimeout(() => overlay.style.opacity = '1', 50);
     }
   </script>
 </body>
