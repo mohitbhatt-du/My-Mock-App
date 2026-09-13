@@ -46,18 +46,20 @@ A professional, automated mock exam operating system and performance dashboard b
 
 ```text
 /My-Mock-App
+├── app.py                # Flask backend server & API routing
+├── requirements.txt      # Python package dependencies
+├── visitors.json         # Simple page-view counter ledger
 │
-├── app.py                  # Flask backend server & API routing
-├── index.html              # Main Analytics OS Dashboard & Quiz Hub
-├── requirements.txt        # Python package dependencies
-├── visitors.json           # Unique visitor IP ledger
-│
-├── /Mock_Pages             # Directory containing day-wise HTML quiz modules
-│   ├── Day_1_Quiz.html
-│   ├── Day_2_Quiz.html
-│   └── ...
-│
-└── /Result                 # Local/Cloud data records
+└── /static               # Frontend assets & generated mock modules
+    ├── /Dashboard
+    │   └── index.html    # Main ExamMatrix IT Dashboard & Quiz Hub
+    │
+    └── /Mock_Pages
+        ├── day1-quiz.html
+        ├── day2-quiz.html
+        ├── ...
+        └── /Revision
+            └── revision-quiz.html  # Dynamic mistakes & skipped questions revision engine
 ```
 
 ## 💡 Developer Disclaimer
