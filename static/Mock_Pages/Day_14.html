@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="difficulty-level" content="3">
+  <meta name="quiz-difficulty" content="Moderate to Hard">
+  <meta name="quiz-tags" content="Balanced">
+  <title>IT Officer Mains: Day 14</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a; --card-bg: #1e293b; --border-color: #334155;
+      --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-blue: #38bdf8; --accent-green: #4ade80; 
+      --accent-red: #f87171; --accent-yellow: #facc15; --accent-indigo: #818cf8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 20px; }
+
+    header {
+      max-width: 1100px; margin: 0 auto 20px; display: flex; justify-content: space-between;
+      align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);
+    }
+    h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .badge-diff { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-left: 10px; }
+    .timer { font-size: 1.1rem; font-weight: 600; color: var(--accent-yellow); display: flex; align-items: center; gap: 6px; }
+
+    /* Setup Screen */
+    .setup-screen { max-width: 600px; margin: 80px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 40px; text-align: center; }
+    .setup-screen h2 { font-size: 1.8rem; margin-bottom: 12px; }
+    .setup-screen p { color: var(--text-muted); margin-bottom: 30px; }
+    .time-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+    .time-btn { background: #0f172a; border: 2px solid var(--border-color); color: var(--text-main); padding: 16px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: 0.2s; }
+    .time-btn:hover { border-color: var(--accent-blue); }
+    .time-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); }
+    .time-desc { display: block; font-size: 0.8rem; font-weight: 400; color: var(--text-muted); margin-top: 4px; }
+    .btn-start-exam { background: var(--accent-green); color: #0f172a; font-size: 1.2rem; font-weight: 700; width: 100%; padding: 16px; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-start-exam:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .quiz-container { max-width: 1100px; margin: 0 auto; display: none; grid-template-columns: 1fr 320px; gap: 20px; }
+    
+    .main-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
+    .question-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
+    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+    
+    .matching-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; background: #0f172a; font-size: 0.95rem; }
+    .matching-table th, .matching-table td { padding: 10px; border: 1px solid var(--border-color); text-align: left; }
+    .matching-table th { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
+    
+    .code-block { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); font-family: monospace; font-size: 14px; overflow-x: auto; margin-bottom: 15px; font-weight: normal; white-space: pre-wrap; }
+    .diagram-container { background: #fff; padding: 20px; border-radius: 8px; overflow-x: auto; margin-bottom: 15px; text-align: center; }
+    .diagram-container svg { width: 100%; max-width: 480px; min-width: 300px; height: auto; display: block; margin: 0 auto; }
+
+    .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .option-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 18px; border-radius: 8px; text-align: left; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+    .option-btn:hover:not(:disabled) { border-color: var(--accent-blue); background: #1e293b; }
+    .option-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); font-weight: 600; }
+    .option-btn.correct-opt { border-color: var(--accent-green) !important; background: rgba(74, 222, 128, 0.15) !important; font-weight: 600; }
+    .option-btn.wrong-opt { border-color: var(--accent-red) !important; background: rgba(248, 113, 113, 0.15) !important; }
+
+    .sidebar { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; height: fit-content; }
+    
+    .filter-select { width: 100%; padding: 10px; margin-bottom: 12px; background: #0f172a; color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; outline: none; cursor: pointer; }
+    .filter-select:focus { border-color: var(--accent-blue); }
+
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+    .p-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 0; border-radius: 6px; font-weight: 600; cursor: pointer; text-align: center; font-size: 0.85rem; transition: 0.2s; }
+    .p-btn.answered { background: var(--accent-blue); color: #0f172a; border-color: var(--accent-blue); }
+    .p-btn.active { border: 2px solid #ffffff; }
+    .p-btn.review-correct { background: var(--accent-green); color: #0f172a; border-color: var(--accent-green); }
+    .p-btn.review-wrong { background: var(--accent-red); color: #0f172a; border-color: var(--accent-red); }
+
+    .nav-btns { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+    .btn { background: var(--accent-blue); color: #0f172a; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-submit { background: var(--accent-green); color: #0f172a; }
+    .btn-danger { background: var(--accent-red); color: #0f172a; }
+
+    .scorecard { display: none; max-width: 900px; margin: 20px auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; }
+    .score-header { text-align: center; margin-bottom: 24px; }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; text-align: center; }
+    .stat-box { background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .stat-val { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .topic-table-container { margin-top: 24px; background: #0f172a; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+    .topic-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .topic-table th, .topic-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+    .topic-table th { background: var(--card-bg); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+    
+    .scorecard-actions { display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+    .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-blue); border-radius: 4px; font-size: 0.95rem; line-height: 1.5; }
+    .knowledge-booster { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(56, 189, 248, 0.3); font-size: 0.9rem; }
+    .save-indicator { position: absolute; top: 24px; right: 24px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    @media print {
+      #setup-screen, #main-header, #quiz-ui, #scorecard { display: none !important; }
+      body { background-color: white !important; color: black !important; padding: 0; height: auto; overflow: visible; }
+      #pdf-export-area { display: block !important; position: static !important; width: 100%; color: black; background: white; padding: 10px; }
+      .pdf-question { margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px; page-break-inside: avoid; }
+      svg text { fill: black !important; }
+      svg path, svg line, svg circle, svg rect { stroke: black !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pdf-export-area" style="display:none;"></div>
+
+  <div class="setup-screen" id="setup-screen">
+    <i data-lucide="settings" style="width: 48px; height: 48px; color: var(--accent-blue); margin-bottom: 16px;"></i>
+    <h2>Configure Your Exam</h2>
+    <p>IT Officer Mains: Day 14 (Moderate to Hard - Balanced Syllabus)</p>
+    
+    <div class="time-options">
+      <div class="time-btn" onclick="selectTime(20, this)">20 Minutes<span class="time-desc">Speed Run</span></div>
+      <div class="time-btn selected" onclick="selectTime(40, this)">40 Minutes<span class="time-desc">Actual Exam Time</span></div>
+      <div class="time-btn" onclick="selectTime(45, this)">45 Minutes<span class="time-desc">Relaxed Pacing</span></div>
+      <div class="time-btn" onclick="selectTime(60, this)">60 Minutes<span class="time-desc">Deep Analysis</span></div>
+    </div>
+    
+    <button class="btn-start-exam" onclick="startExamFromSetup()">
+      Begin Exam <i data-lucide="arrow-right"></i>
+    </button>
+  </div>
+
+  <header id="main-header" style="display: none;">
+    <h1>
+      <i data-lucide="award"></i> IT Officer Mains: Day 14
+      <span class="badge-diff">Moderate to Hard</span>
+    </h1>
+    <div class="timer" id="timer"><i data-lucide="clock"></i> 00:00</div>
+  </header>
+
+  <div class="quiz-container" id="quiz-ui">
+    <div class="main-card">
+      <div class="save-indicator" id="save-indicator"><i data-lucide="cloud-lightning" size="16"></i> Auto-saved</div>
+      <div class="question-header">
+        <span id="q-topic">Topic: Loading...</span>
+        <span id="q-counter">Question 1 of 50</span>
+      </div>
+      <div class="question-text" id="q-text" style="overflow-x: auto;">Loading question...</div>
+      <div class="options-list" id="options-list"></div>
+      <div class="explanation" id="explanation"></div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" onclick="prevQuestion()" id="btn-prev"><i data-lucide="chevron-left"></i> Previous</button>
+        <button class="btn" onclick="clearSelection()" id="btn-clear" style="display:none;">Clear Response</button>
+        <button class="btn" onclick="nextQuestion()" id="btn-next">Next <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <h3 style="font-size: 1rem; margin-bottom: 12px; text-align: center;">Question Palette</h3>
+      
+      <div id="review-filters" style="display: none;">
+        <select class="filter-select" id="palette-filter" onchange="applyReviewFilter()">
+          <option value="all">Show All Questions</option>
+          <option value="correct">Show Correct Only</option>
+          <option value="wrong">Show Incorrect Only</option>
+          <option value="skipped">Show Skipped Only</option>
+        </select>
+      </div>
+
+      <div class="palette-grid" id="palette"></div>
+      <button class="btn btn-submit" style="width: 100%; justify-content: center; margin-top: 24px;" onclick="submitQuiz()">
+        <i data-lucide="check-circle"></i> Submit Quiz
+      </button>
+      <button class="btn btn-danger" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="resetQuiz()">
+        <i data-lucide="rotate-ccw"></i> Reset All
+      </button>
+    </div>
+  </div>
+
+  <div class="scorecard" id="scorecard">
+    <div class="score-header">
+      <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Quiz Completed!</h2>
+      <p style="color: var(--text-muted);">IT Officer Mains: Day 14</p>
+    </div>
+    
+    <div class="score-grid">
+      <div class="stat-box"><div class="stat-val" id="score-total" style="color: var(--accent-blue);">0</div><div class="stat-label">Total Score</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-correct" style="color: var(--accent-green);">0</div><div class="stat-label">Correct (+2)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-wrong" style="color: var(--accent-red);">0</div><div class="stat-label">Incorrect (-0.5)</div></div>
+      <div class="stat-box"><div class="stat-val" id="score-unattempted" style="color: var(--accent-yellow);">0</div><div class="stat-label">Skipped</div></div>
+    </div>
+
+    <div class="topic-table-container">
+      <table class="topic-table">
+        <thead>
+          <tr><th>Topic</th><th>Attempted</th><th>Correct</th><th>Incorrect</th><th>Accuracy</th></tr>
+        </thead>
+        <tbody id="topic-breakdown-body"></tbody>
+      </table>
+    </div>
+
+    <div class="scorecard-actions">
+      <button class="btn btn-secondary" onclick="reviewAnswers()"><i data-lucide="search"></i> Review Answers</button>
+      <button class="btn" style="background: var(--accent-indigo); color: #000;" onclick="generateAndPrintPDF()"><i data-lucide="file-text"></i> Download PDF</button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let selectedTimeMinutes = 40; 
+
+    function selectTime(minutes, element) {
+      selectedTimeMinutes = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    const questions = [
+        {
+            topic: "Data Structures & Algorithms",
+            text: "Analyze the underlying structural property demonstrated in the binary tree diagram below. Based on node arrangement, what type of data structure is this, and what is its standard Pre-Order traversal sequence?<br><br><div class='diagram-container'><svg viewBox=\"0 0 200 150\"><circle cx=\"100\" cy=\"30\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"100\" y=\"35\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\" fill=\"#0f172a\">50</text><line x1=\"90\" y1=\"40\" x2=\"60\" y2=\"70\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"80\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"50\" y=\"85\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\" fill=\"#0f172a\">30</text><line x1=\"110\" y1=\"40\" x2=\"140\" y2=\"70\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"150\" cy=\"80\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"150\" y=\"85\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\" fill=\"#0f172a\">70</text><line x1=\"40\" y1=\"90\" x2=\"25\" y2=\"115\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"20\" cy=\"125\" r=\"12\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"20\" y=\"130\" font-family=\"Arial\" font-size=\"10\" text-anchor=\"middle\" fill=\"#0f172a\">20</text><line x1=\"60\" y1=\"90\" x2=\"75\" y2=\"115\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"80\" cy=\"125\" r=\"12\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"80\" y=\"130\" font-family=\"Arial\" font-size=\"10\" text-anchor=\"middle\" fill=\"#0f172a\">40</text></svg></div>",
+            options: ["Binary Search Tree; 50, 30, 20, 40, 70", "Max Heap; 50, 30, 70, 20, 40", "Binary Search Tree; 20, 30, 40, 50, 70", "Min Heap; 20, 30, 40, 50, 70"],
+            correct: 0,
+            explanation: "The structure exhibits the defining property of a Binary Search Tree (BST) where every left child is strictly smaller than its parent, and every right child is strictly larger. Pre-Order traversal follows the sequence Root -> Left -> Right. Therefore: 50, 30, 20, 40, 70.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• An In-Order traversal of a BST will always output the elements in ascending sorted order.</div>"
+        },
+        {
+            topic: "Computer Networks",
+            text: "A corporate enterprise is allocated the CIDR block 10.15.0.0/17. The network administrator decides to subnet this block into smaller /21 routing domains for branch offices. Exactly how many usable host IP addresses will each /21 subnet provide?",
+            options: ["2048", "1022", "510", "2046"],
+            correct: 3,
+            explanation: "In an IPv4 address (32 bits), a /21 subnet mask leaves exactly 11 bits remaining for host addressing (32 - 21 = 11). To calculate usable hosts, use the formula (2^11) - 2. 2^11 is 2048. Subtracting 2 (for the network ID and broadcast address) yields 2046 usable hosts.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The original /17 block being subnetted into /21 means 4 bits were borrowed, creating 2^4 = 16 individual branch subnets.</div>"
+        },
+        {
+            topic: "Database Systems",
+            text: "In a relational database, what is the primary consequence of a transaction exhibiting the 'Phantom Read' concurrency anomaly?",
+            options: ["A transaction reads a row, another transaction modifies and commits it, and the first transaction re-reads the row to find a different value.", "A transaction reads data that has been modified but not yet committed by another transaction.", "A transaction executes a range query twice, and between the executions, a concurrent transaction inserts or deletes a row that alters the result set of the query predicate.", "A transaction successfully commits, but a subsequent system crash causes the data to be lost."],
+            correct: 2,
+            explanation: "A phantom read specifically occurs when a transaction queries a range of records (e.g., `WHERE salary > 50000`) multiple times, and a separate concurrent transaction inserts or deletes a row matching that exact condition in the interim, causing 'phantom' rows to appear or vanish.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The 'Repeatable Read' isolation level prevents non-repeatable reads (modifying existing rows), but only 'Serializable' prevents phantom reads entirely.</div>"
+        },
+        {
+            topic: "Operating Systems",
+            text: "A highly concurrent server utilizes demand paging with a page table stored in main memory. A standard memory access takes 120 ns. To optimize throughput, a Translation Lookaside Buffer (TLB) is added with a hardware search time of 15 ns. If the TLB hit ratio is 85%, what is the Effective Memory Access Time (EMAT) assuming zero page faults occur?",
+            options: ["135 ns", "153 ns", "168 ns", "255 ns"],
+            correct: 1,
+            explanation: "EMAT = (Hit Ratio * Hit Time) + (Miss Ratio * Miss Time).<br>If TLB Hit: Time = TLB Search (15) + Main Memory Data Access (120) = 135 ns.<br>If TLB Miss: Time = TLB Search (15) + Page Table Access in RAM (120) + Main Memory Data Access (120) = 255 ns.<br>EMAT = (0.85 * 135) + (0.15 * 255) = 114.75 + 38.25 = 153 ns.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A TLB miss forces a 'Page Table Walk' in RAM before the CPU can actually fetch the required data payload.</div>"
+        },
+        {
+            topic: "Java Programming",
+            text: "In Java 8 and later, which of the following statements regarding the 'Stream API' is strictly true?",
+            options: ["Streams directly mutate the underlying collection when terminal operations like `.sorted()` are applied.", "Streams are inherently persistent data structures that store elements in memory for future re-use.", "Intermediate operations on a stream are executed lazily and are not evaluated until a terminal operation is explicitly invoked.", "Parallel streams always guarantee faster execution times compared to sequential streams regardless of the underlying data size."],
+            correct: 2,
+            explanation: "The Stream API utilizes lazy evaluation. Intermediate operations (like `filter`, `map`, `sorted`) merely construct a pipeline of deferred execution. No actual processing or iteration happens until a terminal operation (like `collect` or `count`) triggers the entire pipeline.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Streams are strictly functional; they never mutate the original source data structure, but rather yield a new resulting stream.</div>"
+        },
+        {
+            topic: "Misc (Emerging Tech)",
+            text: "In the context of Machine Learning architectures, what is the primary function of an 'Activation Function' within an Artificial Neural Network?",
+            options: ["To initialize the weights of the network to random non-zero values to prevent symmetry.", "To introduce non-linearity into the network, allowing it to learn and model highly complex, non-linear representations of real-world data.", "To reduce the dimensionality of the input dataset before processing.", "To mathematically calculate the error gradient during the backpropagation phase."],
+            correct: 1,
+            explanation: "Without activation functions (like ReLU, Sigmoid, or Tanh), a neural network would simply be a linear regression model, regardless of how many deep hidden layers it possessed. The activation function introduces the crucial mathematical non-linearity required to solve complex problems.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The ReLU (Rectified Linear Unit) function outputs the input directly if it is positive, otherwise, it outputs zero.</div>"
+        },
+        {
+            topic: "Cyber Security",
+            text: "Which of the following cryptographic attacks mathematically relies on the probability principle that in a sufficiently large dataset, two entirely different inputs will inevitably produce the exact same fixed-length hash output?",
+            options: ["Chosen-Ciphertext Attack", "Replay Attack", "Birthday Attack", "Known-Plaintext Attack"],
+            correct: 2,
+            explanation: "The Birthday Attack is based on the Birthday Paradox, which proves that the probability of a hash collision occurring is significantly higher than intuition suggests. It allows attackers to find two different messages that yield the same hash in roughly 2^(N/2) operations, where N is the hash bit length.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This is why modern hashing algorithms (like SHA-256) require massively large bit outputs to remain secure against collision detection.</div>"
+        },
+        {
+            topic: "Digital Logic",
+            text: "Examine the logic circuit diagram. Based on the sequential flow of the gates, if input A is set to 1 and input B is set to 0, what is the final Boolean output Y?<br><br><div class='diagram-container'><svg viewBox='0 0 350 150'><path d='M 100 30 L 130 30 Q 150 30 150 50 Q 150 70 130 70 L 100 70 Z' fill='#e2e8f0' stroke='#334155' stroke-width='2'/><text x='115' y='55' font-family='Arial' font-size='12' font-weight='bold' fill='#0f172a'>XOR</text><path d='M 90 30 Q 110 50 90 70' fill='none' stroke='#334155' stroke-width='2'/><path d='M 100 30 Q 120 50 100 70' fill='none' stroke='#334155' stroke-width='2'/><circle cx='210' cy='50' r='6' fill='#fff' stroke='#334155' stroke-width='2'/><path d='M 170 30 L 170 70 L 204 50 Z' fill='#e2e8f0' stroke='#334155' stroke-width='2'/><text x='175' y='54' font-family='Arial' font-size='10' font-weight='bold' fill='#0f172a'>NOT</text><line x1='50' y1='40' x2='95' y2='40' stroke='#334155' stroke-width='2'/><text x='35' y='45' font-family='Arial' font-size='14' fill='#0f172a'>A</text><line x1='50' y1='60' x2='95' y2='60' stroke='#334155' stroke-width='2'/><text x='35' y='65' font-family='Arial' font-size='14' fill='#0f172a'>B</text><line x1='150' y1='50' x2='170' y2='50' stroke='#334155' stroke-width='2'/><line x1='216' y1='50' x2='250' y2='50' stroke='#334155' stroke-width='2'/><text x='260' y='55' font-family='Arial' font-size='14' fill='#0f172a'>Y</text></svg></div>",
+            options: ["1", "0", "High Impedance", "Undefined"],
+            correct: 1,
+            explanation: "The circuit feeds inputs A and B into an XOR (Exclusive-OR) gate. If A=1 and B=0, the XOR gate outputs a 1 (since the inputs are different). This output is then immediately fed into a NOT gate (inverter). The NOT gate flips the 1 to a 0. Therefore, final output Y = 0.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The combination of an XOR gate followed by a NOT gate is formally known as an XNOR (Exclusive-NOR) gate, which outputs 1 only when both inputs are identical.</div>"
+        },
+        {
+            topic: "Python Programming",
+            text: "Trace the execution of the following functional Python snippet. What will be the final printed output?<br><br><div class='code-block'>res = list(filter(lambda x: x % 2 == 0, map(lambda x: x * 3, [1, 2, 3, 4])))\nprint(res)</div>",
+            options: ["[6, 12]", "[3, 9]", "[2, 4]", "[6, 12, 18]"],
+            correct: 0,
+            explanation: "Function evaluation processes from the inside out. First, `map` multiplies every element in the list by 3, resulting in the intermediate iterable: `[3, 6, 9, 12]`. Next, `filter` removes any element that is not even (`x % 2 == 0`). This drops 3 and 9, leaving `[6, 12]`.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In Python 3, both `map()` and `filter()` return memory-efficient iterator objects rather than populated lists, which is why wrapping the expression in `list()` is necessary to print the actual values.</div>"
+        },
+        {
+            topic: "Linux Commands",
+            text: "Which of the following Linux command pipelines will efficiently locate all files ending with a \".tmp\" extension within the \"/var\" directory and permanently delete them without prompting?",
+            options: ["`locate \"*.tmp\" /var | rm -f`", "`find /var -name \"*.tmp\" -type f -delete`", "`grep -r \"*.tmp\" /var | delete`", "`rm -rf /var/*.tmp`"],
+            correct: 1,
+            explanation: "The `find` command is built specifically for this purpose. `/var` sets the search path, `-name \"*.tmp\"` targets the extension, `-type f` guarantees it only matches files (protecting directories), and the `-delete` flag safely removes them.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The `-delete` flag is significantly faster and inherently more secure against path injection attacks compared to the older `-exec rm -f {} \\;` methodology.</div>"
+        },
+        {
+            topic: "Software Engineering",
+            text: "In the context of software quality assurance, what is the primary technical objective of utilizing \"Boundary Value Analysis\"?",
+            options: ["To test the integration interfaces between external microservices.", "To analyze the maximum memory boundary limits of the application heap.", "To design test cases at the extreme edges of input ranges, as conditional logic errors are mathematically more likely to occur at threshold boundaries.", "To verify that the source code adheres to predefined stylistic boundaries and naming conventions."],
+            correct: 2,
+            explanation: "Boundary Value Analysis targets the extreme limits of input domains (e.g., if a valid input is 1 to 100, testing 0, 1, 100, and 101). It specifically aims to catch 'off-by-one' errors caused by incorrect relational operators (like using `<` instead of `<=`).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• It is highly complementary to Equivalence Partitioning, where inputs are divided into valid and invalid classes.</div>"
+        },
+        {
+            topic: "C/C++ Programming",
+            text: "What is the primary architectural purpose of the `std::move()` function introduced in the C++11 standard?",
+            options: ["To forcefully relocate an object from stack memory into heap memory.", "To perform a highly optimized deep copy of an object into a new memory location.", "To cast an lvalue into an rvalue reference, explicitly enabling the transfer of resources (move semantics) to avoid expensive deep copying.", "To dynamically reallocate the size of a standard contiguous array."],
+            correct: 2,
+            explanation: "`std::move` does not physically move memory. Instead, it performs a type cast to an rvalue reference (`T&&`). This signals the compiler that the source object is no longer needed, allowing the target object's move constructor to 'steal' its internal memory pointers directly.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Utilizing move semantics provides a massive performance boost when returning heavy objects (like a populated `std::vector`) from functions.</div>"
+        },
+        {
+            topic: "Misc (Banking IT)",
+            text: "In modern Core Banking Systems (CBS), what highly sensitive role does a Hardware Security Module (HSM) fulfill within an ATM or payment network switch architecture?",
+            options: ["It physically secures the cash-dispensing cassettes within the ATM chassis.", "It acts as a firewall routing transaction authorization packets to external gateways like Visa.", "It securely generates cryptographic keys and performs operations like PIN block decryption, translation, and verification within a tamper-evident environment.", "It locally stores the relational database logs for offline branch transactions."],
+            correct: 2,
+            explanation: "An HSM is a dedicated, physical cryptographic processor. When a PIN is entered at an ATM, the resulting encrypted PIN block can only be securely decrypted, validated, and translated inside the HSM. This shields the raw PINs and cryptographic keys from the bank's general server software stack.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If an HSM detects physical tampering, it immediately zeroes out (destroys) all internal cryptographic keys to prevent extraction.</div>"
+        },
+        {
+            topic: "Computer Architecture",
+            text: "According to Amdahl’s Law, if an application spends 25% of its execution time performing strictly sequential operations, what is the absolute maximum theoretical speedup possible, regardless of how many thousands of parallel processor cores are added?",
+            options: ["2x", "3x", "4x", "5x"],
+            correct: 2,
+            explanation: "Amdahl's Law defines max speedup as `1 / (1 - P)`, where P is the parallelizable portion. If 25% is sequential, then 75% is parallel (P = 0.75). The sequential portion (1 - P) is 0.25. Therefore, Max Speedup = 1 / 0.25 = 4.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This law proves that the strictly sequential portion of any algorithm will always mathematically bottleneck its parallel computing potential.</div>"
+        },
+        {
+            topic: "Misc (Cloud Computing)",
+            text: "An enterprise utilizes an infrastructure deployment model where its highly sensitive customer database resides securely in its own on-premises data center, while its outward-facing web application scales dynamically on AWS public cloud servers to handle traffic spikes. Which deployment model does this represent?",
+            options: ["Community Cloud", "Hybrid Cloud", "Multi-Cloud", "Distributed Private Cloud"],
+            correct: 1,
+            explanation: "A Hybrid Cloud seamlessly links a private cloud (or on-prem data center) with a public cloud. This allows the business to retain absolute control over sensitive, compliant data locally while leveraging the massive scalability and elasticity of the public cloud for web traffic.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• 'Cloud Bursting' is a common hybrid architecture where an app runs locally until demand spikes force it to 'burst' into the public cloud.</div>"
+        },
+        {
+            topic: "Linux Permissions",
+            text: "A system administrator executes the command `chmod u+s /usr/bin/custom_tool`. What specific Linux security mechanism is enabled by this action?",
+            options: ["The Sticky Bit is set, preventing anyone but the owner from deleting the file.", "The file is marked as a system binary, preventing it from being moved or renamed.", "The Set-User-ID (SUID) bit is applied, ensuring the file will execute with the elevated privileges of its owner rather than the privileges of the user running it.", "The Execute permission is securely revoked from all unauthorized users."],
+            correct: 2,
+            explanation: "The `u+s` command applies the SUID bit to the executable. When a standard user runs it, the process temporarily inherits the permissions of the user who owns the file (often `root`). This is essential for commands like `passwd` which require root access to update system shadow files.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If a vulnerability exists in an SUID binary, it represents a massive Privilege Escalation vector for attackers.</div>"
+        },
+        {
+            topic: "Misc (IT Act 2000)",
+            text: "Under Section 43A of the Information Technology Act 2000, body corporates are legally mandated to implement reasonable security practices and procedures to protect which specific classification of data?",
+            options: ["Open-source intellectual property", "Sensitive Personal Data or Information (SPDI)", "Public domain government records", "Encrypted corporate trade secrets"],
+            correct: 1,
+            explanation: "Section 43A holds corporations liable for damages if they fail to implement reasonable security practices to protect Sensitive Personal Data or Information (SPDI), which includes passwords, financial data, medical records, and biometric information.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011 explicitly detail how this data must be handled.</div>"
+        },
+        {
+            topic: "Computer Networks",
+            text: "In the Border Gateway Protocol (BGP), what is the primary technical function of the 'AS-Path' attribute?",
+            options: ["To encrypt routing tables exchanged between trusted ISP peers.", "To determine the absolute shortest path by strictly counting individual router hops.", "To act as a mandatory path-vector metric that actively prevents routing loops by tracking the exact sequence of Autonomous Systems a route has traversed.", "To assign IP addresses to internal enterprise routers during network initialization."],
+            correct: 2,
+            explanation: "The AS-Path attribute sequentially records every Autonomous System Number (ASN) a route update passes through. If a BGP router receives an update and sees its own ASN already present in the AS-Path, it discards the route, preventing massive internet-wide routing loops.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Unlike OSPF or RIP, BGP is a Path-Vector protocol that relies on administrator-defined policies rather than pure speed metrics.</div>"
+        },
+        {
+            topic: "Database Systems",
+            text: "In the context of database concurrency control, what defines a 'Conflict Serializable' schedule?",
+            options: ["A schedule that completely eliminates the 'Phantom Read' anomaly.", "A schedule that can be mathematically transformed into a purely serial schedule by swapping adjacent, non-conflicting operations.", "A schedule where all transactions execute strictly one after the other with absolutely zero overlap.", "A schedule where transactions can only read data that has been explicitly locked by a shared read lock."],
+            correct: 1,
+            explanation: "Conflict Serializability dictates that an overlapping concurrent schedule is perfectly safe if its operations can be rearranged into a serial sequence simply by swapping non-conflicting actions (like a Read-Read).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If constructing a Precedence Graph (Serialization Graph) of the schedule results in a cycle, the schedule is fundamentally not conflict serializable.</div>"
+        },
+        {
+            topic: "Operating Systems",
+            text: "What anomaly occurs when increasing the number of physical page frames allocated to a process counter-intuitively causes an increase in the total number of page faults?",
+            options: ["Thrashing", "Race Condition", "Belady's Anomaly", "Deadlock"],
+            correct: 2,
+            explanation: "Belady's Anomaly is a phenomenon specifically associated with the FIFO (First-In, First-Out) page replacement algorithm. Adding more memory frames disrupts the queue state, causing the algorithm to evict actively used pages more frequently.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Stack-based algorithms like LRU (Least Recently Used) and Optimal Page Replacement are mathematically proven to be completely immune to Belady's Anomaly.</div>"
+        },
+        {
+            topic: "Data Structures & Algorithms",
+            text: "Why is the Bellman-Ford algorithm frequently utilized instead of Dijkstra's algorithm for finding shortest paths in specific network routing scenarios?",
+            options: ["Bellman-Ford operates exponentially faster, running in O(V + E) time.", "Bellman-Ford uses significantly less auxiliary memory footprint.", "Bellman-Ford is the only algorithm capable of handling graphs with negative weight edges and explicitly detecting negative weight cycles.", "Bellman-Ford works exclusively on undirected bipartite graphs."],
+            correct: 2,
+            explanation: "Dijkstra's algorithm structurally assumes that path costs will never decrease, failing completely if negative weight edges exist. Bellman-Ford systematically accommodates negative weights and can perform an extra relaxation step to detect infinite negative-weight loops.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The trade-off is performance: Dijkstra with a Min-Heap runs in O((V+E) log V), while Bellman-Ford is slower at O(V * E).</div>"
+        },
+        {
+            topic: "Cyber Security",
+            text: "In IPsec architecture, what is the fundamental difference between 'Transport Mode' and 'Tunnel Mode'?",
+            options: ["Transport mode encrypts only the data payload, leaving the original IP header intact; Tunnel mode encrypts the entire original IP packet and encapsulates it inside a brand new IP header.", "Transport mode encrypts the entire original IP packet; Tunnel mode only encrypts the payload.", "Transport mode operates exclusively at Layer 2; Tunnel mode operates exclusively at Layer 3.", "Transport mode does not provide any encryption, relying solely on authentication headers."],
+            correct: 0,
+            explanation: "Transport mode is used for end-to-end device communication, securing the payload but exposing routing headers. Tunnel mode is used for Site-to-Site VPNs, hiding the original source and destination IPs entirely by wrapping the encrypted packet inside a new outer IP header.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• IPsec achieves this utilizing ESP (Encapsulating Security Payload) for encryption and AH (Authentication Header) for integrity.</div>"
+        },
+        {
+            topic: "Software Engineering",
+            text: "According to the principles of Agile Scrum methodology, what is the precise distinction between a 'Sprint Review' and a 'Sprint Retrospective'?",
+            options: ["The Review is conducted by developers only; the Retrospective is conducted by the Product Owner.", "The Review focuses on demonstrating the working product increment to stakeholders; the Retrospective focuses on the internal team analyzing their own processes to improve workflow efficiency.", "They are synonymous terms for the daily 15-minute stand-up meeting.", "The Review plans the next sprint's objectives; the Retrospective estimates story points."],
+            correct: 1,
+            explanation: "The Sprint Review is oriented toward the *Product* (demoing the built software to clients and stakeholders for feedback). The Sprint Retrospective is oriented toward the *Process* (a private team discussion on what went well, what failed, and how to improve next sprint).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Retrospective is the final ceremony of the sprint, providing a safe space to address workflow bottlenecks without outside pressure.</div>"
+        },
+        {
+            topic: "Java Programming",
+            text: "How does Java's `ConcurrentHashMap` achieve high-performance thread-safety compared to the legacy `Hashtable` implementation?",
+            options: ["It synchronizes every single method entirely, creating a strict single-thread bottleneck.", "It copies the entire map into a new memory space for every write operation to avoid locks.", "It utilizes lock-striping (node-level locking), locking only the specific bucket being updated, which permits concurrent reads and writes across different buckets simultaneously.", "It relies entirely on primitive volatile arrays without using any underlying locking mechanisms."],
+            correct: 2,
+            explanation: "The legacy `Hashtable` uses coarse-grained method-level synchronization, stalling all threads. `ConcurrentHashMap` uses fine-grained segmented locking. Multiple threads can read simultaneously, and can even write simultaneously provided they hash into different memory buckets.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In concurrent environments, `ConcurrentHashMap` explicitly prohibits the use of `null` keys and `null` values to avoid ambiguity.</div>"
+        },
+        {
+            topic: "Python Programming",
+            text: "What is the primary execution advantage of utilizing the `yield` keyword to create a Generator in Python instead of returning a standard populated list?",
+            options: ["Generators automatically execute their internal logic on a separate multi-core background thread.", "Generators suspend execution and lazily evaluate values one at a time, drastically reducing memory consumption for large or infinite datasets.", "Generators natively encrypt output variables in memory.", "Generators cannot be iterated over, completely protecting data integrity."],
+            correct: 1,
+            explanation: "A standard function evaluates an entire list and loads it fully into memory before returning. A generator yields one value, pauses its state, and waits for the next request. This allows processing massive datasets using a fraction of the RAM.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Generator expressions are written utilizing parentheses `()` instead of the square brackets `[]` used by list comprehensions.</div>"
+        },
+        {
+            topic: "C/C++ Programming",
+            text: "Determine the expected output of this C++ snippet utilizing pointer arithmetic. Assume an `int` occupies 4 bytes of memory.<br><br><div class='code-block'>int arr[5] = {10, 20, 30, 40, 50};\nint *p = arr;\n*(p + 3) += 5;\ncout << arr[3];</div>",
+            options: ["30", "35", "40", "45"],
+            correct: 3,
+            explanation: "`p` natively points to `arr[0]`. The pointer arithmetic `(p + 3)` advances the pointer by 3 integer slots, pointing it directly at `arr[3]` (value 40). Dereferencing it and adding 5 (`+= 5`) mutates the memory block directly. Thus, `arr[3]` is updated to 45.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The compiler automatically scales the math, shifting `(p + 3)` by `3 * sizeof(int)` bytes forward in physical memory.</div>"
+        },
+        {
+            topic: "Computer Architecture",
+            text: "Based on the provided pipeline execution diagram, during which specific stage of a classic 5-stage RISC processor are arithmetic and logical operations mathematically executed?<br><br><div class='diagram-container'><svg viewBox='0 0 400 120'><rect x='20' y='40' width='60' height='40' fill='#e2e8f0' stroke='#334155' stroke-width='2'/><text x='50' y='65' font-family='Arial' font-size='14' text-anchor='middle' fill='#0f172a'>IF</text><rect x='90' y='40' width='60' height='40' fill='#e2e8f0' stroke='#334155' stroke-width='2'/><text x='120' y='65' font-family='Arial' font-size='14' text-anchor='middle' fill='#0f172a'>ID</text><rect x='160' y='40' width='60' height='40' fill='#38bdf8' stroke='#334155' stroke-width='2'/><text x='190' y='65' font-family='Arial' font-size='14' text-anchor='middle' font-weight='bold' fill='#0f172a'>EX</text><rect x='230' y='40' width='60' height='40' fill='#e2e8f0' stroke='#334155' stroke-width='2'/><text x='260' y='65' font-family='Arial' font-size='14' text-anchor='middle' fill='#0f172a'>MEM</text><rect x='300' y='40' width='60' height='40' fill='#e2e8f0' stroke='#334155' stroke-width='2'/><text x='330' y='65' font-family='Arial' font-size='14' text-anchor='middle' fill='#0f172a'>WB</text><line x1='80' y1='60' x2='90' y2='60' stroke='#334155' stroke-width='2'/><line x1='150' y1='60' x2='160' y2='60' stroke='#334155' stroke-width='2'/><line x1='220' y1='60' x2='230' y2='60' stroke='#334155' stroke-width='2'/><line x1='290' y1='60' x2='300' y2='60' stroke='#334155' stroke-width='2'/></svg></div>",
+            options: ["Instruction Fetch (IF)", "Instruction Decode (ID)", "Execution (EX)", "Memory Access (MEM)"],
+            correct: 2,
+            explanation: "The Execution (EX) stage utilizes the Arithmetic Logic Unit (ALU) to perform the actual mathematical and logical operations required by the decoded instruction.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• IF fetches the command from cache. ID decodes it and reads registers. MEM accesses data memory (if needed). WB writes the final result back to the register file.</div>"
+        },
+        {
+            topic: "Digital Logic",
+            text: "When constructing a Half Adder circuit to mathematically add two single binary bits together, what two logical outputs are produced?",
+            options: ["Quotient and Remainder", "Sum and Carry", "Sum and Difference", "Carry and Borrow"],
+            correct: 1,
+            explanation: "A Half Adder processes two binary inputs and produces two outputs: the Sum (calculated using an XOR gate) and the Carry (calculated using an AND gate).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A Half Adder lacks the ability to accept a carry-in from a previous addition stage. A <strong>Full Adder</strong> is required to add three bits together.</div>"
+        },
+        {
+            topic: "Misc (Banking IT)",
+            text: "Which retail payment system, operated by the NPCI in India, is specifically engineered to handle bulk, repetitive, and periodic electronic transactions such as automated salary credits, pension payments, and mutual fund SIP deductions?",
+            options: ["IMPS (Immediate Payment Service)", "UPI (Unified Payments Interface)", "NACH (National Automated Clearing House)", "RTGS (Real-Time Gross Settlement)"],
+            correct: 2,
+            explanation: "NACH serves as a web-based solution to facilitate interbank, high volume, electronic transactions which are repetitive and periodic in nature. It completely replaces the older Electronic Clearing Service (ECS) system.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While IMPS and UPI are instant P2P/P2M transfer systems, NACH operates in scheduled batches optimized for millions of simultaneous corporate requests.</div>"
+        },
+        {
+            topic: "Misc (Cloud Computing)",
+            text: "What is the primary technical distinction between a Type 1 (Bare-Metal) Hypervisor and a Type 2 (Hosted) Hypervisor?",
+            options: ["Type 1 requires an underlying host operating system (like Windows or Linux) to run; Type 2 runs directly on the hardware.", "Type 1 runs directly on the physical server hardware without a host OS; Type 2 runs as an application atop a standard host OS.", "Type 1 only supports Linux guests; Type 2 only supports Windows guests.", "Type 1 relies on containerization; Type 2 uses full hardware emulation."],
+            correct: 1,
+            explanation: "Type 1 hypervisors (like VMware ESXi or Microsoft Hyper-V) install directly onto bare-metal hardware, ensuring maximum enterprise performance. Type 2 hypervisors (like VirtualBox) run as standard programs inside a Host OS.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because Type 2 has an entire Host OS sitting between the hypervisor and the hardware, it incurs a much heavier performance overhead.</div>"
+        },
+        {
+            topic: "Linux Commands",
+            text: "When viewing a directory using the `ls -l` command, the first character of a file's permission string is an `l` (e.g., `lrwxrwxrwx`). What does this explicitly indicate?",
+            options: ["It is a locked file.", "It is a standard text document.", "It is a symbolic link.", "It is a device driver."],
+            correct: 2,
+            explanation: "The first character of the permission string indicates the file type. An `l` stands for a symbolic link (soft link). A `d` stands for a directory, and a `-` stands for a regular file.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Symbolic links act like shortcuts, pointing to another file path on the system. If the original file is deleted, the link becomes 'broken'.</div>"
+        },
+        {
+            topic: "Linux Permissions",
+            text: "If a shared Linux directory (like `/tmp`) has the 'Sticky Bit' set, denoted by a 't' in its permissions string (`drwxrwxrwt`), what specific security restriction is enforced?",
+            options: ["The directory cannot be executed as a script.", "All files created inside inherit the ownership of the directory.", "Users can create and modify files, but only the file's owner, the directory's owner, or the root user can delete or rename those files.", "The directory is hidden from standard `ls` outputs."],
+            correct: 2,
+            explanation: "The Sticky Bit is crucial for publicly writable directories. Even though the directory permissions (777) allow any user to write to it, the sticky bit prevents User A from maliciously deleting or renaming a temporary file created by User B.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Sticky Bit is applied using the command `chmod +t directory_name`.</div>"
+        },
+        {
+            topic: "Misc (IT Act 2000)",
+            text: "Under the provisions of the Information Technology Act 2000 in India, what specific role does the 'Controller of Certifying Authorities' (CCA) fulfill?",
+            options: ["To investigate local cyber crimes and make arrests.", "To license, regulate, and oversee the operations of Certifying Authorities (CAs) who issue Digital Signature Certificates.", "To host the secure servers for all banking transactions.", "To act as the final appellate court for internet disputes."],
+            correct: 1,
+            explanation: "Established under Section 17 of the IT Act, the CCA is the apex body that regulates the working of Certifying Authorities (like TCS, e-Mudhra). The CCA maintains the 'Root Certificate' of India to digitally sign the public keys of all licensed CAs, establishing the nation's Public Key Infrastructure (PKI) trust chain.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Cyber crimes are handled by designated Cyber Crime Cells, and appeals go to the Cyber Appellate Tribunal (TDSAT).</div>"
+        },
+        {
+            topic: "Misc (Emerging Tech)",
+            text: "In public blockchain networks like Bitcoin, which specific consensus mechanism ensures distributed Byzantine fault tolerance by requiring nodes to expend significant computational energy to validate transactions?",
+            options: ["Proof of Stake (PoS)", "Delegated Byzantine Fault Tolerance (dBFT)", "Proof of Work (PoW)", "Practical Byzantine Fault Tolerance (pBFT)"],
+            correct: 2,
+            explanation: "Proof of Work (PoW) relies on miners solving complex cryptographic puzzles. This expenditure of hardware energy and time prevents malicious actors from easily rewriting the blockchain's history.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Proof of Stake (PoS), used by Ethereum, replaces energy-intensive mining with validators who lock up cryptocurrency collateral.</div>"
+        },
+        {
+            topic: "Computer Networks",
+            text: "Which of the following fields exists in an IPv4 header but was completely eliminated in the IPv6 header to improve router processing efficiency?",
+            options: ["Source Address", "Header Checksum", "Version", "Hop Limit / Time to Live"],
+            correct: 1,
+            explanation: "The Header Checksum was removed in IPv6. Because data link layers (like Ethernet) and transport layers (like TCP/UDP) already perform robust checksums, computing it again at the network layer was redundant and slowed down router processing.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• IPv4's 'Time to Live' (TTL) was renamed to 'Hop Limit' in IPv6.</div>"
+        },
+        {
+            topic: "Database Systems",
+            text: "Which of the following describes the core functionality of a 'Materialized View' in enterprise data warehousing?",
+            options: ["It acts strictly as an alias for a complex SELECT statement and computes data freshly on every call.", "It physically stores the pre-computed results of a query on disk to dramatically speed up complex read operations, requiring periodic refreshes.", "It enforces referential integrity between fact and dimension tables.", "It temporarily locks entire tables to perform offline backup dumps."],
+            correct: 1,
+            explanation: "Unlike standard Views (which are virtual and run their underlying query every time they are accessed), Materialized Views physically store the result set. They are ideal for heavy analytical queries where querying live transactional tables would be too slow.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The trade-off is that Materialized Views present 'stale' data until they are explicitly refreshed via triggers or scheduled jobs.</div>"
+        },
+        {
+            topic: "Operating Systems",
+            text: "Calculate the total head movement in cylinders for a disk scheduling algorithm servicing a queue of requests. The read/write head is currently at cylinder 40. The incoming queue is: 80, 20, 10, 120. If the system utilizes the Shortest Seek Time First (SSTF) algorithm, what is the total head movement?",
+            options: ["140", "210", "110", "180"],
+            correct: 0,
+            explanation: "SSTF always moves to the closest requested cylinder.<br>Start: 40.<br>Closest is 20 (distance: 20). Head at 20.<br>Closest is 10 (distance: 10). Head at 10.<br>Closest is 80 (distance: 70). Head at 80.<br>Closest is 120 (distance: 40). Head at 120.<br>Total movement = 20 + 10 + 70 + 40 = 140 cylinders.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While SSTF minimizes head movement compared to FIFO, it suffers heavily from <strong>Starvation</strong>.</div>"
+        },
+        {
+            topic: "Data Structures & Algorithms",
+            text: "When implementing a standard Hash Table using Double Hashing to resolve collisions, how is the probe sequence calculated mathematically?",
+            options: ["By checking the next contiguous memory slot (i + 1).", "By checking slots at intervals of a secondary hash function: (H1(x) + i * H2(x)) % size.", "By squaring the collision step count: (H1(x) + i^2) % size.", "By building a linked list at the collision index."],
+            correct: 1,
+            explanation: "Double Hashing uses a secondary hash function (H2) to determine the step size if a collision occurs at the primary hash (H1). This drastically reduces both primary and secondary clustering.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• For double hashing to work correctly and visit all slots, H2(x) must be relatively prime to the table size.</div>"
+        },
+        {
+            topic: "Cyber Security",
+            text: "What specific type of malicious software never writes an executable file to the victim's hard drive, but instead executes purely within volatile RAM by hijacking legitimate, built-in operating system tools like PowerShell?",
+            options: ["Ransomware", "Fileless Malware", "Macro Virus", "Boot Sector Virus"],
+            correct: 1,
+            explanation: "Fileless malware evades traditional signature-based antivirus scanners by living entirely in memory and using 'Living off the Land' (LotL) techniques—abusing trusted administrative tools already present on the OS to carry out its attacks.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because it resides in RAM, a system reboot typically destroys the active malware process, though attackers often establish registry persistence to re-trigger it.</div>"
+        },
+        {
+            topic: "Software Engineering",
+            text: "Which of the following Software Architecture patterns relies entirely on immutable, append-only logs to store every state-changing action, rather than simply updating database tables with the current state?",
+            options: ["Model-View-Controller (MVC)", "Event Sourcing", "Monolithic Architecture", "Service-Oriented Architecture (SOA)"],
+            correct: 1,
+            explanation: "Event Sourcing stores every change as an immutable event (e.g., 'Account Created', 'Deposited $50', 'Withdrew $20'). The current system state is derived purely by replaying the log from the beginning. It provides a perfect, tamper-evident audit trail.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Event Sourcing is heavily used in core banking ledgers and high-frequency trading platforms.</div>"
+        },
+        {
+            topic: "Java Programming",
+            text: "Which Java Garbage Collection algorithm, specifically designed for enterprise applications with large memory heaps, works by dynamically partitioning the heap into hundreds of equal-sized regions and prioritizing the collection of regions containing the most garbage?",
+            options: ["Serial Garbage Collector", "Parallel (Throughput) Collector", "G1 (Garbage-First) Collector", "Z Garbage Collector (ZGC)"],
+            correct: 2,
+            explanation: "The G1 (Garbage-First) Collector divides the heap into logical regions. It tracks the amount of live data in each region and targets the regions with the most garbage first, optimizing pause times and avoiding full-heap sweeps when possible.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• G1 became the default Garbage Collector in Java 9, replacing the older Parallel Collector.</div>"
+        },
+        {
+            topic: "Python Programming",
+            text: "What does the `@staticmethod` decorator signify when applied to a method within a Python class?",
+            options: ["The method receives the class object (`cls`) as its first implicit argument.", "The method can modify the state of the class itself, affecting all instances.", "The method acts like a regular utility function placed inside the class namespace; it does not implicitly receive `self` or `cls` arguments.", "The method cannot be accessed from outside the class."],
+            correct: 2,
+            explanation: "A `@staticmethod` knows absolutely nothing about the class or the instance. It is simply a utility function logically grouped inside the class. It doesn't take the implicit `self` (instance) or `cls` (class) parameters.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• `@classmethod`: Receives the class (`cls`) as the first argument, allowing it to modify class-level state or serve as an alternative constructor.</div>"
+        },
+        {
+            topic: "C/C++ Programming",
+            text: "Which C++ cast operator is evaluated purely at compile-time and is typically utilized for explicit conversions between related types, such as navigating class hierarchies without runtime type checks?",
+            options: ["`dynamic_cast`", "`reinterpret_cast`", "`static_cast`", "`const_cast`"],
+            correct: 2,
+            explanation: "`static_cast` performs conversions at compile-time. It is safer than C-style casts because it checks for type compatibility, but it does not perform runtime safety checks when downcasting pointers (unlike `dynamic_cast`).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• `dynamic_cast` uses RTTI (Run-Time Type Information) and incurs a performance overhead.<br>• `reinterpret_cast` forcefully converts any pointer to any other pointer type, which is highly dangerous.</div>"
+        },
+        {
+            topic: "Computer Architecture",
+            text: "What does the 'Instruction Set Architecture' (ISA) of a computer strictly define?",
+            options: ["The physical manufacturing process used for the silicon wafer.", "The boundary and exact interface between the hardware and the lowest-level software, including the supported instructions, registers, and memory models.", "The bus width of the motherboard PCI-e slots.", "The graphical user interface of the BIOS."],
+            correct: 1,
+            explanation: "The ISA is the programmer's view of the processor. It defines everything a machine language programmer needs to know to write code for that CPU, including the available operations, data types, registers, and addressing modes.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Examples of ISAs include x86, ARM, and RISC-V. Microarchitecture is the physical silicon implementation of an ISA.</div>"
+        },
+        {
+            topic: "Digital Logic",
+            text: "A Flip-Flop is a fundamental digital circuit capable of storing exactly how much data?",
+            options: ["1 bit", "1 byte", "4 bits (a nibble)", "8 bits"],
+            correct: 0,
+            explanation: "A flip-flop is a bistable multivibrator that can maintain one of two stable states (0 or 1). Therefore, a single flip-flop stores exactly 1 bit of binary data.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• To store an 8-bit byte, you need a 'Register' consisting of 8 flip-flops wired together on a shared clock signal.</div>"
+        },
+        {
+            topic: "Computer Networks",
+            text: "In the IEEE 802.11 standard, what is the exact purpose of the CSMA/CA protocol?",
+            options: ["To encrypt data packets before transmission.", "To actively detect collisions on the wireless medium and instantly halt transmission.", "To avoid collisions by sensing the medium and using random back-off timers before transmitting.", "To assign IP addresses to wireless devices."],
+            correct: 2,
+            explanation: "Wireless radios cannot transmit and receive simultaneously, making it impossible to detect collisions while sending. Therefore, Wi-Fi uses CSMA/CA (Collision Avoidance). Devices sense the channel; if busy, they wait a random back-off time before trying again to avoid overlapping transmissions.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>CSMA/CD (Collision Detection):</strong> Used in wired Ethernet networks (802.3), where voltage spikes can accurately signal a collision.</div>"
+        },
+        {
+            topic: "Database Systems",
+            text: "Which SQL concept is a virtual table whose contents are dynamically defined by a stored SELECT query, providing an abstraction layer over the actual underlying tables?",
+            options: ["Stored Procedure", "View", "Trigger", "Index"],
+            correct: 1,
+            explanation: "A View is a virtual table. It does not store data itself. Every time a user queries the View, the database engine transparently runs the underlying SELECT query against the base tables to fetch the current data.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Views are heavily used for security (restricting users to see only specific columns) and simplifying complex, frequently used JOIN queries.</div>"
+        },
+        {
+            topic: "Operating Systems",
+            text: "Which directory in a standard Linux filesystem is dynamically generated in RAM by the kernel during boot, and is populated entirely with special device files corresponding to hardware peripherals?",
+            options: ["/etc", "/mnt", "/dev", "/usr"],
+            correct: 2,
+            explanation: "The `/dev` (device) directory contains special device nodes. In Linux, 'everything is a file'. Hardware devices like hard drives (`/dev/sda`), terminals (`/dev/tty`), and null outputs (`/dev/null`) are accessed and interacted with by reading and writing to these virtual files.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The <strong>udev</strong> daemon is responsible for dynamically creating and removing these device files in `/dev` as hardware is plugged in or removed.</div>"
+        },
+        {
+            topic: "Data Structures & Algorithms",
+            text: "Which algorithmic paradigm does the Floyd-Warshall algorithm utilize to find the shortest paths between all pairs of vertices in a weighted graph?",
+            options: ["Greedy Approach", "Divide and Conquer", "Dynamic Programming", "Backtracking"],
+            correct: 2,
+            explanation: "The Floyd-Warshall algorithm uses Dynamic Programming. It systematically updates a distance matrix by considering whether a path between two nodes `i` and `j` is shorter if it goes through an intermediate node `k`, building up optimal solutions step-by-step.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Its time complexity is heavily fixed at O(V^3), making it suitable only for relatively dense graphs with a small number of vertices.</div>"
+        },
+        {
+            topic: "Cyber Security",
+            text: "Which of the following describes the principle of 'Steganography'?",
+            options: ["Encrypting a hard drive using a 256-bit symmetric key.", "Concealing a secret message, file, or image within another seemingly ordinary, non-secret file or image to hide its very existence.", "Authenticating a user via retinal or fingerprint scans.", "Overwhelming a server with excessive ping requests."],
+            correct: 1,
+            explanation: "Cryptography scrambles a message to make it unreadable. Steganography hides the message entirely so nobody even suspects a secret is being communicated. A common method is altering the Least Significant Bits (LSB) of pixels in a standard image file to encode text.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because the changes are in the least significant bits, the human eye cannot detect the slight color variations in the carrier image.</div>"
+        }
+    ];
+
+    let currentQ = 0;
+    let userAnswers = new Array(50).fill(null);
+    let isReviewMode = false;
+    let quizSubmitted = false;
+    let timeRemaining = 0;
+    let timerInterval;
+
+    const elTopic = document.getElementById('q-topic');
+    const elCounter = document.getElementById('q-counter');
+    const elText = document.getElementById('q-text');
+    const elOptions = document.getElementById('options-list');
+    const elExplanation = document.getElementById('explanation');
+    const elPalette = document.getElementById('palette');
+    const saveIndicator = document.getElementById('save-indicator');
+
+    function initQuiz() {
+      window.addEventListener('beforeunload', function (e) {
+        if (!quizSubmitted && document.getElementById('quiz-ui').style.display === 'grid') {
+          e.preventDefault(); e.returnValue = '';
+        }
+      });
+
+      const finalResult = localStorage.getItem('quiz_result_day_14');
+      if (finalResult) {
+        try {
+          const parsedResult = JSON.parse(finalResult);
+          userAnswers = parsedResult.userAnswersArray || new Array(50).fill(null);
+          
+          document.getElementById('setup-screen').innerHTML = `
+            <i data-lucide="check-circle" style="width: 56px; height: 56px; color: var(--accent-green); margin-bottom: 16px;"></i>
+            <h2 style="margin-bottom: 8px;">Quiz Already Completed</h2>
+            <p style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 5px;">Your Score: <strong style="color: var(--accent-blue);">${parsedResult.score} / ${questions.length * 2}</strong></p>
+            <p style="color: var(--text-muted); margin-bottom: 24px;">You have already submitted this exam.</p>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+              <button class="btn" style="flex: 1;" onclick="loadScorecardFromStorage()"><i data-lucide="bar-chart-2"></i> View Scorecard</button>
+              <button class="btn btn-danger" style="flex: 1;" onclick="resetQuiz()"><i data-lucide="rotate-ccw"></i> Retake Exam</button>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        } catch(e) {}
+      }
+
+      const savedData = localStorage.getItem('it_officer_mains_day14');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          if (parsed && parsed.timeRemaining > 0 && !parsed.quizSubmitted) {
+            userAnswers = parsed.userAnswers;
+            timeRemaining = parsed.timeRemaining;
+            currentQ = parsed.currentQ;
+            
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-header').style.display = 'flex';
+            document.getElementById('quiz-ui').style.display = 'grid';
+            
+            buildPalette();
+            loadQuestion(currentQ);
+            startTimer(true);
+          }
+        } catch(e) { console.error("Error loading save state"); }
+      }
+    }
+
+    function loadScorecardFromStorage() {
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('scorecard').style.display = 'block';
+        
+        let correct = 0, wrong = 0, unattempted = 0;
+        let topicStats = {};
+
+        for (let i = 0; i < 50; i++) {
+            let q = questions[i];
+            let baseTopic = q.topic;
+            
+            if(!topicStats[baseTopic]) {
+                topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+            }
+            topicStats[baseTopic].total++;
+
+            if (userAnswers[i] === null) {
+                unattempted++; topicStats[baseTopic].skipped++;
+            } else if (userAnswers[i] === q.correct) {
+                correct++; topicStats[baseTopic].correct++;
+            } else {
+                wrong++; topicStats[baseTopic].wrong++;
+            }
+        }
+
+        const score = (correct * 2) - (wrong * 0.5);
+        document.getElementById('score-total').innerText = score;
+        document.getElementById('score-correct').innerText = correct;
+        document.getElementById('score-wrong').innerText = wrong;
+        document.getElementById('score-unattempted').innerText = unattempted;
+
+        const tbBody = document.getElementById('topic-breakdown-body');
+        tbBody.innerHTML = '';
+        for (const [topic, stats] of Object.entries(topicStats)) {
+            const acc = Math.round((stats.correct / stats.total) * 100);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
+            tbBody.appendChild(tr);
+        }
+        
+        document.querySelector('.topic-table-container').style.display = 'block';
+    }
+
+    function startExamFromSetup() {
+      timeRemaining = selectedTimeMinutes * 60;
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      
+      buildPalette();
+      loadQuestion(0);
+      triggerAutoSave();
+      startTimer(false);
+    }
+
+    function buildPalette() {
+      elPalette.innerHTML = '';
+      for (let i = 0; i < 50; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'p-btn';
+        btn.id = `pal-${i}`;
+        btn.innerText = i + 1;
+        btn.onclick = () => jumpToQuestion(i);
+        elPalette.appendChild(btn);
+      }
+    }
+
+    function triggerAutoSave() {
+      if(quizSubmitted) return;
+      const state = { currentQ, userAnswers, timeRemaining, quizSubmitted };
+      localStorage.setItem('it_officer_mains_day14', JSON.stringify(state));
+      saveIndicator.classList.add('show');
+      setTimeout(() => saveIndicator.classList.remove('show'), 1500);
+    }
+
+    function resetQuiz() {
+      if(confirm("Are you sure you want to reset this quiz? Your score will be overwritten.")) {
+        localStorage.removeItem('it_officer_mains_day14');
+        localStorage.removeItem('quiz_result_day_14');
+        location.reload();
+      }
+    }
+
+    function startTimer(isResume) {
+      const elTimer = document.getElementById('timer');
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining % 10 === 0) triggerAutoSave(); 
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          elTimer.innerHTML = `<i data-lucide="clock"></i> 00:00`;
+          submitQuiz(true); 
+        } else {
+          const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+          const s = (timeRemaining % 60).toString().padStart(2, '0');
+          elTimer.innerHTML = `<i data-lucide="clock"></i> ${m}:${s}`;
+        }
+      }, 1000);
+    }
+
+    function loadQuestion(index) {
+      currentQ = index;
+      const q = questions[index];
+      
+      elTopic.innerText = `Topic: ${q.topic}`;
+      elCounter.innerText = `Question ${index + 1} of 50`;
+      elText.innerHTML = q.text; 
+
+      elOptions.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (userAnswers[index] === i) btn.classList.add('selected');
+        
+        if (isReviewMode) {
+          btn.disabled = true;
+          if (i === q.correct) btn.classList.add('correct-opt');
+          if (userAnswers[index] === i && i !== q.correct) btn.classList.add('wrong-opt');
+        }
+
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> ${opt}`;
+        if (!isReviewMode) btn.onclick = () => selectOption(i);
+        elOptions.appendChild(btn);
+      });
+
+      document.getElementById('btn-clear').style.display = (!isReviewMode && userAnswers[index] !== null) ? 'block' : 'none';
+      
+      if (isReviewMode) {
+        elExplanation.style.display = 'block';
+        elExplanation.innerHTML = `<strong>Explanation:</strong><br>${q.explanation}`;
+      } else {
+        elExplanation.style.display = 'none';
+      }
+      updatePaletteUI();
+    }
+
+    function selectOption(optIndex) {
+      userAnswers[currentQ] = optIndex;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function clearSelection() {
+      userAnswers[currentQ] = null;
+      triggerAutoSave();
+      loadQuestion(currentQ);
+    }
+
+    function nextQuestion() {
+        if (currentQ < 49) {
+            if (isReviewMode) {
+                let next = currentQ + 1;
+                while (next < 50 && document.getElementById(`pal-${next}`).style.display === 'none') {
+                    next++;
+                }
+                if (next < 50) loadQuestion(next);
+            } else {
+                loadQuestion(currentQ + 1);
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQ > 0) {
+            if (isReviewMode) {
+                let prev = currentQ - 1;
+                while (prev >= 0 && document.getElementById(`pal-${prev}`).style.display === 'none') {
+                    prev--;
+                }
+                if (prev >= 0) loadQuestion(prev);
+            } else {
+                loadQuestion(currentQ - 1);
+            }
+        }
+    }
+
+    function jumpToQuestion(index) { loadQuestion(index); }
+
+    function updatePaletteUI() {
+      for (let i = 0; i < 50; i++) {
+        const btn = document.getElementById(`pal-${i}`);
+        if (!btn) continue;
+        
+        btn.className = 'p-btn';
+        if (isReviewMode) {
+          if (userAnswers[i] === questions[i].correct) btn.classList.add('review-correct');
+          else if (userAnswers[i] !== null) btn.classList.add('review-wrong');
+        } else {
+          if (userAnswers[i] !== null) btn.classList.add('answered');
+        }
+        if (i === currentQ) btn.classList.add('active');
+      }
+    }
+
+    function applyReviewFilter() {
+        const filter = document.getElementById('palette-filter').value;
+        let firstVisible = -1;
+
+        for (let i = 0; i < 50; i++) {
+            const btn = document.getElementById(`pal-${i}`);
+            let isCorrect = userAnswers[i] === questions[i].correct;
+            let isSkipped = userAnswers[i] === null;
+            let isWrong = !isCorrect && !isSkipped;
+            
+            let show = false;
+            if (filter === 'all') show = true;
+            else if (filter === 'correct' && isCorrect) show = true;
+            else if (filter === 'wrong' && isWrong) show = true;
+            else if (filter === 'skipped' && isSkipped) show = true;
+
+            btn.style.display = show ? 'block' : 'none';
+            if (show && firstVisible === -1) firstVisible = i;
+        }
+
+        if (firstVisible !== -1 && document.getElementById(`pal-${currentQ}`).style.display === 'none') {
+            loadQuestion(firstVisible);
+        }
+    }
+
+    let generatedAnalyticsData = {}; 
+
+    function submitQuiz(force = false) {
+      if (!force && !confirm("Are you sure you want to submit the quiz?")) return;
+      
+      quizSubmitted = true;
+      clearInterval(timerInterval);
+      localStorage.removeItem('it_officer_mains_day14');
+
+      document.getElementById('quiz-ui').style.display = 'none';
+      document.getElementById('scorecard').style.display = 'block';
+      document.getElementById('main-header').style.display = 'none';
+
+      let correct = 0, wrong = 0, unattempted = 0;
+      let topicStats = {};
+      let wrongLog = [], skippedLog = [];
+      let playableMistakes = [];
+
+      for (let i = 0; i < 50; i++) {
+        let q = questions[i];
+        let baseTopic = q.topic;
+        
+        if(!topicStats[baseTopic]) {
+            topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+        }
+        topicStats[baseTopic].total++;
+
+        if (userAnswers[i] === null) {
+          unattempted++; topicStats[baseTopic].skipped++;
+          skippedLog.push({ qNum: i+1, topic: baseTopic, text: q.text });
+          playableMistakes.push(q);
+        } else if (userAnswers[i] === q.correct) {
+          correct++; topicStats[baseTopic].correct++;
+        } else {
+          wrong++; topicStats[baseTopic].wrong++;
+          wrongLog.push({
+             qNum: i+1, topic: baseTopic, text: q.text, 
+             userAnswer: q.options[userAnswers[i]], correctAnswer: q.options[q.correct]
+          });
+          playableMistakes.push(q);
+        }
+      }
+
+      const score = (correct * 2) - (wrong * 0.5);
+      document.getElementById('score-total').innerText = score;
+      document.getElementById('score-correct').innerText = correct;
+      document.getElementById('score-wrong').innerText = wrong;
+      document.getElementById('score-unattempted').innerText = unattempted;
+
+      const tbBody = document.getElementById('topic-breakdown-body');
+      tbBody.innerHTML = '';
+      for (const [topic, stats] of Object.entries(topicStats)) {
+          const acc = Math.round((stats.correct / stats.total) * 100);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
+          tbBody.appendChild(tr);
+      }
+
+      generatedAnalyticsData = {
+        quizDay: 14, 
+        quizTitle: "IT Officer Mains: Day 14",
+        difficultyLevel: 3,
+        difficultyName: "Moderate to Hard",
+        focusArea: "Balanced Syllabus",
+        date: new Date().toISOString(),
+        totalQuestions: 50,
+        correct: correct, incorrect: wrong, unattempted: unattempted, score: score,
+        topicBreakdown: topicStats, wrongQuestions: wrongLog, skippedQuestions: skippedLog,
+        playableMistakes: playableMistakes,
+        userAnswersArray: userAnswers
+      };
+
+      autoSaveToServer(generatedAnalyticsData);
+    }
+
+    function reviewAnswers() {
+      isReviewMode = true;
+      document.getElementById('scorecard').style.display = 'none';
+      document.getElementById('main-header').style.display = 'flex';
+      document.getElementById('quiz-ui').style.display = 'grid';
+      document.querySelector('.btn-submit').style.display = 'none';
+      document.querySelector('.btn-danger').style.display = 'none';
+      
+      document.getElementById('review-filters').style.display = 'block';
+      if(elPalette.innerHTML === '') buildPalette();
+      
+      loadQuestion(0);
+    }
+
+    function autoSaveToServer(data) {
+      try {
+        const storageKey = `quiz_result_day_${data.quizDay}`;
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        
+        if (window.parent && window.parent.loadDataFromBackend) {
+          window.parent.loadDataFromBackend();
+        }
+      } catch (err) {
+        console.error("Error saving result locally.", err);
+      }
+    }
+
+    function generateAndPrintPDF() {
+        const printArea = document.getElementById('pdf-export-area');
+        let htmlContent = `
+            <div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; color: #000;">
+                <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">IT Officer Mains: Day 14 - Answer Key</h1>
+                <p><strong>Difficulty:</strong> Moderate to Hard | <strong>Focus:</strong> Balanced Syllabus</p>
+                <hr style="margin-bottom: 30px;">
+        `;
+
+        questions.forEach((q, i) => {
+            const uAns = userAnswers[i];
+            let statusBadge = "";
+            if (uAns === null) statusBadge = "<span style='color: orange;'>[Skipped]</span>";
+            else if (uAns === q.correct) statusBadge = "<span style='color: green;'>[Correct]</span>";
+            else statusBadge = "<span style='color: red;'>[Wrong]</span>";
+
+            htmlContent += `
+                <div class="pdf-question">
+                    <h3>Q${i+1}. ${q.text} ${statusBadge}</h3>
+                    <p style="font-size: 0.9em; color: #555;">Topic: ${q.topic}</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+            `;
+            
+            q.options.forEach((opt, optIndex) => {
+                let prefix = "[ ]";
+                let style = "";
+                if(optIndex === q.correct) {
+                    prefix = "[✓]"; style = "color: green; font-weight: bold;";
+                } else if (uAns === optIndex) {
+                    prefix = "[✗]"; style = "color: red; text-decoration: line-through;";
+                }
+                htmlContent += `<li style="margin-bottom: 5px; ${style}">${prefix} ${String.fromCharCode(65 + optIndex)}. ${opt}</li>`;
+            });
+
+            htmlContent += `
+                    </ul>
+                    <div style="background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin-top: 10px;">
+                        <strong>Explanation:</strong><br>${q.explanation}
+                    </div>
+                </div>
+            `;
+        });
+
+        htmlContent += `</div>`;
+        printArea.innerHTML = htmlContent;
+        window.print();
+    }
+
+    window.onload = initQuiz;
+  </script>
+</body>
+</html>
