@@ -940,7 +940,7 @@
       <!-- Quick Notification Bell -->
       <button class="notif-bell-btn" onclick="switchTab('notifications')" title="Exam Notifications & Alerts">
         <i data-lucide="bell" size="18"></i>
-        <span class="notif-dot-badge">3</span>
+        <span class="notif-dot-badge" id="header-notif-count">0</span>
       </button>
 
       <!-- Anonymous User Pill or Sign In Button -->
@@ -988,7 +988,7 @@
     </button>
     <button class="tab-btn" onclick="switchTab('notifications')" id="tab-notifications">
       <i data-lucide="bell"></i> Notifications
-      <span class="badge-tab-pill notif-pill">3 New</span>
+      <span class="badge-tab-pill notif-pill" id="nav-notif-badge">0 New</span>
     </button>
     <button class="tab-btn" onclick="switchTab('posts')" id="tab-posts">
       <i data-lucide="message-square"></i> Community Posts
@@ -1206,84 +1206,18 @@
     </div>
 
     <!-- Notification Filter Bar -->
-    <div class="notif-filter-bar">
-      <span class="chip active" onclick="filterNotifs('all', this)">All Notices (4)</span>
-      <span class="chip" onclick="filterNotifs('official', this)">Official IBPS Releases (2)</span>
-      <span class="chip" onclick="filterNotifs('admit-card', this)">Admit Card Radar (1)</span>
-      <span class="chip" onclick="filterNotifs('mock-release', this)">Mock Papers (1)</span>
+    <div class="notif-filter-bar" id="notif-filter-bar">
+      <span class="chip active" onclick="filterNotifs('all', this)" id="chip-notif-all">All Notices (<span id="count-notif-all">0</span>)</span>
+      <span class="chip" onclick="filterNotifs('official', this)" id="chip-notif-official">Official IBPS (<span id="count-notif-official">0</span>)</span>
+      <span class="chip" onclick="filterNotifs('admit-card', this)" id="chip-notif-admit">Admit Card (<span id="count-notif-admit">0</span>)</span>
+      <span class="chip" onclick="filterNotifs('mock-release', this)" id="chip-notif-mock">Mock Papers (<span id="count-notif-mock">0</span>)</span>
     </div>
 
-    <div class="notif-board">
-      <!-- Notification Card 1 -->
-      <article class="glass-card notif-card official" data-category="official">
-        <div class="notif-card-header">
-          <span class="notif-category official"><i data-lucide="alert-circle" size="13"></i> Official IBPS Advisory</span>
-          <span class="notif-time">Updated 2 days ago • ibps.in</span>
-        </div>
-        <h3 class="notif-title">IBPS SO (Scale-I) IT Officer Mains 2026: Official Examination Structure Confirmed</h3>
-        <p class="notif-body">
-          The Institute of Banking Personnel Selection has issued the confirmed pattern for Phase-II Mains. The Professional Knowledge assessment comprises <strong>60 Questions for 60 Marks</strong> with a strictly enforced time limit of <strong>45 minutes</strong>. A negative penalty of <strong>0.25 marks</strong> is deducted for each incorrect answer. Bilingual delivery in English and Hindi will be active across all authorized TCS iON venues.
-        </p>
-        <div class="notif-actions">
-          <a href="https://www.ibps.in" target="_blank" class="btn btn-secondary" style="font-size: 0.84rem; padding: 7px 16px;">
-            <i data-lucide="external-link" size="14"></i> Official IBPS Portal
-          </a>
-          <button class="btn btn-secondary" style="font-size: 0.84rem; padding: 7px 16px;" onclick="switchTab('quizzes')">
-            <i data-lucide="book-open" size="14"></i> Practice Matching Mocks
-          </button>
-        </div>
-      </article>
-
-      <!-- Notification Card 2 -->
-      <article class="glass-card notif-card admit-card" data-category="admit-card">
-        <div class="notif-card-header">
-          <span class="notif-category admit-card"><i data-lucide="file-text" size="13"></i> Call Letter Radar</span>
-          <span class="notif-time">Active Window Monitoring</span>
-        </div>
-        <h3 class="notif-title">Phase-II Mains Call Letter & Venue Allocation Window Approaching</h3>
-        <p class="notif-body">
-          Admit cards for Phase-II Mains are scheduled for release 10 to 14 days before the exam date. Keep your Registration Number, Roll Number, and Password / Date of Birth (DD-MM-YY format) accessible. ExamMatrix automated monitoring will broadcast immediate alerts once the direct download gateway goes live on the official server.
-        </p>
-        <div class="notif-actions">
-          <span style="font-size: 0.85rem; color: var(--accent-amber); display: flex; align-items: center; gap: 6px;">
-            <i data-lucide="clock" size="14"></i> Direct Download Link will populate here automatically
-          </span>
-        </div>
-      </article>
-
-      <!-- Notification Card 3 -->
-      <article class="glass-card notif-card mock-release" data-category="mock-release">
-        <div class="notif-card-header">
-          <span class="notif-category mock-release"><i data-lucide="sparkles" size="13"></i> Content Release</span>
-          <span class="notif-time">Latest System Update</span>
-        </div>
-        <h3 class="notif-title">Full 17-Day Mock Test Ledger with Dynamic TCS iON Player Active</h3>
-        <p class="notif-body">
-          All 17 daily full-length mock papers (850 total Professional Knowledge questions) are synchronized with Cloud Firestore. Featuring high-yield coverage across Database Management, Computer Networks, Operating Systems, Data Structures, Software Engineering, and Web Technologies with KaTeX mathematical formatting and real-time cloud autosaves.
-        </p>
-        <div class="notif-actions">
-          <button class="btn btn-play" style="width: auto; padding: 7px 18px; font-size: 0.84rem;" onclick="switchTab('quizzes')">
-            <i data-lucide="play" size="14"></i> Explore 17 Mock Papers
-          </button>
-        </div>
-      </article>
-
-      <!-- Notification Card 4 -->
-      <article class="glass-card notif-card advisory" data-category="official">
-        <div class="notif-card-header">
-          <span class="notif-category advisory"><i data-lucide="trending-up" size="13"></i> High-Yield Syllabus Focus</span>
-          <span class="notif-time">ExamMatrix Curriculum Radar</span>
-        </div>
-        <h3 class="notif-title">High-Weightage Banking IT Trends: Information Security & Cloud Infrastructure</h3>
-        <p class="notif-body">
-          Analysis of recent Specialist Officer exam cycles indicates elevated weightage for Cloud Computing (IaaS/PaaS/SaaS architectures), Cryptography (RSA, AES, Digital Certificates, PKI), and Network Firewalls. Candidates are advised to prioritize these high-yield topics alongside classical Relational Normalization and SQL subqueries.
-        </p>
-        <div class="notif-actions">
-          <button class="btn btn-secondary" style="font-size: 0.84rem; padding: 7px 16px;" onclick="switchTab('drills')">
-            <i data-lucide="crosshair" size="14"></i> Launch Topic Drills
-          </button>
-        </div>
-      </article>
+    <div class="notif-board" id="candidate-notif-board">
+      <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+        <i data-lucide="loader" class="spin" size="32"></i>
+        <p style="margin-top: 10px;">Loading exam announcements & alerts...</p>
+      </div>
     </div>
   </div>
 
@@ -1339,126 +1273,12 @@
       </div>
 
       <!-- Feed Preview Posts -->
-      <!-- Post 1 -->
-      <article class="glass-card post-card">
-        <div class="post-card-header">
-          <div class="post-author-box">
-            <div class="user-avatar-circle" style="background: rgba(245, 158, 11, 0.2); width: 36px; height: 36px;">🥭</div>
-            <div>
-              <div class="post-author-name">Velvet Mango #482</div>
-              <div class="post-author-handle">@velvet_mango_482 • IT Officer Aspirant</div>
-            </div>
-          </div>
-          <span class="post-time">2 hours ago</span>
+      <div id="candidate-posts-feed" style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+          <i data-lucide="loader" class="spin" size="32"></i>
+          <p style="margin-top: 10px;">Loading candidate posts...</p>
         </div>
-
-        <h4 class="post-title">Strict 2PL vs Rigorous 2PL: Crucial Distinction for Cascading Aborts</h4>
-        <p class="post-content">
-          Saw a tricky question in Day 3 Mock Q34 regarding Concurrency Control protocols:
-          <br><br>
-          • <strong>Strict 2PL</strong>: Holds all <em>exclusive (write)</em> locks until commit/abort. This guarantees strict schedules and <strong>prevents cascading rollbacks</strong> completely!
-          <br>
-          • <strong>Rigorous 2PL</strong>: Holds <em>BOTH shared (read) and exclusive (write)</em> locks until commit. Produces strict serializability where transaction commit order equals serialization order.
-          <br><br>
-          Quick mnemonic: "Strict locks Writes; Rigorous locks Both." Don't lose 0.50 marks on this in Mains!
-        </p>
-
-        <div class="post-tag-group">
-          <span class="post-tag">#DBMS</span>
-          <span class="post-tag">#ConcurrencyControl</span>
-          <span class="post-tag">#HighYieldNotes</span>
-        </div>
-
-        <div class="post-footer">
-          <div class="post-actions-group">
-            <button class="post-action-btn" onclick="alert('Social upvoting active in Phase 6!')"><i data-lucide="arrow-big-up" size="16"></i> 38 Upvotes</button>
-            <button class="post-action-btn" onclick="alert('Discussion threads active in Phase 6!')"><i data-lucide="message-circle" size="16"></i> 9 Explanations</button>
-          </div>
-          <button class="post-action-btn"><i data-lucide="bookmark" size="15"></i> Save Note</button>
-        </div>
-      </article>
-
-      <!-- Post 2 -->
-      <article class="glass-card post-card">
-        <div class="post-card-header">
-          <div class="post-author-box">
-            <div class="user-avatar-circle" style="background: rgba(16, 185, 129, 0.2); width: 36px; height: 36px;">🥝</div>
-            <div>
-              <div class="post-author-name">Cosmic Kiwi #312</div>
-              <div class="post-author-handle">@cosmic_kiwi_312 • Scale-I Target</div>
-            </div>
-          </div>
-          <span class="post-time">5 hours ago</span>
-        </div>
-
-        <h4 class="post-title">Subnetting Shortcut: Finding Usable Host IP Range in /28 Subnet</h4>
-        <p class="post-content">
-          Given IP: <code>192.168.10.38/28</code>. What is the valid host range?
-          <br><br>
-          1. Host bits = 32 - 28 = 4 bits. Block size = 2^4 = <strong>16</strong>.
-          <br>
-          2. Multiples of 16 around 38: 0, 16, <strong>32</strong>, 48.
-          <br>
-          3. Network ID = <code>192.168.10.32</code>. Broadcast ID = <code>192.168.10.47</code>.
-          <br>
-          4. <strong>Usable Range</strong> = <code>192.168.10.33</code> to <code>192.168.10.46</code> (14 hosts).
-          <br><br>
-          Takes literally 15 seconds once you know the block size trick!
-        </p>
-
-        <div class="post-tag-group">
-          <span class="post-tag">#ComputerNetworks</span>
-          <span class="post-tag">#Subnetting</span>
-          <span class="post-tag">#SpeedTrick</span>
-        </div>
-
-        <div class="post-footer">
-          <div class="post-actions-group">
-            <button class="post-action-btn" onclick="alert('Social upvoting active in Phase 6!')"><i data-lucide="arrow-big-up" size="16"></i> 52 Upvotes</button>
-            <button class="post-action-btn" onclick="alert('Discussion threads active in Phase 6!')"><i data-lucide="message-circle" size="16"></i> 14 Explanations</button>
-          </div>
-          <button class="post-action-btn"><i data-lucide="bookmark" size="15"></i> Save Note</button>
-        </div>
-      </article>
-
-      <!-- Post 3 -->
-      <article class="glass-card post-card">
-        <div class="post-card-header">
-          <div class="post-author-box">
-            <div class="user-avatar-circle" style="background: rgba(249, 115, 22, 0.2); width: 36px; height: 36px;">🍈</div>
-            <div>
-              <div class="post-author-name">Radiant Guava #518</div>
-              <div class="post-author-handle">@radiant_guava_518 • Mains Strategist</div>
-            </div>
-          </div>
-          <span class="post-time">1 day ago</span>
-        </div>
-
-        <h4 class="post-title">My 3-Round Strategy for 50 Questions in 40 Minutes</h4>
-        <p class="post-content">
-          After giving 6 mocks on ExamMatrix, my score improved from 42 to 67.5 by eliminating blind guessing:
-          <br><br>
-          • <strong>Round 1 (0 to 18 min)</strong>: Answer direct memory/concept questions (OS scheduling names, software models, basic SQL commands). Mark tricky ones for review.
-          <br>
-          • <strong>Round 2 (18 to 32 min)</strong>: Solve mathematical/algorithmic problems (Subnetting, Dijkstra iterations, Normalization candidate keys).
-          <br>
-          • <strong>Round 3 (32 to 40 min)</strong>: Review 50/50 marked questions. If you cannot logically eliminate 2 options, <strong>SKIP IT</strong>. A skipped question costs 0, a wrong guess costs 0.50!
-        </p>
-
-        <div class="post-tag-group">
-          <span class="post-tag">#Strategy</span>
-          <span class="post-tag">#NegativeMarking</span>
-          <span class="post-tag">#IBPS_SO</span>
-        </div>
-
-        <div class="post-footer">
-          <div class="post-actions-group">
-            <button class="post-action-btn" onclick="alert('Social upvoting active in Phase 6!')"><i data-lucide="arrow-big-up" size="16"></i> 64 Upvotes</button>
-            <button class="post-action-btn" onclick="alert('Discussion threads active in Phase 6!')"><i data-lucide="message-circle" size="16"></i> 21 Explanations</button>
-          </div>
-          <button class="post-action-btn"><i data-lucide="bookmark" size="15"></i> Save Note</button>
-        </div>
-      </article>
+      </div>
     </div>
   </div>
 
@@ -1487,45 +1307,10 @@
     </div>
 
     <!-- Active Study Rooms Grid -->
-    <div class="chat-rooms-grid">
-      <div class="glass-card chat-room-card" onclick="alert('Study room launching in Phase 6!')">
-        <div class="chat-room-header">
-          <span class="chat-room-icon">🛡️</span>
-          <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> 34 Online</span>
-        </div>
-        <h4 class="chat-room-title">IT Core Specialists</h4>
-        <p class="chat-room-desc">DBMS Normalization, OS Deadlocks, TCP/IP congestion, and Data Structure complexities.</p>
-        <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
-      </div>
-
-      <div class="glass-card chat-room-card" onclick="alert('Study room launching in Phase 6!')">
-        <div class="chat-room-header">
-          <span class="chat-room-icon">⚡</span>
-          <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> 21 Online</span>
-        </div>
-        <h4 class="chat-room-title">Speed Optimization Squad</h4>
-        <p class="chat-room-desc">Targeting 48s per question. Rapid elimination techniques and negative marking reduction.</p>
-        <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
-      </div>
-
-      <div class="glass-card chat-room-card" onclick="alert('Study room launching in Phase 6!')">
-        <div class="chat-room-header">
-          <span class="chat-room-icon">🎯</span>
-          <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> 28 Online</span>
-        </div>
-        <h4 class="chat-room-title">Daily Doubt Clearance</h4>
-        <p class="chat-room-desc">Post tricky questions from today's mock tests and get instant peer breakdowns.</p>
-        <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
-      </div>
-
-      <div class="glass-card chat-room-card" onclick="alert('Study room launching in Phase 6!')">
-        <div class="chat-room-header">
-          <span class="chat-room-icon">📢</span>
-          <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> 47 Online</span>
-        </div>
-        <h4 class="chat-room-title">IBPS SO Intel & Vacancies</h4>
-        <p class="chat-room-desc">Discuss vacancy updates, previous year cutoffs, bank preferences, and exam logistics.</p>
-        <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
+    <div class="chat-rooms-grid" id="candidate-chat-rooms-grid">
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
+        <i data-lucide="loader" class="spin" size="32"></i>
+        <p style="margin-top: 10px;">Loading study rooms...</p>
       </div>
     </div>
 
@@ -1836,13 +1621,16 @@
 
     async function loadDataFromBackend() {
       try {
-        const [quizRes, visitorRes, attemptsRes, githubRes, cutoffRes, masteryRes] = await Promise.all([
+        const [quizRes, visitorRes, attemptsRes, githubRes, cutoffRes, masteryRes, notifsRes, groupsRes, postsRes] = await Promise.all([
           fetch('/api/quizzes'),
           fetch('/api/visitors'),
           fetch('/api/attempts').catch(() => null),
           fetch('https://api.github.com/repos/mohitbhatt-du/My-Mock-App').catch(() => null),
           fetch('/api/analytics/cutoff-predictor').catch(() => null),
-          fetch('/api/topics/mastery').catch(() => null)
+          fetch('/api/topics/mastery').catch(() => null),
+          fetch('/api/notifications').catch(() => null),
+          fetch('/api/groups').catch(() => null),
+          fetch('/api/posts').catch(() => null)
         ]);
         
         globalQuizzes = await quizRes.json();
@@ -1873,6 +1661,30 @@
           try {
             const masteryData = await masteryRes.json();
             renderTopicDrills(masteryData);
+          } catch(e) {}
+        }
+
+        if (notifsRes && notifsRes.ok) {
+          try {
+            const notifsData = await notifsRes.json();
+            const list = Array.isArray(notifsData) ? notifsData : (notifsData.notifications || []);
+            renderCandidateNotifications(list);
+          } catch(e) {}
+        }
+
+        if (groupsRes && groupsRes.ok) {
+          try {
+            const groupsData = await groupsRes.json();
+            const list = Array.isArray(groupsData) ? groupsData : (groupsData.groups || []);
+            renderCandidateStudyGroups(list);
+          } catch(e) {}
+        }
+
+        if (postsRes && postsRes.ok) {
+          try {
+            const postsData = await postsRes.json();
+            const list = Array.isArray(postsData) ? postsData : (postsData.posts || []);
+            renderCandidatePosts(list);
           } catch(e) {}
         }
 
@@ -2318,10 +2130,20 @@
       }
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function filterNotifs(category, el) {
       document.querySelectorAll('.notif-filter-bar .chip').forEach(c => c.classList.remove('active'));
       if (el) el.classList.add('active');
-      const cards = document.querySelectorAll('.notif-card');
+      const cards = document.querySelectorAll('#candidate-notif-board .notif-card');
       cards.forEach(card => {
         if (category === 'all' || card.dataset.category === category) {
           card.style.display = 'block';
@@ -2329,6 +2151,151 @@
           card.style.display = 'none';
         }
       });
+    }
+
+    function renderCandidateNotifications(notifs) {
+      const board = document.getElementById('candidate-notif-board');
+      if (!board) return;
+      
+      const allCount = notifs.length;
+      const officialCount = notifs.filter(n => n.category === 'official').length;
+      const admitCount = notifs.filter(n => n.category === 'admit-card').length;
+      const mockCount = notifs.filter(n => n.category === 'mock-release').length;
+
+      const cAll = document.getElementById('count-notif-all');
+      const cOff = document.getElementById('count-notif-official');
+      const cAdm = document.getElementById('count-notif-admit');
+      const cMck = document.getElementById('count-notif-mock');
+      if (cAll) cAll.innerText = allCount;
+      if (cOff) cOff.innerText = officialCount;
+      if (cAdm) cAdm.innerText = admitCount;
+      if (cMck) cMck.innerText = mockCount;
+
+      const headBadge = document.getElementById('header-notif-count');
+      if (headBadge) {
+        headBadge.innerText = allCount;
+        headBadge.style.display = allCount > 0 ? 'inline-block' : 'none';
+      }
+      const navBadge = document.getElementById('nav-notif-badge');
+      if (navBadge) {
+        navBadge.innerText = `${allCount} New`;
+        navBadge.style.display = allCount > 0 ? 'inline-flex' : 'none';
+      }
+
+      if (allCount === 0) {
+        board.innerHTML = `
+          <div class="empty-state" style="padding: 40px; text-align: center;">
+            <i data-lucide="bell-off" size="36"></i>
+            <h3>No Published Exam Notices</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem;">Official announcements and admit card radars will appear here dynamically.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      board.innerHTML = notifs.map(n => {
+        let catClass = n.category || 'official';
+        let catIcon = 'alert-circle';
+        let catLabel = 'Official Advisory';
+        if (catClass === 'admit-card') { catIcon = 'file-text'; catLabel = 'Call Letter Radar'; }
+        else if (catClass === 'mock-release') { catIcon = 'sparkles'; catLabel = 'Content Release'; }
+        else if (catClass === 'advisory') { catIcon = 'trending-up'; catLabel = 'Curriculum & Pattern'; }
+        
+        const priorityBadge = n.priority === 'urgent' ? `<span style="background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.35); font-size: 0.72rem; padding: 2px 7px; border-radius: 999px; font-weight: 700; margin-left: 6px;">URGENT</span>` : '';
+
+        return `
+          <article class="glass-card notif-card ${catClass}" data-category="${catClass}">
+            <div class="notif-card-header">
+              <span class="notif-category ${catClass}">
+                <i data-lucide="${catIcon}" size="13"></i> ${catLabel} ${priorityBadge}
+              </span>
+              <span class="notif-time">${escapeHtml(n.createdAt || 'ExamMatrix Advisory')}</span>
+            </div>
+            <h3 class="notif-title">${escapeHtml(n.title)}</h3>
+            <p class="notif-body">${escapeHtml(n.content)}</p>
+            ${n.actionUrl ? `
+            <div class="notif-actions">
+              <a href="${escapeHtml(n.actionUrl)}" ${n.actionUrl.startsWith('http') ? 'target="_blank"' : ''} class="btn btn-secondary" style="font-size: 0.84rem; padding: 7px 16px;">
+                <i data-lucide="external-link" size="14"></i> ${escapeHtml(n.actionText || 'View Details')}
+              </a>
+            </div>` : ''}
+          </article>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function renderCandidatePosts(posts) {
+      const feed = document.getElementById('candidate-posts-feed');
+      if (!feed) return;
+      if (!posts || posts.length === 0) {
+        feed.innerHTML = `
+          <div class="glass-card" style="padding: 30px; text-align: center; color: var(--text-muted);">
+            <i data-lucide="message-square" size="32" style="margin-bottom: 8px;"></i>
+            <p>No community posts yet. Stay tuned for Phase 6 discussions!</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+      feed.innerHTML = posts.map(p => `
+        <article class="glass-card post-card" id="post-${p.id}">
+          <div class="post-card-header">
+            <div class="post-author-box">
+              <div class="user-avatar-circle" style="background: rgba(245, 158, 11, 0.2); width: 36px; height: 36px; font-size: 1.15rem;">${p.authorEmoji || '🥭'}</div>
+              <div>
+                <div class="post-author-name">${escapeHtml(p.authorUsername)}</div>
+                <div class="post-author-handle">${escapeHtml(p.authorHandle)} • Aspirant</div>
+              </div>
+            </div>
+            <span class="post-time">${escapeHtml(p.createdAt || 'Recently')}</span>
+          </div>
+
+          <h4 class="post-title">${escapeHtml(p.title)}</h4>
+          <div class="post-content" style="white-space: pre-line; line-height: 1.6; font-size: 0.92rem; color: #cbd5e1; margin-bottom: 12px;">${escapeHtml(p.content)}</div>
+
+          <div class="post-tag-group">
+            ${(p.tags || []).map(t => `<span class="post-tag">#${escapeHtml(t.replace(/^#/, ''))}</span>`).join('')}
+          </div>
+
+          <div class="post-footer">
+            <div class="post-actions-group">
+              <button class="post-action-btn" onclick="alert('Social upvoting active in Phase 6!')"><i data-lucide="arrow-big-up" size="16"></i> ${p.upvotes || 0} Upvotes</button>
+              <button class="post-action-btn" onclick="alert('Discussion threads active in Phase 6!')"><i data-lucide="message-circle" size="16"></i> Discussions</button>
+            </div>
+            <button class="post-action-btn" onclick="alert('Note bookmarked to your review stash!')"><i data-lucide="bookmark" size="15"></i> Save Note</button>
+          </div>
+        </article>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function renderCandidateStudyGroups(groups) {
+      const grid = document.getElementById('candidate-chat-rooms-grid');
+      if (!grid) return;
+      if (!groups || groups.length === 0) {
+        grid.innerHTML = `
+          <div class="glass-card" style="grid-column: 1/-1; padding: 30px; text-align: center; color: var(--text-muted);">
+            <i data-lucide="users" size="32" style="margin-bottom: 8px;"></i>
+            <p>No study rooms active currently.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+      grid.innerHTML = groups.map(g => `
+        <div class="glass-card chat-room-card" onclick="alert('Study room &quot;${escapeHtml(g.name)}&quot; is in early preview! Live group chat launches in Phase 6.')">
+          <div class="chat-room-header">
+            <span class="chat-room-icon">${g.icon || '👥'}</span>
+            <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> ${g.memberCount || 20} Online</span>
+          </div>
+          <h4 class="chat-room-title">${escapeHtml(g.name)}</h4>
+          <p class="chat-room-desc">${escapeHtml(g.description || '')}</p>
+          <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
+        </div>
+      `).join('');
+      lucide.createIcons();
     }
 
     function renderTrendChart(labels, scores) {

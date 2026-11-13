@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request, send_from_directory, session, redirect, url_for
-import os, json, re, urllib.request, urllib.parse, secrets
+import os, json, re, urllib.request, urllib.parse, secrets, random
 from datetime import datetime
 from functools import wraps
 from database import (
     init_db, db_session, Exam, Question, Attempt, SiteMetric, QuestionStat, User,
+    StudyGroup, ExamNotification, CommunityPost, generate_unique_fruity_name,
     increment_visitors, record_question_stat, generate_revision_mock,
     generate_topic_drill, get_topic_mastery_list, get_cutoff_prediction,
     get_or_create_user, create_or_update_mock, update_mock_metadata,
@@ -120,6 +121,10 @@ def get_current_user():
         session.clear()
         return jsonify({"authenticated": False, "user": None, "isAdmin": False})
 
+    if user.is_banned:
+        session.clear()
+        return jsonify({"authenticated": False, "isBanned": True, "error": "Your account has been suspended by an administrator."}), 403
+
     user_dict = user.to_dict(include_private=False)
     return jsonify({
         "authenticated": True,
@@ -161,6 +166,10 @@ def demo_login():
     candidate_id = payload.get('candidateId') or secrets.token_hex(4)
     email = f"candidate_{candidate_id}@exammatrix.local"
     user = get_or_create_user(session_db, email, is_admin=False)
+
+    if user.is_banned:
+        return jsonify({"error": "Your account has been suspended by an administrator."}), 403
+
     session['user_id'] = user.id
     session['is_admin'] = bool(user.is_admin)
 
@@ -371,6 +380,226 @@ def modify_mock(exam_id):
     if updated:
         return jsonify({"success": True, "exam": updated, "message": "Mock details updated."})
     return jsonify({"error": f"Exam '{clean_id}' not found."}), 404
+
+# -------------------- USER MANAGEMENT --------------------
+
+@app.route('/api/admin/users', methods=['GET'])
+@admin_required
+def get_admin_users():
+    session_db = db_session()
+    try:
+        users = session_db.query(User).order_by(User.id.desc()).all()
+        return jsonify([u.to_dict(include_private=True) for u in users])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/admin/users/<int:user_id>/action', methods=['POST'])
+@admin_required
+def admin_user_action(user_id):
+    session_db = db_session()
+    try:
+        user = session_db.query(User).filter_by(id=user_id).first()
+        if not user:
+            return jsonify({"error": f"User #{user_id} not found."}), 404
+
+        payload = request.get_json(silent=True) or {}
+        action = payload.get('action', '').lower()
+
+        if action == 'ban':
+            user.is_banned = True
+        elif action == 'unban':
+            user.is_banned = False
+        elif action == 'mute':
+            user.is_muted = True
+        elif action == 'unmute':
+            user.is_muted = False
+        elif action == 'reset_name':
+            cand_name, handle, emoji, color = generate_unique_fruity_name(session_db)
+            user.username = cand_name
+            user.handle = handle
+            user.fruit_emoji = emoji
+            user.avatar_color = color
+        elif action == 'set_note':
+            user.status_note = str(payload.get('note', '')).strip()[:200]
+        else:
+            return jsonify({"error": f"Unsupported moderation action: '{action}'."}), 400
+
+        session_db.commit()
+        return jsonify({
+            "success": True,
+            "message": f"Action '{action}' applied to user #{user_id}.",
+            "user": user.to_dict(include_private=True)
+        })
+    except Exception as e:
+        session_db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+# -------------------- NOTIFICATIONS (EXAM & SYSTEM) --------------------
+
+@app.route('/api/notifications', methods=['GET'])
+def get_notifications():
+    session_db = db_session()
+    try:
+        notifs = session_db.query(ExamNotification).filter_by(is_published=True).order_by(ExamNotification.created_at.desc()).all()
+        return jsonify([n.to_dict() for n in notifs])
+    except Exception as e:
+        return jsonify([]), 500
+
+@app.route('/api/admin/notifications', methods=['GET', 'POST'])
+@admin_required
+def manage_admin_notifications():
+    session_db = db_session()
+    if request.method == 'POST':
+        try:
+            payload = request.get_json(silent=True) or {}
+            title = payload.get('title', '').strip()
+            content = payload.get('content', '').strip()
+            if not title or not content:
+                return jsonify({"error": "Title and Content are required."}), 400
+
+            category = payload.get('category', 'official').lower()
+            priority = payload.get('priority', 'normal').lower()
+            action_url = payload.get('actionUrl', '').strip() or None
+            action_text = payload.get('actionText', '').strip() or None
+
+            notif = ExamNotification(
+                title=title,
+                category=category,
+                priority=priority,
+                content=content,
+                action_url=action_url,
+                action_text=action_text,
+                is_published=True,
+                created_at=datetime.utcnow()
+            )
+            session_db.add(notif)
+            session_db.commit()
+            return jsonify({"success": True, "notification": notif.to_dict()}), 201
+        except Exception as e:
+            session_db.rollback()
+            return jsonify({"error": str(e)}), 500
+
+    try:
+        notifs = session_db.query(ExamNotification).order_by(ExamNotification.created_at.desc()).all()
+        return jsonify([n.to_dict() for n in notifs])
+    except Exception as e:
+        return jsonify([]), 500
+
+@app.route('/api/admin/notifications/<int:notif_id>', methods=['DELETE'])
+@admin_required
+def delete_admin_notification(notif_id):
+    session_db = db_session()
+    try:
+        notif = session_db.query(ExamNotification).filter_by(id=notif_id).first()
+        if not notif:
+            return jsonify({"error": "Notification not found."}), 404
+        session_db.delete(notif)
+        session_db.commit()
+        return jsonify({"success": True, "message": f"Notification #{notif_id} deleted."})
+    except Exception as e:
+        session_db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+# -------------------- STUDY GROUPS --------------------
+
+@app.route('/api/groups', methods=['GET'])
+def get_study_groups():
+    session_db = db_session()
+    try:
+        groups = session_db.query(StudyGroup).filter_by(is_active=True).order_by(StudyGroup.created_at.asc()).all()
+        return jsonify([g.to_dict() for g in groups])
+    except Exception as e:
+        return jsonify([]), 500
+
+@app.route('/api/admin/groups', methods=['GET', 'POST'])
+@admin_required
+def manage_admin_groups():
+    session_db = db_session()
+    if request.method == 'POST':
+        try:
+            payload = request.get_json(silent=True) or {}
+            name = payload.get('name', '').strip()
+            if not name:
+                return jsonify({"error": "Group room name is required."}), 400
+
+            group_id = re.sub(r'[^a-z0-9_]', '', name.lower().replace(' ', '_')) or f"group_{secrets.token_hex(3)}"
+            icon = payload.get('icon', '🛡️').strip() or '🛡️'
+            category = payload.get('category', 'Core IT').strip() or 'Core IT'
+            description = payload.get('description', '').strip()
+
+            group = StudyGroup(
+                id=group_id,
+                name=name,
+                icon=icon,
+                category=category,
+                description=description,
+                member_count=random.randint(15, 45),
+                is_active=True,
+                created_at=datetime.utcnow()
+            )
+            session_db.add(group)
+            session_db.commit()
+            return jsonify({"success": True, "group": group.to_dict()}), 201
+        except Exception as e:
+            session_db.rollback()
+            return jsonify({"error": str(e)}), 500
+
+    try:
+        groups = session_db.query(StudyGroup).order_by(StudyGroup.created_at.asc()).all()
+        return jsonify([g.to_dict() for g in groups])
+    except Exception as e:
+        return jsonify([]), 500
+
+@app.route('/api/admin/groups/<group_id>', methods=['DELETE'])
+@admin_required
+def delete_admin_group(group_id):
+    session_db = db_session()
+    try:
+        group = session_db.query(StudyGroup).filter_by(id=group_id).first()
+        if not group:
+            return jsonify({"error": "Study group not found."}), 404
+        session_db.delete(group)
+        session_db.commit()
+        return jsonify({"success": True, "message": f"Group '{group_id}' removed."})
+    except Exception as e:
+        session_db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+# -------------------- COMMUNITY POSTS MODERATION --------------------
+
+@app.route('/api/posts', methods=['GET'])
+def get_community_posts():
+    session_db = db_session()
+    try:
+        posts = session_db.query(CommunityPost).filter_by(is_deleted=False).order_by(CommunityPost.created_at.desc()).all()
+        return jsonify([p.to_dict() for p in posts])
+    except Exception as e:
+        return jsonify([]), 500
+
+@app.route('/api/admin/posts', methods=['GET'])
+@admin_required
+def get_admin_posts():
+    session_db = db_session()
+    try:
+        posts = session_db.query(CommunityPost).order_by(CommunityPost.created_at.desc()).all()
+        return jsonify([p.to_dict() for p in posts])
+    except Exception as e:
+        return jsonify([]), 500
+
+@app.route('/api/admin/posts/<int:post_id>', methods=['DELETE'])
+@admin_required
+def delete_admin_post(post_id):
+    session_db = db_session()
+    try:
+        post = session_db.query(CommunityPost).filter_by(id=post_id).first()
+        if not post:
+            return jsonify({"error": "Post not found."}), 404
+        post.is_deleted = True
+        session_db.commit()
+        return jsonify({"success": True, "message": f"Post #{post_id} removed by admin."})
+    except Exception as e:
+        session_db.rollback()
+        return jsonify({"error": str(e)}), 500
 
 # ==================== QUIZ & PLAYER APIS ====================
 

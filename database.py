@@ -120,6 +120,9 @@ class User(Base):
     fruit_emoji = Column(String(10), default="🥭")
     avatar_color = Column(String(30), default="#10b981")
     is_admin = Column(Boolean, default=False)
+    is_banned = Column(Boolean, default=False)
+    is_muted = Column(Boolean, default=False)
+    status_note = Column(String(200), default="")
     created_at = Column(DateTime, default=datetime.utcnow)
     last_login = Column(DateTime, default=datetime.utcnow)
 
@@ -136,7 +139,12 @@ class User(Base):
             "fruitEmoji": self.fruit_emoji,
             "avatarColor": self.avatar_color,
             "isAdmin": bool(self.is_admin),
-            "createdAt": self.created_at.isoformat() if self.created_at else None
+            "isBanned": bool(self.is_banned),
+            "isMuted": bool(self.is_muted),
+            "statusNote": self.status_note or "",
+            "attemptsCount": len(self.attempts) if self.attempts else 0,
+            "createdAt": self.created_at.isoformat() if self.created_at else None,
+            "lastLogin": self.last_login.isoformat() if self.last_login else None
         }
         if include_private:
             data["email"] = self.email
@@ -304,6 +312,88 @@ class QuestionStat(Base):
             "boxLevel": self.box_level,
             "lastAttemptedAt": self.last_attempted_at.isoformat() if self.last_attempted_at else None,
             "nextReviewAt": self.next_review_at.isoformat() if self.next_review_at else None
+        }
+
+class StudyGroup(Base):
+    __tablename__ = 'study_groups'
+
+    id = Column(String(50), primary_key=True)
+    name = Column(String(100), nullable=False)
+    icon = Column(String(10), default="🛡️")
+    category = Column(String(50), default="Core IT")
+    description = Column(Text, default="")
+    member_count = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "icon": self.icon,
+            "category": self.category,
+            "description": self.description,
+            "memberCount": self.member_count,
+            "isActive": bool(self.is_active),
+            "createdAt": self.created_at.isoformat() if self.created_at else None
+        }
+
+class ExamNotification(Base):
+    __tablename__ = 'exam_notifications'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(200), nullable=False)
+    category = Column(String(50), default="official") # official, admit-card, mock-release, advisory
+    priority = Column(String(20), default="normal") # urgent, normal, advisory
+    content = Column(Text, nullable=False)
+    action_url = Column(String(300), nullable=True)
+    action_text = Column(String(100), nullable=True)
+    is_published = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "category": self.category,
+            "priority": self.priority,
+            "content": self.content,
+            "actionUrl": self.action_url,
+            "actionText": self.action_text,
+            "isPublished": bool(self.is_published),
+            "createdAt": self.created_at.isoformat() if self.created_at else None
+        }
+
+class CommunityPost(Base):
+    __tablename__ = 'community_posts'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
+    author_username = Column(String(100), nullable=False)
+    author_handle = Column(String(100), nullable=False)
+    author_emoji = Column(String(10), default="🥭")
+    title = Column(String(250), nullable=False)
+    content = Column(Text, nullable=False)
+    tags = Column(String(200), default="")
+    upvotes = Column(Integer, default=0)
+    is_deleted = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "userId": self.user_id,
+            "authorUsername": self.author_username,
+            "authorHandle": self.author_handle,
+            "authorEmoji": self.author_emoji,
+            "title": self.title,
+            "content": self.content,
+            "tags": [t.strip() for t in self.tags.split(',') if t.strip()] if self.tags else [],
+            "upvotes": self.upvotes,
+            "isDeleted": bool(self.is_deleted),
+            "createdAt": self.created_at.isoformat() if self.created_at else None
         }
 
 def record_question_stat(session, question_id, result_status):
@@ -656,6 +746,12 @@ def ensure_schema():
                     cursor.execute("ALTER TABLE users ADD COLUMN username VARCHAR(100);")
                 if 'handle' not in user_cols:
                     cursor.execute("ALTER TABLE users ADD COLUMN handle VARCHAR(100);")
+                if 'is_banned' not in user_cols:
+                    cursor.execute("ALTER TABLE users ADD COLUMN is_banned BOOLEAN DEFAULT 0;")
+                if 'is_muted' not in user_cols:
+                    cursor.execute("ALTER TABLE users ADD COLUMN is_muted BOOLEAN DEFAULT 0;")
+                if 'status_note' not in user_cols:
+                    cursor.execute("ALTER TABLE users ADD COLUMN status_note VARCHAR(200) DEFAULT '';")
             conn.connection.commit()
             
         # Backfill existing users with username & handle if null
@@ -677,10 +773,141 @@ def ensure_schema():
     except Exception as e:
         print(f"Schema check error: {e}")
 
+def seed_social_and_notifications_if_empty():
+    session = db_session()
+    try:
+        # Seed Study Groups
+        if session.query(StudyGroup).count() == 0:
+            groups = [
+                StudyGroup(
+                    id="it_core",
+                    name="IT Core Specialists",
+                    icon="🛡️",
+                    category="Core IT",
+                    description="DBMS Normalization, OS Deadlocks, TCP/IP congestion, and Data Structure complexities.",
+                    member_count=34,
+                    is_active=True
+                ),
+                StudyGroup(
+                    id="speed_squad",
+                    name="Speed Optimization Squad",
+                    icon="⚡",
+                    category="Speed Drill",
+                    description="Targeting 48s per question. Rapid elimination techniques and negative marking reduction.",
+                    member_count=21,
+                    is_active=True
+                ),
+                StudyGroup(
+                    id="doubt_clearance",
+                    name="Daily Doubt Clearance",
+                    icon="🎯",
+                    category="Doubt Solving",
+                    description="Post tricky questions from today's mock tests and get instant peer breakdowns.",
+                    member_count=28,
+                    is_active=True
+                ),
+                StudyGroup(
+                    id="ibps_intel",
+                    name="IBPS SO Intel & Vacancies",
+                    icon="📢",
+                    category="General",
+                    description="Discuss vacancy updates, previous year cutoffs, bank preferences, and exam logistics.",
+                    member_count=47,
+                    is_active=True
+                )
+            ]
+            session.add_all(groups)
+
+        # Seed Exam Notifications
+        if session.query(ExamNotification).count() == 0:
+            notifs = [
+                ExamNotification(
+                    title="IBPS SO (Scale-I) IT Officer Mains 2026: Official Examination Structure Confirmed",
+                    category="official",
+                    priority="urgent",
+                    content="The Institute of Banking Personnel Selection has issued the confirmed pattern for Phase-II Mains. The Professional Knowledge assessment comprises 60 Questions for 60 Marks with a strictly enforced time limit of 45 minutes. A negative penalty of 0.25 marks is deducted for each incorrect answer. Bilingual delivery in English and Hindi will be active across all authorized TCS iON venues.",
+                    action_url="https://www.ibps.in",
+                    action_text="Official IBPS Portal",
+                    is_published=True
+                ),
+                ExamNotification(
+                    title="Phase-II Mains Call Letter & Venue Allocation Window Approaching",
+                    category="admit-card",
+                    priority="normal",
+                    content="Admit cards for Phase-II Mains are scheduled for release 10 to 14 days before the exam date. Keep your Registration Number, Roll Number, and Password / Date of Birth (DD-MM-YY format) accessible. ExamMatrix automated monitoring will broadcast immediate alerts once the direct download gateway goes live on the official server.",
+                    action_url="https://www.ibps.in",
+                    action_text="Check Live Status",
+                    is_published=True
+                ),
+                ExamNotification(
+                    title="Full 17-Day Mock Test Ledger with Dynamic TCS iON Player Active",
+                    category="mock-release",
+                    priority="normal",
+                    content="All 17 daily full-length mock papers (850 total Professional Knowledge questions) are synchronized with Cloud Firestore. Featuring high-yield coverage across Database Management, Computer Networks, Operating Systems, Data Structures, Software Engineering, and Web Technologies with KaTeX mathematical formatting and real-time cloud autosaves.",
+                    action_url="/mock?day=17",
+                    action_text="Explore 17 Mock Papers",
+                    is_published=True
+                ),
+                ExamNotification(
+                    title="High-Weightage Banking IT Trends: Information Security & Cloud Infrastructure",
+                    category="advisory",
+                    priority="normal",
+                    content="Analysis of recent Specialist Officer exam cycles indicates elevated weightage for Cloud Computing (IaaS/PaaS/SaaS architectures), Cryptography (RSA, AES, Digital Certificates, PKI), and Network Firewalls. Candidates are advised to prioritize these high-yield topics alongside classical Relational Normalization and SQL subqueries.",
+                    action_url="/mock?topic=Network%20Security",
+                    action_text="Launch Topic Drills",
+                    is_published=True
+                )
+            ]
+            session.add_all(notifs)
+
+        # Seed Community Posts
+        if session.query(CommunityPost).count() == 0:
+            posts = [
+                CommunityPost(
+                    author_username="Velvet Mango #482",
+                    author_handle="@velvet_mango_482",
+                    author_emoji="🥭",
+                    title="Strict 2PL vs Rigorous 2PL: Crucial Distinction for Cascading Aborts",
+                    content="Saw a tricky question in Day 3 Mock Q34 regarding Concurrency Control protocols: Strict 2PL holds exclusive locks until commit, preventing cascading rollbacks. Rigorous 2PL holds BOTH shared and exclusive locks until commit, producing strict serializability. Quick mnemonic: Strict locks Writes; Rigorous locks Both.",
+                    tags="DBMS,ConcurrencyControl,HighYieldNotes",
+                    upvotes=38,
+                    is_deleted=False
+                ),
+                CommunityPost(
+                    author_username="Cosmic Kiwi #312",
+                    author_handle="@cosmic_kiwi_312",
+                    author_emoji="🥝",
+                    title="Subnetting Shortcut: Finding Usable Host IP Range in /28 Subnet",
+                    content="Given IP: 192.168.10.38/28. Host bits = 32 - 28 = 4 bits. Block size = 2^4 = 16. Multiples of 16 around 38: 0, 16, 32, 48. Network ID = 192.168.10.32. Broadcast ID = 192.168.10.47. Usable Range = 192.168.10.33 to 192.168.10.46 (14 hosts).",
+                    tags="ComputerNetworks,Subnetting,SpeedTrick",
+                    upvotes=52,
+                    is_deleted=False
+                ),
+                CommunityPost(
+                    author_username="Radiant Guava #518",
+                    author_handle="@radiant_guava_518",
+                    author_emoji="🍈",
+                    title="My 3-Round Strategy for 50 Questions in 40 Minutes",
+                    content="Round 1 (0 to 18 min): Answer direct memory/concept questions. Round 2 (18 to 32 min): Solve mathematical/algorithmic problems. Round 3 (32 to 40 min): Review 50/50 marked questions. If you cannot logically eliminate 2 options, SKIP IT. A skipped question costs 0, a wrong guess costs 0.50!",
+                    tags="Strategy,NegativeMarking,IBPS_SO",
+                    upvotes=64,
+                    is_deleted=False
+                )
+            ]
+            session.add_all(posts)
+
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print(f"Error seeding social/notifs: {e}")
+    finally:
+        session.close()
+
 def init_db():
     Base.metadata.create_all(bind=engine)
     ensure_schema()
     seed_database_if_empty()
+    seed_social_and_notifications_if_empty()
     sync_stats_from_existing_attempts()
 
 def increment_visitors():

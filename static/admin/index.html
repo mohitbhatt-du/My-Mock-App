@@ -272,6 +272,63 @@
     .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; display: inline-block; }
     .badge-diff { background: rgba(129, 140, 248, 0.15); color: var(--accent-indigo); border: 1px solid rgba(129, 140, 248, 0.3); }
     .badge-tag { background: rgba(167, 139, 250, 0.15); color: #c084fc; border: 1px solid rgba(167, 139, 250, 0.3); }
+
+    /* Admin Tabs */
+    .tab-container {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 10px 18px;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+    .tab-btn.active { color: var(--accent-amber); background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.3); }
+    .view-section { display: none; animation: fadeIn 0.3s ease; }
+    .view-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .status-badge.active { background: rgba(52, 211, 153, 0.15); color: var(--accent-emerald); border: 1px solid rgba(52, 211, 153, 0.3); }
+    .status-badge.banned { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); border: 1px solid rgba(251, 113, 133, 0.3); }
+    .status-badge.muted { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.3); }
+    
+    .chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .chip:hover { color: var(--text-main); border-color: var(--border-hover); }
+    .chip.active { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); border-color: rgba(251, 191, 36, 0.4); }
     
     /* Auth Modal Overlay */
     #auth-overlay {
@@ -390,6 +447,27 @@
     </div>
   </section>
 
+  <!-- ADMIN NAVIGATION TABS -->
+  <div class="tab-container">
+    <button class="tab-btn active" onclick="switchAdminTab('mocks')" id="tab-admin-mocks">
+      <i data-lucide="book-open"></i> Mock Exams & Processor
+    </button>
+    <button class="tab-btn" onclick="switchAdminTab('users')" id="tab-admin-users">
+      <i data-lucide="users"></i> User Management (Ban/Mute)
+    </button>
+    <button class="tab-btn" onclick="switchAdminTab('notifs')" id="tab-admin-notifs">
+      <i data-lucide="bell"></i> Broadcast Notifications
+    </button>
+    <button class="tab-btn" onclick="switchAdminTab('posts')" id="tab-admin-posts">
+      <i data-lucide="message-square"></i> Posts Moderation
+    </button>
+    <button class="tab-btn" onclick="switchAdminTab('groups')" id="tab-admin-groups">
+      <i data-lucide="users"></i> Study Groups Creator
+    </button>
+  </div>
+
+  <!-- ==================== TAB 1: MOCK EXAMS & 50-Q PROCESSOR ==================== -->
+  <div id="view-admin-mocks" class="view-section active">
   <!-- CREATE NEW MOCK SECTION -->
   <section class="glass-card" style="padding: 28px; margin-bottom: 32px; border-left: 4px solid var(--accent-cyan);">
     <div class="section-title">
@@ -499,6 +577,269 @@
       </tbody>
     </table>
   </section>
+  </div> <!-- END TAB 1: MOCK EXAMS -->
+
+  <!-- ==================== TAB 2: USER MANAGEMENT (BAN / MUTE) ==================== -->
+  <div id="view-admin-users" class="view-section">
+    <section class="glass-card table-container" style="margin-top: 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <div class="section-title" style="margin-bottom: 4px;">
+            <i data-lucide="users" style="color: var(--accent-indigo);"></i>
+            <span>Candidate User Management</span>
+          </div>
+          <p class="section-desc" style="margin-bottom: 0;">Manage registered candidates, enforce community rules, ban abusive accounts, or mute chat/post privileges.</p>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-secondary" style="font-size: 0.85rem;" onclick="loadAdminUsers()">
+            <i data-lucide="refresh-cw"></i> Refresh Users
+          </button>
+        </div>
+      </div>
+
+      <!-- User Filters & Search Toolbar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span class="chip active" onclick="filterAdminUsers('all', this)">All Users</span>
+          <span class="chip" onclick="filterAdminUsers('active', this)">Active Only</span>
+          <span class="chip" onclick="filterAdminUsers('banned', this)">Banned</span>
+          <span class="chip" onclick="filterAdminUsers('muted', this)">Muted</span>
+        </div>
+
+        <div style="position: relative; width: 280px;">
+          <input type="text" id="user-search-input" placeholder="Search by name, handle, or email..." oninput="searchUsers(this.value)" style="width: 100%; padding-left: 36px;">
+          <i data-lucide="search" size="16" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>User / Fruity Name</th>
+            <th>Handle</th>
+            <th>Email (Private)</th>
+            <th>Mocks Taken</th>
+            <th>Status</th>
+            <th>Admin Note</th>
+            <th>Moderation Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-table-body">
+          <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">Loading users...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ==================== TAB 3: BROADCAST NOTIFICATIONS ==================== -->
+  <div id="view-admin-notifs" class="view-section">
+    <!-- Broadcast Notification Form -->
+    <section class="glass-card" style="padding: 28px; margin-bottom: 32px; border-left: 4px solid var(--accent-rose);">
+      <div class="section-title">
+        <i data-lucide="megaphone" style="color: var(--accent-rose);"></i>
+        <span>Broadcast New Exam Notification</span>
+      </div>
+      <p class="section-desc">
+        Publish an official announcement, admit card update, or mock release alert. Notifications broadcast instantly to candidate dashboards.
+      </p>
+
+      <div class="form-grid">
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="notif-title-input">Notification Headline</label>
+          <input type="text" id="notif-title-input" placeholder="e.g. IBPS SO Mains 2026: Official Admit Card Download Window Live">
+        </div>
+
+        <div class="form-group">
+          <label for="notif-category-select">Category</label>
+          <select id="notif-category-select">
+            <option value="official">Official IBPS Release (official)</option>
+            <option value="admit-card">Admit Card Radar (admit-card)</option>
+            <option value="mock-release">Mock Test Series (mock-release)</option>
+            <option value="advisory">Curriculum Advisory (advisory)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="notif-priority-select">Priority Level</label>
+          <select id="notif-priority-select">
+            <option value="urgent">Urgent / High Priority</option>
+            <option value="normal" selected>Normal</option>
+            <option value="advisory">Informational Advisory</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="notif-action-url">Action Link (Optional URL)</label>
+          <input type="url" id="notif-action-url" placeholder="https://www.ibps.in or /mock?day=18">
+        </div>
+
+        <div class="form-group">
+          <label for="notif-action-text">Action Button Text</label>
+          <input type="text" id="notif-action-text" placeholder="e.g. Official Portal or Launch Mock">
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="notif-content-input">Detailed Announcement Message</label>
+          <textarea id="notif-content-input" style="height: 110px; width: 100%; border-radius: 8px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-main); font-size: 0.92rem; resize: vertical;" placeholder="Type the complete notice description for candidates..."></textarea>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px;">
+        <button class="btn btn-secondary" onclick="clearNotifForm()">
+          <i data-lucide="refresh-cw"></i> Clear
+        </button>
+        <button class="btn btn-primary" onclick="broadcastNotification()">
+          <i data-lucide="send"></i> Broadcast Notice to Candidates
+        </button>
+      </div>
+    </section>
+
+    <!-- Published Notifications Ledger -->
+    <section class="glass-card table-container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div class="section-title" style="margin-bottom: 0;">
+          <i data-lucide="bell" style="color: var(--accent-rose);"></i>
+          <span>Active Notifications Directory</span>
+        </div>
+        <button class="btn btn-secondary" style="font-size: 0.85rem;" onclick="loadAdminNotifications()">
+          <i data-lucide="refresh-cw"></i> Refresh List
+        </button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Headline</th>
+            <th>Priority</th>
+            <th>Action Link</th>
+            <th>Published Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="notifs-table-body">
+          <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">Loading notifications...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ==================== TAB 4: POSTS MODERATION ==================== -->
+  <div id="view-admin-posts" class="view-section">
+    <section class="glass-card table-container" style="margin-top: 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <div class="section-title" style="margin-bottom: 4px;">
+            <i data-lucide="message-square" style="color: var(--accent-cyan);"></i>
+            <span>Community Posts & Doubts Moderation</span>
+          </div>
+          <p class="section-desc" style="margin-bottom: 0;">Inspect candidate discussions, remove spam, or delete inappropriate questions.</p>
+        </div>
+
+        <button class="btn btn-secondary" style="font-size: 0.85rem;" onclick="loadAdminPosts()">
+          <i data-lucide="refresh-cw"></i> Refresh Posts
+        </button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Author (Fruity Handle)</th>
+            <th>Post Title</th>
+            <th>Tags</th>
+            <th>Upvotes</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="posts-table-body">
+          <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">Loading community posts...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ==================== TAB 5: STUDY GROUPS CREATOR ==================== -->
+  <div id="view-admin-groups" class="view-section">
+    <!-- Create Group Form -->
+    <section class="glass-card" style="padding: 28px; margin-bottom: 32px; border-left: 4px solid var(--accent-emerald);">
+      <div class="section-title">
+        <i data-lucide="users" style="color: var(--accent-emerald);"></i>
+        <span>Create New Study Group Room</span>
+      </div>
+      <p class="section-desc">
+        Configure peer study rooms for specific IT Officer domains (e.g. Cloud Security, SQL Mastery, Speed Optimization).
+      </p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="group-name-input">Room Name</label>
+          <input type="text" id="group-name-input" placeholder="e.g. Cloud Security & Microservices Lab">
+        </div>
+
+        <div class="form-group">
+          <label for="group-icon-input">Emoji Icon</label>
+          <input type="text" id="group-icon-input" value="🛡️" placeholder="e.g. 🛡️, ⚡, 🎯, ☁️, 🔐">
+        </div>
+
+        <div class="form-group">
+          <label for="group-category-select">Domain Category</label>
+          <select id="group-category-select">
+            <option value="Core IT">Core IT (DBMS, OS, Networks)</option>
+            <option value="Speed Drill">Speed & Elimination Drills</option>
+            <option value="Doubt Solving">Doubt Clearing & Tricky MCQs</option>
+            <option value="General">IBPS SO Exam Logistics & Vacancies</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="group-desc-input">Room Description & Target</label>
+          <input type="text" id="group-desc-input" placeholder="e.g. Focused peer room for mastering AWS, Docker, REST APIs, and PKI Cryptography.">
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px;">
+        <button class="btn btn-secondary" onclick="document.getElementById('group-name-input').value = ''">
+          <i data-lucide="refresh-cw"></i> Reset
+        </button>
+        <button class="btn btn-success" onclick="createNewGroup()">
+          <i data-lucide="plus-circle"></i> Create Study Group
+        </button>
+      </div>
+    </section>
+
+    <!-- Active Groups Directory -->
+    <section class="glass-card table-container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div class="section-title" style="margin-bottom: 0;">
+          <i data-lucide="users" style="color: var(--accent-emerald);"></i>
+          <span>Active Study Groups Directory</span>
+        </div>
+        <button class="btn btn-secondary" style="font-size: 0.85rem;" onclick="loadAdminGroups()">
+          <i data-lucide="refresh-cw"></i> Refresh Groups
+        </button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Icon</th>
+            <th>Room Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Active Members</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="groups-table-body">
+          <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">Loading study rooms...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
 
   <!-- QUICK EDIT MODAL -->
   <div id="edit-modal">
@@ -906,6 +1247,478 @@
       }
       document.getElementById('mock-json').value = JSON.stringify(sample, null, 2);
       validatePastedJson();
+    }
+
+    // ==================== ADMIN TAB SWITCHER ====================
+    let currentAdminUsers = [];
+    let currentAdminNotifs = [];
+    let currentAdminPosts = [];
+    let currentAdminGroups = [];
+
+    function switchAdminTab(tabId) {
+      document.querySelectorAll('.tab-container .tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+      const btn = document.getElementById(`tab-admin-${tabId}`);
+      const sec = document.getElementById(`view-admin-${tabId}`);
+      if (btn) btn.classList.add('active');
+      if (sec) sec.classList.add('active');
+
+      if (tabId === 'mocks') loadAdminStats();
+      else if (tabId === 'users') loadAdminUsers();
+      else if (tabId === 'notifs') loadAdminNotifications();
+      else if (tabId === 'posts') loadAdminPosts();
+      else if (tabId === 'groups') loadAdminGroups();
+
+      lucide.createIcons();
+    }
+
+    // ==================== USER MANAGEMENT ====================
+    async function loadAdminUsers() {
+      const tbody = document.getElementById('users-table-body');
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Fetching candidate directory...</td></tr>';
+      try {
+        const res = await fetch('/api/admin/users', {
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        if (res.ok) {
+          currentAdminUsers = await res.json();
+          renderUsersTable(currentAdminUsers);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--accent-rose); padding: 30px;">Failed to load users. Ensure admin key is valid.</td></tr>';
+        }
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-rose); padding: 30px;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderUsersTable(users) {
+      const tbody = document.getElementById('users-table-body');
+      tbody.innerHTML = '';
+      if (!users || users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">No registered candidates found matching criteria.</td></tr>';
+        return;
+      }
+
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+        const isBanned = Boolean(u.isBanned);
+        const isMuted = Boolean(u.isMuted);
+
+        let statusHtml = '<span class="status-badge active"><i data-lucide="check-circle" size="12"></i> Active</span>';
+        if (isBanned) {
+          statusHtml = '<span class="status-badge banned"><i data-lucide="ban" size="12"></i> Banned</span>';
+        } else if (isMuted) {
+          statusHtml = '<span class="status-badge muted"><i data-lucide="volume-x" size="12"></i> Muted</span>';
+        }
+
+        const banBtnText = isBanned ? '<i data-lucide="check" size="13"></i> Unban' : '<i data-lucide="ban" size="13"></i> Ban';
+        const banBtnClass = isBanned ? 'btn btn-secondary' : 'btn btn-danger';
+        const muteBtnText = isMuted ? '<i data-lucide="volume-2" size="13"></i> Unmute' : '<i data-lucide="volume-x" size="13"></i> Mute';
+
+        tr.innerHTML = `
+          <td>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.25rem;">${u.fruitEmoji || '🥭'}</span>
+              <div>
+                <strong style="color: var(--text-main); font-size: 0.95rem;">${u.username}</strong>
+                ${u.isAdmin ? '<span class="badge" style="background: rgba(251,191,36,0.2); color: var(--accent-amber); font-size: 0.7rem; margin-left: 6px;">ADMIN</span>' : ''}
+              </div>
+            </div>
+          </td>
+          <td><code style="color: var(--accent-emerald); font-size: 0.82rem;">${u.handle}</code></td>
+          <td style="color: var(--text-muted); font-size: 0.85rem;">${u.email || 'guest@anonymous'}</td>
+          <td><strong style="color: var(--accent-cyan);">${u.attemptsCount || 0}</strong></td>
+          <td>${statusHtml}</td>
+          <td style="max-width: 140px; font-size: 0.8rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            ${u.statusNote || '<em>None</em>'}
+          </td>
+          <td>
+            <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+              <button class="${banBtnClass}" style="font-size: 0.78rem; padding: 5px 10px;" onclick="executeUserAction(${u.id}, '${isBanned ? 'unban' : 'ban'}')">
+                ${banBtnText}
+              </button>
+              <button class="btn btn-secondary" style="font-size: 0.78rem; padding: 5px 10px;" onclick="executeUserAction(${u.id}, '${isMuted ? 'unmute' : 'mute'}')">
+                ${muteBtnText}
+              </button>
+              <button class="btn btn-secondary" style="font-size: 0.78rem; padding: 5px 10px;" onclick="executeUserAction(${u.id}, 'reset_name')" title="Regenerate unique Fruity moniker">
+                <i data-lucide="refresh-cw" size="13"></i> Reset Name
+              </button>
+              <button class="btn btn-secondary" style="font-size: 0.78rem; padding: 5px 10px;" onclick="promptUserNote(${u.id}, '${(u.statusNote || '').replace(/'/g, "\\'")}')" title="Set admin moderation note">
+                <i data-lucide="file-text" size="13"></i> Note
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    function searchUsers(query) {
+      const q = (query || '').toLowerCase().trim();
+      if (!q) {
+        renderUsersTable(currentAdminUsers);
+        return;
+      }
+      const filtered = currentAdminUsers.filter(u => 
+        (u.username && u.username.toLowerCase().includes(q)) ||
+        (u.handle && u.handle.toLowerCase().includes(q)) ||
+        (u.email && u.email.toLowerCase().includes(q))
+      );
+      renderUsersTable(filtered);
+    }
+
+    function filterAdminUsers(status, el) {
+      document.querySelectorAll('#view-admin-users .chip').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      if (status === 'all') {
+        renderUsersTable(currentAdminUsers);
+      } else if (status === 'active') {
+        renderUsersTable(currentAdminUsers.filter(u => !u.isBanned && !u.isMuted));
+      } else if (status === 'banned') {
+        renderUsersTable(currentAdminUsers.filter(u => u.isBanned));
+      } else if (status === 'muted') {
+        renderUsersTable(currentAdminUsers.filter(u => u.isMuted));
+      }
+    }
+
+    async function executeUserAction(userId, action) {
+      if (action === 'ban' && !confirm(`Are you sure you want to BAN candidate #${userId}? They will be blocked from logging in.`)) return;
+      if (action === 'reset_name' && !confirm(`Regenerate fruity name and handle for candidate #${userId}?`)) return;
+
+      try {
+        const res = await fetch(`/api/admin/users/${userId}/action`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Key': currentAdminKey
+          },
+          body: JSON.stringify({ action })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          await loadAdminUsers();
+        } else {
+          alert(data.error || 'User action failed.');
+        }
+      } catch (err) {
+        alert('Action error: ' + err.message);
+      }
+    }
+
+    async function promptUserNote(userId, currentNote) {
+      const newNote = prompt("Enter moderation note for this candidate (max 200 chars):", currentNote || "");
+      if (newNote === null) return;
+      try {
+        const res = await fetch(`/api/admin/users/${userId}/action`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Key': currentAdminKey
+          },
+          body: JSON.stringify({ action: 'set_note', note: newNote })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          await loadAdminUsers();
+        } else {
+          alert(data.error || 'Failed to update note.');
+        }
+      } catch (err) {
+        alert('Note error: ' + err.message);
+      }
+    }
+
+    // ==================== NOTIFICATIONS MANAGEMENT ====================
+    async function loadAdminNotifications() {
+      const tbody = document.getElementById('notifs-table-body');
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading notices...</td></tr>';
+      try {
+        const res = await fetch('/api/admin/notifications', {
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        if (res.ok) {
+          currentAdminNotifs = await res.json();
+          renderNotifsTable(currentAdminNotifs);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--accent-rose); padding: 30px;">Failed to load notifications.</td></tr>';
+        }
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--accent-rose); padding: 30px;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderNotifsTable(notifs) {
+      const tbody = document.getElementById('notifs-table-body');
+      tbody.innerHTML = '';
+      if (!notifs || notifs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">No published notifications in ledger.</td></tr>';
+        return;
+      }
+
+      notifs.forEach(n => {
+        const tr = document.createElement('tr');
+        const dateStr = n.createdAt ? new Date(n.createdAt).toLocaleDateString() : 'N/A';
+        const priorityColor = n.priority === 'urgent' ? 'var(--accent-rose)' : (n.priority === 'advisory' ? 'var(--accent-cyan)' : 'var(--accent-amber)');
+
+        tr.innerHTML = `
+          <td><span class="badge" style="background: rgba(255,255,255,0.06); text-transform: uppercase; font-size: 0.72rem;">${n.category}</span></td>
+          <td>
+            <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 2px;">${n.title}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${n.content}</div>
+          </td>
+          <td><span style="color: ${priorityColor}; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">${n.priority}</span></td>
+          <td style="font-size: 0.82rem;">${n.actionUrl ? `<a href="${n.actionUrl}" target="_blank" style="color: var(--accent-cyan);">${n.actionText || 'Visit Link'}</a>` : '—'}</td>
+          <td style="color: var(--text-muted); font-size: 0.85rem;">${dateStr}</td>
+          <td>
+            <button class="btn btn-danger" style="font-size: 0.78rem; padding: 5px 10px;" onclick="deleteNotification(${n.id})">
+              <i data-lucide="trash-2" size="13"></i> Delete
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    async function broadcastNotification() {
+      const title = document.getElementById('notif-title-input').value.trim();
+      const content = document.getElementById('notif-content-input').value.trim();
+      const category = document.getElementById('notif-category-select').value;
+      const priority = document.getElementById('notif-priority-select').value;
+      const actionUrl = document.getElementById('notif-action-url').value.trim();
+      const actionText = document.getElementById('notif-action-text').value.trim();
+
+      if (!title || !content) {
+        alert("Please enter both a Notification Headline and Message.");
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/notifications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Key': currentAdminKey
+          },
+          body: JSON.stringify({ title, content, category, priority, actionUrl, actionText })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          alert("🎉 Notification broadcasted to all candidate dashboards!");
+          clearNotifForm();
+          await loadAdminNotifications();
+        } else {
+          alert(data.error || "Failed to broadcast notification.");
+        }
+      } catch (err) {
+        alert("Broadcast error: " + err.message);
+      }
+    }
+
+    function clearNotifForm() {
+      document.getElementById('notif-title-input').value = '';
+      document.getElementById('notif-content-input').value = '';
+      document.getElementById('notif-action-url').value = '';
+      document.getElementById('notif-action-text').value = '';
+    }
+
+    async function deleteNotification(id) {
+      if (!confirm(`Are you sure you want to delete notification #${id}?`)) return;
+      try {
+        const res = await fetch(`/api/admin/notifications/${id}`, {
+          method: 'DELETE',
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          await loadAdminNotifications();
+        } else {
+          alert(data.error || 'Failed to delete notification.');
+        }
+      } catch (err) {
+        alert('Delete error: ' + err.message);
+      }
+    }
+
+    // ==================== COMMUNITY POSTS MODERATION ====================
+    async function loadAdminPosts() {
+      const tbody = document.getElementById('posts-table-body');
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading posts...</td></tr>';
+      try {
+        const res = await fetch('/api/admin/posts', {
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        if (res.ok) {
+          currentAdminPosts = await res.json();
+          renderPostsTable(currentAdminPosts);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--accent-rose); padding: 30px;">Failed to load posts.</td></tr>';
+        }
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-rose); padding: 30px;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderPostsTable(posts) {
+      const tbody = document.getElementById('posts-table-body');
+      tbody.innerHTML = '';
+      if (!posts || posts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">No community posts in database.</td></tr>';
+        return;
+      }
+
+      posts.forEach(p => {
+        const tr = document.createElement('tr');
+        const dateStr = p.createdAt ? new Date(p.createdAt).toLocaleDateString() : 'N/A';
+        const isDeleted = Boolean(p.isDeleted);
+
+        tr.innerHTML = `
+          <td>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>${p.authorEmoji || '🥭'}</span>
+              <div>
+                <strong style="color: var(--text-main); font-size: 0.92rem;">${p.authorUsername}</strong>
+                <div style="font-size: 0.75rem; color: var(--accent-emerald);">${p.authorHandle}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <strong style="color: var(--text-main); font-size: 0.92rem;">${p.title}</strong>
+            <div style="font-size: 0.8rem; color: var(--text-muted); max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.content}</div>
+          </td>
+          <td style="font-size: 0.78rem; color: var(--accent-cyan);">${(p.tags || []).map(t => `#${t}`).join(' ')}</td>
+          <td><strong style="color: var(--accent-amber);">▲ ${p.upvotes || 0}</strong></td>
+          <td>${isDeleted ? '<span class="status-badge banned">Deleted</span>' : '<span class="status-badge active">Visible</span>'}</td>
+          <td style="color: var(--text-muted); font-size: 0.85rem;">${dateStr}</td>
+          <td>
+            ${isDeleted ? '<span style="color: var(--text-muted); font-size: 0.8rem;">Removed</span>' : `
+              <button class="btn btn-danger" style="font-size: 0.78rem; padding: 5px 10px;" onclick="deletePost(${p.id})">
+                <i data-lucide="trash-2" size="13"></i> Delete Post
+              </button>
+            `}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    async function deletePost(id) {
+      if (!confirm(`Are you sure you want to remove post #${id}?`)) return;
+      try {
+        const res = await fetch(`/api/admin/posts/${id}`, {
+          method: 'DELETE',
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          await loadAdminPosts();
+        } else {
+          alert(data.error || 'Failed to remove post.');
+        }
+      } catch (err) {
+        alert('Delete error: ' + err.message);
+      }
+    }
+
+    // ==================== STUDY GROUPS MANAGEMENT ====================
+    async function loadAdminGroups() {
+      const tbody = document.getElementById('groups-table-body');
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading study rooms...</td></tr>';
+      try {
+        const res = await fetch('/api/admin/groups', {
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        if (res.ok) {
+          currentAdminGroups = await res.json();
+          renderGroupsTable(currentAdminGroups);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--accent-rose); padding: 30px;">Failed to load study rooms.</td></tr>';
+        }
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--accent-rose); padding: 30px;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderGroupsTable(groups) {
+      const tbody = document.getElementById('groups-table-body');
+      tbody.innerHTML = '';
+      if (!groups || groups.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">No study groups created yet.</td></tr>';
+        return;
+      }
+
+      groups.forEach(g => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-size: 1.4rem;">${g.icon || '🛡️'}</td>
+          <td><strong style="color: var(--text-main); font-size: 0.95rem;">${g.name}</strong></td>
+          <td><span class="badge" style="background: rgba(129,140,248,0.15); color: var(--accent-indigo);">${g.category || 'General'}</span></td>
+          <td style="color: var(--text-muted); font-size: 0.85rem; max-width: 300px;">${g.description || '—'}</td>
+          <td><strong style="color: var(--accent-emerald);">${g.memberCount || 0} active</strong></td>
+          <td><span class="status-badge active">Active</span></td>
+          <td>
+            <button class="btn btn-danger" style="font-size: 0.78rem; padding: 5px 10px;" onclick="deleteGroup('${g.id}')">
+              <i data-lucide="trash-2" size="13"></i> Delete
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    async function createNewGroup() {
+      const name = document.getElementById('group-name-input').value.trim();
+      const icon = document.getElementById('group-icon-input').value.trim() || '🛡️';
+      const category = document.getElementById('group-category-select').value;
+      const description = document.getElementById('group-desc-input').value.trim();
+
+      if (!name) {
+        alert("Please enter a Room Name.");
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/groups', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Key': currentAdminKey
+          },
+          body: JSON.stringify({ name, icon, category, description })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          alert(`🎉 Success! Study group '${name}' created.`);
+          document.getElementById('group-name-input').value = '';
+          document.getElementById('group-desc-input').value = '';
+          await loadAdminGroups();
+        } else {
+          alert(data.error || 'Failed to create study group.');
+        }
+      } catch (err) {
+        alert('Group creation error: ' + err.message);
+      }
+    }
+
+    async function deleteGroup(id) {
+      if (!confirm(`Are you sure you want to delete study room '${id}'?`)) return;
+      try {
+        const res = await fetch(`/api/admin/groups/${id}`, {
+          method: 'DELETE',
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          await loadAdminGroups();
+        } else {
+          alert(data.error || 'Failed to delete group.');
+        }
+      } catch (err) {
+        alert('Delete error: ' + err.message);
+      }
     }
   </script>
 </body>
