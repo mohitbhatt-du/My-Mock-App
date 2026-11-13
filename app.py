@@ -1,13 +1,22 @@
 from flask import Flask, jsonify, request, send_from_directory
 import os, json, re
+from datetime import datetime
+from database import (
+    init_db, db_session, Exam, Question, Attempt, SiteMetric, increment_visitors
+)
 
 app = Flask(__name__, static_folder='static')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_QUIZZES_DIR = os.path.join(BASE_DIR, 'data', 'quizzes')
 MOCK_PAGES_DIR = os.path.join(BASE_DIR, 'static', 'Mock_Pages')
 os.makedirs(MOCK_PAGES_DIR, exist_ok=True)
-os.makedirs(DATA_QUIZZES_DIR, exist_ok=True)
+
+# Initialize database on application start
+init_db()
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
 
 @app.route('/')
 def home():
@@ -24,104 +33,194 @@ def serve_quiz(filename):
     """Legacy route for backwards compatibility"""
     return send_from_directory(MOCK_PAGES_DIR, filename)
 
-# API: List all quizzes
+# API: List all exams
 @app.route('/api/quizzes', methods=['GET'])
 def get_quizzes():
-    manifest_path = os.path.join(DATA_QUIZZES_DIR, 'manifest.json')
-    if os.path.exists(manifest_path):
-        try:
-            with open(manifest_path, 'r', encoding='utf-8') as f:
-                manifest = json.load(f)
-            
-            quizzes = []
-            for item in manifest:
-                quizzes.append({
-                    "id": item.get("id"),
-                    "name": item.get("legacyHtml") or f"{item.get('id')}.html",
-                    "title": item.get("title"),
-                    "difficulty": item.get("difficulty", "Standard"),
-                    "tags": item.get("tags", "Balanced"),
-                    # New unified player URL with query param
-                    "url": f"/player?quiz={item.get('id')}",
-                    "totalQuestions": item.get("totalQuestions", 50)
-                })
-            
-            # Natural sort by day / number
-            def extract_number(q):
-                match = re.search(r'\d+', q['title'])
-                return int(match.group()) if match else 0
-            
-            quizzes.sort(key=extract_number)
-            return jsonify(quizzes)
-        except Exception as e:
-            print(f"Error reading manifest: {e}")
-
-    # Fallback to legacy scan if manifest is missing
-    quizzes = []
+    session = db_session()
     try:
-        if os.path.exists(MOCK_PAGES_DIR):
-            for filename in os.listdir(MOCK_PAGES_DIR):
-                if filename.endswith('.html'):
-                    filepath = os.path.join(MOCK_PAGES_DIR, filename)
-                    try:
-                        with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-                            content = f.read(2500)
-                        title_match = re.search(r'<title>(.*?)</title>', content, re.IGNORECASE)
-                        diff_match = re.search(r'<meta name="quiz-difficulty" content="(.*?)">', content, re.IGNORECASE)
-                        tags_match = re.search(r'<meta name="quiz-tags" content="(.*?)">', content, re.IGNORECASE)
-                        title = title_match.group(1) if title_match else filename.replace('.html', '')
-                        quizzes.append({
-                            "name": filename,
-                            "title": title,
-                            "difficulty": diff_match.group(1) if diff_match else 'Unknown Level',
-                            "tags": tags_match.group(1) if tags_match else 'Balanced',
-                            "url": f"/Mock_Pages/{filename}"
-                        })
-                    except Exception as err:
-                        print(f"Error reading {filename}: {err}")
-            quizzes.sort(key=lambda q: int(re.search(r'\d+', q['title']).group()) if re.search(r'\d+', q['title']) else 0)
+        exams = session.query(Exam).order_by(Exam.day).all()
+        return jsonify([exam.to_dict() for exam in exams])
     except Exception as e:
-        print(f"Fallback scan error: {e}")
+        print(f"Error fetching quizzes from DB: {e}")
+        return jsonify([]), 500
 
-    return jsonify(quizzes)
-
-# API: Get individual quiz data by ID
+# API: Get single exam with questions
 @app.route('/api/quizzes/<quiz_id>', methods=['GET'])
 def get_quiz_detail(quiz_id):
-    # Normalize ID (e.g., "Day_1.html" or "day_1")
     clean_id = quiz_id.replace('.html', '').replace('.json', '').lower()
-    json_path = os.path.join(DATA_QUIZZES_DIR, f"{clean_id}.json")
+    include_answers = request.args.get('include_answers', 'true').lower() == 'true'
     
-    if os.path.exists(json_path):
-        try:
-            with open(json_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            return jsonify(data)
-        except Exception as e:
-            return jsonify({"error": f"Failed to load quiz data: {str(e)}"}), 500
-    
-    return jsonify({"error": f"Quiz '{quiz_id}' not found."}), 404
+    session = db_session()
+    try:
+        exam = session.query(Exam).filter_by(id=clean_id).first()
+        if not exam:
+            # Fallback by day number
+            match = re.search(r'\d+', clean_id)
+            if match:
+                day_num = int(match.group())
+                exam = session.query(Exam).filter_by(day=day_num).first()
 
-# API: Page View Counter
+        if exam:
+            return jsonify(exam.to_dict(include_questions=True, include_answers=include_answers))
+        
+        return jsonify({"error": f"Exam '{quiz_id}' not found."}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# API: Secure Server-Side Exam Submission & Evaluation
+@app.route('/api/quizzes/<quiz_id>/submit', methods=['POST'])
+def submit_quiz_evaluation(quiz_id):
+    clean_id = quiz_id.replace('.html', '').replace('.json', '').lower()
+    payload = request.get_json(silent=True) or {}
+    user_answers = payload.get('answers', []) # Array of 0-based option index or null
+    time_taken = payload.get('timeTakenSeconds', 0)
+
+    session = db_session()
+    try:
+        exam = session.query(Exam).filter_by(id=clean_id).first()
+        if not exam:
+            match = re.search(r'\d+', clean_id)
+            if match:
+                exam = session.query(Exam).filter_by(day=int(match.group())).first()
+
+        if not exam:
+            return jsonify({"error": f"Exam '{quiz_id}' not found."}), 404
+
+        questions = exam.questions
+        total_q = len(questions)
+
+        # Pad or slice user_answers
+        if isinstance(user_answers, dict):
+            # Format: {"0": 1, "1": 3, ...}
+            raw_answers = [None] * total_q
+            for k, v in user_answers.items():
+                try:
+                    idx = int(k)
+                    if 0 <= idx < total_q:
+                        raw_answers[idx] = v
+                except Exception:
+                    pass
+            user_answers = raw_answers
+        elif len(user_answers) < total_q:
+            user_answers = list(user_answers) + [None] * (total_q - len(user_answers))
+        else:
+            user_answers = list(user_answers)[:total_q]
+
+        correct_count = 0
+        wrong_count = 0
+        skipped_count = 0
+        topic_stats = {}
+        wrong_log = []
+        skipped_log = []
+        playable_mistakes = []
+        answer_keys = []
+
+        for idx, q in enumerate(questions):
+            topic = q.topic or 'General'
+            if topic not in topic_stats:
+                topic_stats[topic] = {"total": 0, "correct": 0, "wrong": 0, "skipped": 0}
+            topic_stats[topic]["total"] += 1
+
+            u_ans = user_answers[idx]
+            opts = json.loads(q.options_json)
+
+            q_full_data = {
+                "id": q.q_num,
+                "topic": q.topic,
+                "text": q.text,
+                "options": opts,
+                "correct": q.correct,
+                "explanation": q.explanation
+            }
+            answer_keys.append({
+                "qNum": q.q_num,
+                "correct": q.correct,
+                "explanation": q.explanation
+            })
+
+            if u_ans is None:
+                skipped_count += 1
+                topic_stats[topic]["skipped"] += 1
+                skipped_log.append({"qNum": idx + 1, "topic": topic, "text": q.text})
+                playable_mistakes.append(q_full_data)
+            elif u_ans == q.correct:
+                correct_count += 1
+                topic_stats[topic]["correct"] += 1
+            else:
+                wrong_count += 1
+                topic_stats[topic]["wrong"] += 1
+                user_ans_text = opts[u_ans] if (0 <= u_ans < len(opts)) else "Invalid"
+                correct_ans_text = opts[q.correct] if (0 <= q.correct < len(opts)) else ""
+                wrong_log.append({
+                    "qNum": idx + 1,
+                    "topic": topic,
+                    "text": q.text,
+                    "userAnswer": user_ans_text,
+                    "correctAnswer": correct_ans_text
+                })
+                playable_mistakes.append(q_full_data)
+
+        # Official IBPS scoring: +2.0 for correct, -0.5 penalty for incorrect
+        raw_score = (correct_count * 2.0) - (wrong_count * 0.5)
+        score = max(0.0, round(raw_score, 2))
+        attempted = correct_count + wrong_count
+        accuracy = round((correct_count / attempted) * 100) if attempted > 0 else 0
+
+        # Persist Attempt in SQLite Database
+        attempt = Attempt(
+            exam_id=exam.id,
+            exam_title=exam.title,
+            exam_day=exam.day,
+            score=score,
+            correct_count=correct_count,
+            incorrect_count=wrong_count,
+            skipped_count=skipped_count,
+            total_questions=total_q,
+            accuracy=accuracy,
+            time_taken_seconds=time_taken,
+            date=datetime.utcnow(),
+            answers_json=json.dumps(user_answers),
+            topic_breakdown_json=json.dumps(topic_stats),
+            wrong_questions_json=json.dumps(wrong_log),
+            skipped_questions_json=json.dumps(skipped_log),
+            playable_mistakes_json=json.dumps(playable_mistakes)
+        )
+        session.add(attempt)
+        session.commit()
+
+        response_data = attempt.to_dict()
+        response_data["answerKeys"] = answer_keys
+        return jsonify(response_data)
+
+    except Exception as e:
+        session.rollback()
+        print(f"Error evaluating exam: {e}")
+        return jsonify({"error": f"Evaluation error: {str(e)}"}), 500
+
+# API: Get All Attempts History (For Dashboard Persistence)
+@app.route('/api/attempts', methods=['GET', 'DELETE'])
+def manage_attempts():
+    session = db_session()
+    if request.method == 'DELETE':
+        try:
+            session.query(Attempt).delete()
+            session.commit()
+            return jsonify({"message": "All attempts deleted successfully."})
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
+
+    # GET attempts
+    try:
+        attempts = session.query(Attempt).order_by(Attempt.date.asc()).all()
+        return jsonify([a.to_dict() for a in attempts])
+    except Exception as e:
+        return jsonify([]), 500
+
+# API: Atomic Visitor Counter
 @app.route('/api/visitors', methods=['GET'])
 def visitor_count():
-    visitor_file = os.path.join(BASE_DIR, 'visitors.json')
-    count = 0
-    try:
-        if os.path.exists(visitor_file):
-            with open(visitor_file, 'r', encoding='utf-8') as f:
-                try:
-                    data = json.load(f)
-                    count = data.get('count', 0)
-                except json.JSONDecodeError:
-                    count = 0
-        count += 1
-        with open(visitor_file, 'w', encoding='utf-8') as f:
-            json.dump({"count": count}, f)
-    except Exception as e:
-        print(f"Visitor counter error: {e}")
-        if count == 0: count = 1
-        
+    count = increment_visitors()
     return jsonify({"count": count})
 
 if __name__ == '__main__':

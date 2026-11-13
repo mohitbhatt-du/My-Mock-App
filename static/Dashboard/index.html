@@ -231,10 +231,11 @@
 
     async function loadDataFromBackend() {
           try {
-            // Fetch Quizzes, Visitor Count, AND GitHub Stars simultaneously
-            const [quizRes, visitorRes, githubRes] = await Promise.all([
+            // Fetch Quizzes, Visitor Count, Database Attempts, AND GitHub Stars simultaneously
+            const [quizRes, visitorRes, attemptsRes, githubRes] = await Promise.all([
               fetch('/api/quizzes'),
               fetch('/api/visitors'),
+              fetch('/api/attempts').catch(() => null),
               fetch('https://api.github.com/repos/mohitbhatt-du/My-Mock-App').catch(() => null)
             ]);
             
@@ -250,8 +251,13 @@
               document.getElementById('star-counter').innerText = '0';
             }
             
-            // Load private results from the user's browser memory
-            const results = loadResultsFromLocalStorage();
+            let dbAttempts = [];
+            if (attemptsRes && attemptsRes.ok) {
+              try { dbAttempts = await attemptsRes.json(); } catch(e) {}
+            }
+
+            // Load results merged from DB & LocalStorage
+            const results = loadMergedResults(dbAttempts);
             
             processDataAndRenderAnalytics(results);
             renderQuizHub(globalQuizzes, results);
@@ -262,18 +268,34 @@
           }
         }
 
-    function loadResultsFromLocalStorage() {
-      const results = [];
+    function loadMergedResults(dbAttempts = []) {
+      const resultsMap = new Map();
+
+      // 1. Load attempts from database first
+      if (Array.isArray(dbAttempts)) {
+        dbAttempts.forEach(att => {
+          if (att && att.quizDay) {
+            resultsMap.set(`day_${att.quizDay}`, att);
+          }
+        });
+      }
+
+      // 2. Overlay with local storage results
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith('quiz_result_')) {
           try {
-            results.push(JSON.parse(localStorage.getItem(key)));
+            const localItem = JSON.parse(localStorage.getItem(key));
+            if (localItem && localItem.quizDay) {
+              resultsMap.set(`day_${localItem.quizDay}`, localItem);
+            }
           } catch (e) {}
         }
       }
-      results.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
-      return results;
+
+      const merged = Array.from(resultsMap.values());
+      merged.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+      return merged;
     }
 
 
@@ -475,17 +497,24 @@ function renderQuizHub(quizzes, results) {
     }
 
     async function resetAllProgress() {
-          const confirmed = confirm("⚠️ WARNING: This will delete all your local mock test results on this device.");
+          const confirmed = confirm("⚠️ WARNING: This will delete all your mock test results on this device and database.");
           if (confirmed) {
-            // Clear only quiz results from this browser
+            // Delete server database attempts
+            try {
+              await fetch('/api/attempts', { method: 'DELETE' });
+            } catch(e) {
+              console.warn("Could not delete server attempts:", e);
+            }
+
+            // Clear local storage quiz results
             const keysToRemove = [];
             for (let i = 0; i < localStorage.length; i++) {
               const key = localStorage.key(i);
-              if (key.startsWith('quiz_result_')) keysToRemove.push(key);
+              if (key.startsWith('quiz_result_') || key.startsWith('it_officer_mains_')) keysToRemove.push(key);
             }
             keysToRemove.forEach(k => localStorage.removeItem(k));
             
-            alert("Your local progress has been reset.");
+            alert("All your progress has been reset successfully.");
             loadDataFromBackend();
           }
         }

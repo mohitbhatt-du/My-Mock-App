@@ -665,7 +665,7 @@
 
     let generatedAnalyticsData = {}; 
 
-    function submitQuiz(force = false) {
+    async function submitQuiz(force = false) {
       if (!force && !confirm("Are you sure you want to submit the quiz?")) return;
       
       quizSubmitted = true;
@@ -680,34 +680,78 @@
       let topicStats = {};
       let wrongLog = [], skippedLog = [];
       let playableMistakes = [];
+      let score = 0;
+      let timeSpent = Math.max(0, (selectedTimeMinutes * 60) - timeRemaining);
 
-      for (let i = 0; i < questions.length; i++) {
-        let q = questions[i];
-        let baseTopic = q.topic;
-        
-        if(!topicStats[baseTopic]) {
-          topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
-        }
-        topicStats[baseTopic].total++;
-
-        if (userAnswers[i] === null) {
-          unattempted++; topicStats[baseTopic].skipped++;
-          skippedLog.push({ qNum: i+1, topic: baseTopic, text: q.text });
-          playableMistakes.push(q);
-        } else if (userAnswers[i] === q.correct) {
-          correct++; topicStats[baseTopic].correct++;
-        } else {
-          wrong++; topicStats[baseTopic].wrong++;
-          wrongLog.push({
-            qNum: i+1, topic: baseTopic, text: q.text, 
-            userAnswer: q.options[userAnswers[i]], correctAnswer: q.options[q.correct]
+      // Attempt Server-Side Evaluation (Phase 2 Database & Secure Scoring)
+      let serverEvaluated = false;
+      if (quizId !== 'revision') {
+        try {
+          const res = await fetch(`/api/quizzes/${quizId}/submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              answers: userAnswers,
+              timeTakenSeconds: timeSpent
+            })
           });
-          playableMistakes.push(q);
+          if (res.ok) {
+            const serverData = await res.json();
+            score = serverData.score;
+            correct = serverData.correct;
+            wrong = serverData.incorrect;
+            unattempted = serverData.unattempted;
+            topicStats = serverData.topicBreakdown || {};
+            wrongLog = serverData.wrongQuestions || [];
+            skippedLog = serverData.skippedQuestions || [];
+            playableMistakes = serverData.playableMistakes || [];
+
+            // Update local questions with authoritative answer keys
+            if (serverData.answerKeys && Array.isArray(serverData.answerKeys)) {
+              serverData.answerKeys.forEach((keyData, idx) => {
+                if (questions[idx]) {
+                  questions[idx].correct = keyData.correct;
+                  questions[idx].explanation = keyData.explanation;
+                }
+              });
+            }
+            serverEvaluated = true;
+          }
+        } catch (serverErr) {
+          console.warn("Server evaluation failed, falling back to client scoring.", serverErr);
         }
       }
 
-      const score = Math.max(0, (correct * 2) - (wrong * 0.5));
-      document.getElementById('score-total').innerText = score;
+      // Fallback Client Evaluation (e.g. for dynamic revision or offline)
+      if (!serverEvaluated) {
+        for (let i = 0; i < questions.length; i++) {
+          let q = questions[i];
+          let baseTopic = q.topic;
+          
+          if(!topicStats[baseTopic]) {
+            topicStats[baseTopic] = { total: 0, correct: 0, wrong: 0, skipped: 0 };
+          }
+          topicStats[baseTopic].total++;
+
+          if (userAnswers[i] === null) {
+            unattempted++; topicStats[baseTopic].skipped++;
+            skippedLog.push({ qNum: i+1, topic: baseTopic, text: q.text });
+            playableMistakes.push(q);
+          } else if (userAnswers[i] === q.correct) {
+            correct++; topicStats[baseTopic].correct++;
+          } else {
+            wrong++; topicStats[baseTopic].wrong++;
+            wrongLog.push({
+              qNum: i+1, topic: baseTopic, text: q.text, 
+              userAnswer: q.options[userAnswers[i]], correctAnswer: q.options[q.correct]
+            });
+            playableMistakes.push(q);
+          }
+        }
+        score = Math.max(0, (correct * 2) - (wrong * 0.5));
+      }
+
+      document.getElementById('score-total').innerText = typeof score === 'number' ? score.toFixed(2) : score;
       document.getElementById('score-correct').innerText = correct;
       document.getElementById('score-wrong').innerText = wrong;
       document.getElementById('score-unattempted').innerText = unattempted;
@@ -715,7 +759,7 @@
       const tbBody = document.getElementById('topic-breakdown-body');
       tbBody.innerHTML = '';
       for (const [topic, stats] of Object.entries(topicStats)) {
-        const acc = Math.round((stats.correct / stats.total) * 100);
+        const acc = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
         const tr = document.createElement('tr');
         tr.innerHTML = `<td><strong>${topic}</strong></td><td>${stats.total - stats.skipped} / ${stats.total}</td><td style="color: var(--accent-green);">${stats.correct}</td><td style="color: var(--accent-red);">${stats.wrong}</td><td>${acc}%</td>`;
         tbBody.appendChild(tr);
