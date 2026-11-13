@@ -547,7 +547,7 @@
 
   <script>
     lucide.createIcons();
-    let currentAdminKey = localStorage.getItem('exammatrix_admin_key') || '';
+    let currentAdminKey = sessionStorage.getItem('exammatrix_admin_key') || localStorage.getItem('exammatrix_admin_key') || '';
     let liveExamsList = [];
 
     window.onload = async () => {
@@ -589,7 +589,7 @@
         const data = await res.json();
         if (res.ok && data.isAdmin) {
           currentAdminKey = key;
-          localStorage.setItem('exammatrix_admin_key', key);
+          sessionStorage.setItem('exammatrix_admin_key', key);
           document.getElementById('auth-overlay').style.display = 'none';
           await loadAdminStats();
         } else {
@@ -603,6 +603,7 @@
     }
 
     async function logoutAdmin() {
+      sessionStorage.removeItem('exammatrix_admin_key');
       localStorage.removeItem('exammatrix_admin_key');
       currentAdminKey = '';
       try {

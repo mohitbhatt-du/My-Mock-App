@@ -18,6 +18,12 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 
+  <!-- Firebase 10.8.0 SDKs (Cloud Firestore & Auth) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="/static/firebase-service.js"></script>
+
   <style>
     /* ==========================================================================
        TCS iON OFFICIAL WHITE / BLUE EXAMINATION THEME
@@ -1026,21 +1032,7 @@
             quizData = await res.json();
             questions = quizData.questions || [];
           } else {
-            const savedRevision = localStorage.getItem('active_revision_exam');
-            if (savedRevision) {
-              const parsed = JSON.parse(savedRevision);
-              questions = parsed.questions || [];
-              quizData = {
-                id: 'revision',
-                day: 0,
-                title: 'IT Officer Mains: Adaptive Revision Mock',
-                difficulty: 'Adaptive',
-                tags: 'Spaced Repetition',
-                questions: questions
-              };
-            } else {
-              throw new Error("No revision mock available yet. Please attempt more mock tests first.");
-            }
+            throw new Error("No revision mock available yet. Please attempt more mock tests first.");
           }
         } else if (quizId.startsWith('drill')) {
           // 2. Targeted Topic Drill Mode
@@ -1068,7 +1060,7 @@
         document.getElementById('header-diff').innerText = `Section: Professional Knowledge (${quizData.tags || 'IT Core'})`;
         document.getElementById('score-subtitle').innerText = quizData.title;
 
-        initQuizState();
+        await initQuizState();
 
       } catch (err) {
         console.error("Error loading quiz:", err);
@@ -1084,7 +1076,7 @@
       }
     }
 
-    function initQuizState() {
+    async function initQuizState() {
       window.addEventListener('beforeunload', function (e) {
         if (!quizSubmitted && document.getElementById('tcs-main-container').style.display === 'flex') {
           e.preventDefault(); e.returnValue = '';
@@ -1108,45 +1100,16 @@
         }
       });
 
-      const storageKey = `quiz_result_day_${quizDayNum}`;
-      const finalResult = localStorage.getItem(storageKey);
-
-      // Reattempt screen
-      if (finalResult && quizId !== 'revision') {
+      // Resume from Cloud Firestore draft if exists
+      if (typeof getCloudDraft === 'function') {
         try {
-          const parsedResult = JSON.parse(finalResult);
-          userAnswers = parsedResult.userAnswersArray || new Array(questions.length).fill(null);
-          
-          document.getElementById('setup-screen').innerHTML = `
-            <div style="width: 56px; height: 56px; background: #ecfdf5; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
-              <i data-lucide="check-circle" size="30"></i>
-            </div>
-            <h2 style="margin-bottom: 8px;">Examination Already Completed</h2>
-            <p style="font-size: 1.15rem; color: #1e3a8a; margin-bottom: 6px;">Your Score: <strong>${parsedResult.score} / ${questions.length * 2}</strong></p>
-            <p style="color: #64748b; margin-bottom: 24px;">You have already submitted responses for this mock paper.</p>
-            
-            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-              <button class="tcs-btn btn-mark-next" style="padding: 10px 20px;" onclick="loadScorecardFromStorage()"><i data-lucide="bar-chart-2" size="16"></i> View Scorecard</button>
-              <button class="tcs-btn" style="background: #dc2626; color: #fff; padding: 10px 20px;" onclick="resetQuiz()"><i data-lucide="rotate-ccw" size="16"></i> Retake Examination</button>
-            </div>
-          `;
-          lucide.createIcons();
-          return;
-        } catch(e) {}
-      }
-
-      // Resume from draft
-      const draftKey = `it_officer_mains_day${quizDayNum}`;
-      const savedData = localStorage.getItem(draftKey);
-      if (savedData) {
-        try {
-          const parsed = JSON.parse(savedData);
-          if (parsed && parsed.timeRemaining > 0 && !parsed.quizSubmitted) {
-            userAnswers = parsed.userAnswers;
-            markedForReview = new Set(parsed.markedForReview || []);
-            visitedQuestions = new Set(parsed.visitedQuestions || [0]);
-            timeRemaining = parsed.timeRemaining;
-            currentQ = parsed.currentQ;
+          const cloudDraft = await getCloudDraft(quizDayNum);
+          if (cloudDraft && cloudDraft.timeRemaining > 0 && !cloudDraft.quizSubmitted) {
+            userAnswers = cloudDraft.userAnswers || new Array(questions.length).fill(null);
+            markedForReview = new Set(cloudDraft.markedForReview || []);
+            visitedQuestions = new Set(cloudDraft.visitedQuestions || [0]);
+            timeRemaining = cloudDraft.timeRemaining;
+            currentQ = cloudDraft.currentQ || 0;
             
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('tcs-main-container').style.display = 'flex';
@@ -1255,9 +1218,13 @@
         timeRemaining,
         quizSubmitted
       };
-      localStorage.setItem(`it_officer_mains_day${quizDayNum}`, JSON.stringify(state));
-      saveIndicator.classList.add('show');
-      setTimeout(() => saveIndicator.classList.remove('show'), 1200);
+      if (typeof saveCloudDraft === 'function') {
+        saveCloudDraft(quizDayNum, state);
+      }
+      if (saveIndicator) {
+        saveIndicator.classList.add('show');
+        setTimeout(() => saveIndicator.classList.remove('show'), 1200);
+      }
     }
 
     function resetQuiz() {
@@ -1268,9 +1235,10 @@
         message: "Are you sure you want to reset and retake this examination? Your previous score and answers will be cleared.",
         confirmText: "Yes, Retake Test",
         confirmClass: "btn-confirm-danger",
-        onConfirm: () => {
-          localStorage.removeItem(`it_officer_mains_day${quizDayNum}`);
-          localStorage.removeItem(`quiz_result_day_${quizDayNum}`);
+        onConfirm: async () => {
+          if (typeof clearCloudDraft === 'function') {
+            await clearCloudDraft(quizDayNum);
+          }
           location.reload();
         }
       });
@@ -1518,7 +1486,9 @@
       }
       const btnPause = document.getElementById('btn-pause');
       if (btnPause) btnPause.style.display = 'none';
-      localStorage.removeItem(`it_officer_mains_day${quizDayNum}`);
+      if (typeof clearCloudDraft === 'function') {
+        clearCloudDraft(quizDayNum);
+      }
 
       document.getElementById('tcs-main-container').style.display = 'none';
       document.getElementById('scorecard').style.display = 'block';
@@ -1647,16 +1617,23 @@
       loadQuestion(0);
     }
 
-    function autoSaveToServer(data) {
+    async function autoSaveToServer(data) {
       try {
-        const storageKey = `quiz_result_day_${data.quizDay}`;
-        localStorage.setItem(storageKey, JSON.stringify(data));
-        
+        if (typeof saveAttemptToFirestore === 'function') {
+          await saveAttemptToFirestore(data);
+        }
+        // Also sync to backend SQLite ledger for admin/leaderboard analytics
+        await fetch('/api/attempts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }).catch(() => {});
+
         if (window.parent && window.parent.loadDataFromBackend) {
           window.parent.loadDataFromBackend();
         }
       } catch (err) {
-        console.error("Error saving result locally.", err);
+        console.error("Error saving attempt to Cloud Firestore:", err);
       }
     }
 
