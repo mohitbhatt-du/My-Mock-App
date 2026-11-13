@@ -163,19 +163,43 @@ function onFirebaseAuthChange(callback) {
 }
 
 /**
+ * Safely resolves active Firebase user, checking parent iframe context and auth state
+ */
+async function getActiveUser() {
+  if (fbAuth && fbAuth.currentUser) return fbAuth.currentUser;
+  try {
+    if (typeof window !== 'undefined' && window.parent && window.parent !== window && window.parent.fbAuth && window.parent.fbAuth.currentUser) {
+      return window.parent.fbAuth.currentUser;
+    }
+  } catch (e) {}
+
+  if (fbAuth) {
+    return new Promise(resolve => {
+      const unsub = fbAuth.onAuthStateChanged(u => {
+        unsub();
+        resolve(u);
+      });
+      setTimeout(() => resolve(fbAuth ? fbAuth.currentUser : null), 800);
+    });
+  }
+  return null;
+}
+
+/**
  * Save Completed Mock Exam Attempt into Cloud Firestore
  * Replaces localStorage quiz_result_*
  */
 async function saveAttemptToFirestore(attempt) {
   if (!fbDb) return null;
-  const user = fbAuth ? fbAuth.currentUser : null;
-  const uid = user ? user.uid : 'anonymous_guest';
+  const user = await getActiveUser();
+  const parentUser = (typeof window !== 'undefined' && window.parent && window.parent.globalUser) ? window.parent.globalUser : null;
+  const uid = user ? user.uid : (parentUser ? parentUser.uid : (attempt.userId || 'anonymous_guest'));
 
-  let username = 'Candidate';
-  let handle = '@candidate';
-  let emoji = '🥭';
+  let username = (parentUser && parentUser.username) ? parentUser.username : 'Candidate';
+  let handle = (parentUser && parentUser.handle) ? parentUser.handle : '@candidate';
+  let emoji = (parentUser && parentUser.fruitEmoji) ? parentUser.fruitEmoji : '🥭';
 
-  if (user) {
+  if (user && fbDb) {
     try {
       const uDoc = await fbDb.collection('users').doc(user.uid).get();
       if (uDoc.exists) {
@@ -187,14 +211,17 @@ async function saveAttemptToFirestore(attempt) {
     } catch (e) {}
   }
 
+  const qDay = Number(attempt.quizDay) || 0;
+  const defTitle = qDay > 0 ? `IT Officer Mains: Day ${qDay}` : 'Custom Assessment';
+
   const payload = {
     userId: uid,
     username: username,
     userHandle: handle,
     userFruitEmoji: emoji,
-    examId: String(attempt.examId || `day_${attempt.quizDay || 1}`),
-    quizDay: Number(attempt.quizDay) || 1,
-    quizTitle: attempt.quizTitle || `IT Officer Mains: Day ${attempt.quizDay || 1}`,
+    examId: String(attempt.examId || (qDay > 0 ? `day_${qDay}` : 'custom')),
+    quizDay: qDay,
+    quizTitle: attempt.quizTitle || defTitle,
     score: Number(attempt.score) || 0,
     correct: Number(attempt.correct) || 0,
     incorrect: Number(attempt.incorrect) || 0,

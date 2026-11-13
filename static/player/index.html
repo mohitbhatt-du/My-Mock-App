@@ -1505,16 +1505,21 @@
       try {
         const qDbIds = questions.map(q => q.db_id || q.id);
         const urlParams = new URLSearchParams(window.location.search);
-        const res = await fetch(`/api/quizzes/${quizId}/submit`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            answers: userAnswers,
-            questionDbIds: qDbIds,
-            drillTopic: urlParams.get('topic') || '',
-            timeTakenSeconds: timeSpent
-          })
-        });
+          const activeUid = (typeof fbAuth !== 'undefined' && fbAuth && fbAuth.currentUser ? fbAuth.currentUser.uid : (window.parent && window.parent.globalUser ? window.parent.globalUser.uid : null));
+          const res = await fetch(`/api/quizzes/${quizId}/submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              answers: userAnswers,
+              questionDbIds: qDbIds,
+              quizTitle: quizData.title,
+              quizDay: quizDayNum,
+              examId: quizId,
+              userId: activeUid,
+              drillTopic: urlParams.get('topic') || '',
+              timeTakenSeconds: timeSpent
+            })
+          });
           if (res.ok) {
             const serverData = await res.json();
             score = serverData.score;
@@ -1621,7 +1626,10 @@
       try {
         if (typeof saveAttemptToFirestore === 'function') {
           await saveAttemptToFirestore(data);
+        } else if (window.parent && typeof window.parent.saveAttemptToFirestore === 'function') {
+          await window.parent.saveAttemptToFirestore(data);
         }
+
         // Also sync to backend SQLite ledger for admin/leaderboard analytics
         await fetch('/api/attempts', {
           method: 'POST',
@@ -1629,7 +1637,9 @@
           body: JSON.stringify(data)
         }).catch(() => {});
 
-        if (window.parent && window.parent.loadDataFromBackend) {
+        if (window.parent && typeof window.parent.onMockAttemptSaved === 'function') {
+          window.parent.onMockAttemptSaved(data);
+        } else if (window.parent && window.parent.loadDataFromBackend) {
           window.parent.loadDataFromBackend();
         }
       } catch (err) {

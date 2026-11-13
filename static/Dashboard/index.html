@@ -787,9 +787,22 @@
 
     let globalQuizzes = [];
     let globalResults = [];
+    let latestDbAttempts = [];
+    let latestFirestoreAttempts = [];
     let globalUser = null;
     let currentFilter = 'all';
     let trendChart, accuracyChart, topicChart;
+
+    window.onMockAttemptSaved = function(newAttempt) {
+      if (newAttempt) {
+        latestDbAttempts.push(newAttempt);
+        globalResults = loadMergedResults(latestDbAttempts, latestFirestoreAttempts);
+        processDataAndRenderAnalytics(globalResults);
+        filterAndRenderQuizzes();
+        updateSmartHeroRecommendation(globalQuizzes, globalResults);
+      }
+      loadDataFromBackend();
+    };
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -807,7 +820,8 @@
             renderUserHeader(globalUser);
             if (typeof subscribeFirestoreAttempts === 'function') {
               subscribeFirestoreAttempts(globalUser.uid, (firestoreAttempts) => {
-                globalResults = loadMergedResults([], firestoreAttempts);
+                latestFirestoreAttempts = firestoreAttempts || [];
+                globalResults = loadMergedResults(latestDbAttempts, latestFirestoreAttempts);
                 processDataAndRenderAnalytics(globalResults);
                 filterAndRenderQuizzes();
                 updateSmartHeroRecommendation(globalQuizzes, globalResults);
@@ -1024,6 +1038,7 @@
         if (attemptsRes && attemptsRes.ok) {
           try { dbAttempts = await attemptsRes.json(); } catch(e) {}
         }
+        latestDbAttempts = dbAttempts;
 
         if (cutoffRes && cutoffRes.ok) {
           try {
@@ -1039,7 +1054,7 @@
           } catch(e) {}
         }
 
-        globalResults = loadMergedResults(dbAttempts);
+        globalResults = loadMergedResults(latestDbAttempts, latestFirestoreAttempts);
         
         processDataAndRenderAnalytics(globalResults);
         filterAndRenderQuizzes();
@@ -1205,19 +1220,27 @@
       enterFullScreen();
     }
 
+    function getAttemptKey(att, idx) {
+      if (!att) return `att_${idx}`;
+      if (att.quizDay && Number(att.quizDay) > 0) return `day_${att.quizDay}`;
+      if (att.examId) return String(att.examId);
+      if (att.quizTitle) return String(att.quizTitle);
+      return `attempt_${att.id || idx}`;
+    }
+
     function loadMergedResults(dbAttempts = [], firestoreAttempts = []) {
       const resultsMap = new Map();
       if (Array.isArray(dbAttempts)) {
-        dbAttempts.forEach(att => {
-          if (att && att.quizDay) {
-            resultsMap.set(`day_${att.quizDay}`, att);
+        dbAttempts.forEach((att, idx) => {
+          if (att) {
+            resultsMap.set(getAttemptKey(att, idx), att);
           }
         });
       }
       if (Array.isArray(firestoreAttempts)) {
-        firestoreAttempts.forEach(att => {
-          if (att && att.quizDay) {
-            resultsMap.set(`day_${att.quizDay}`, att);
+        firestoreAttempts.forEach((att, idx) => {
+          if (att) {
+            resultsMap.set(getAttemptKey(att, idx), att);
           }
         });
       }
@@ -1238,7 +1261,11 @@
       
       quizzes.forEach((quiz) => {
         const globalIndex = globalQuizzes.findIndex(g => g.id === quiz.id);
-        const matchingResult = results.slice().reverse().find(r => r.quizTitle === quiz.title);
+        const matchingResult = results.slice().reverse().find(r => 
+          (r.quizDay && quiz.day && Number(r.quizDay) === Number(quiz.day)) ||
+          (r.examId && (r.examId === quiz.id || r.examId === `day_${quiz.day}`)) ||
+          (r.quizTitle && quiz.title && r.quizTitle.toLowerCase().trim() === quiz.title.toLowerCase().trim())
+        );
         let scoreBadge = '';
         let btnClass = 'btn btn-play';
         let btnText = '<i data-lucide="play"></i> Launch Exam';

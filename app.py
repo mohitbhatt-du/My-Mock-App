@@ -424,7 +424,7 @@ def submit_quiz_evaluation(quiz_id):
     question_db_ids = payload.get('questionDbIds', [])
     time_taken = payload.get('timeTakenSeconds', 0)
     drill_topic = payload.get('drillTopic', '')
-    user_id = session.get('user_id')
+    user_id = session.get('user_id') or payload.get('userId')
 
     session_db = db_session()
     try:
@@ -432,33 +432,47 @@ def submit_quiz_evaluation(quiz_id):
         exam_day = 0
         questions = []
 
+        exam = session_db.query(Exam).filter_by(id=clean_id).first()
+        if not exam:
+            match = re.search(r'\d+', clean_id)
+            if match:
+                exam = session_db.query(Exam).filter_by(day=int(match.group())).first()
+
+        if exam:
+            exam_title = exam.title
+            exam_day = exam.day
+
+        if clean_id.startswith('drill'):
+            exam_title = f"Topic Drill: {drill_topic or 'Targeted Practice'}"
+            exam_day = 0
+        elif clean_id == 'revision':
+            exam_title = "IT Officer Mains: Adaptive Revision Mock"
+            exam_day = 0
+
+        # Override with explicit payload if present
+        if payload.get('quizTitle'):
+            exam_title = payload.get('quizTitle')
+        if payload.get('quizDay') is not None:
+            try:
+                exam_day = int(payload.get('quizDay'))
+            except Exception:
+                pass
+
+        if not exam_title:
+            exam_title = f"IT Officer Mains: Day {exam_day}" if exam_day > 0 else "Custom Assessment"
+
         if question_db_ids:
             questions = [session_db.query(Question).filter_by(id=qid).first() for qid in question_db_ids]
             questions = [q for q in questions if q is not None]
-            if clean_id.startswith('drill'):
-                exam_title = f"Topic Drill: {drill_topic or 'Targeted Practice'}"
-            elif clean_id == 'revision':
-                exam_title = "IT Officer Mains: Adaptive Revision Mock"
-            else:
-                exam_title = payload.get('quizTitle', 'Custom Assessment')
+        elif exam:
+            questions = exam.questions
+        elif clean_id == 'revision':
+            rev = generate_revision_mock(session_db, 50)
+            q_ids = [q['db_id'] for q in rev['questions']]
+            questions = [session_db.query(Question).filter_by(id=qid).first() for qid in q_ids]
+            questions = [q for q in questions if q is not None]
         else:
-            exam = session_db.query(Exam).filter_by(id=clean_id).first()
-            if not exam:
-                match = re.search(r'\d+', clean_id)
-                if match:
-                    exam = session_db.query(Exam).filter_by(day=int(match.group())).first()
-
-            if not exam and clean_id == 'revision':
-                rev = generate_revision_mock(session_db, 50)
-                q_ids = [q['db_id'] for q in rev['questions']]
-                questions = [session_db.query(Question).filter_by(id=qid).first() for qid in q_ids]
-                exam_title = "IT Officer Mains: Adaptive Revision Mock"
-            elif exam:
-                questions = exam.questions
-                exam_title = exam.title
-                exam_day = exam.day
-            else:
-                return jsonify({"error": f"Exam '{quiz_id}' not found."}), 404
+            return jsonify({"error": f"Exam '{quiz_id}' not found."}), 404
 
         total_q = len(questions)
 
@@ -589,7 +603,7 @@ def get_cutoff_analytics():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/attempts', methods=['GET', 'DELETE'])
+@app.route('/api/attempts', methods=['GET', 'POST', 'DELETE'])
 def manage_attempts():
     session_db = db_session()
     if request.method == 'DELETE':
@@ -600,6 +614,42 @@ def manage_attempts():
         except Exception as e:
             session_db.rollback()
             return jsonify({"error": str(e)}), 500
+
+    if request.method == 'POST':
+        try:
+            data = request.get_json(silent=True) or {}
+            quiz_day = int(data.get('quizDay') or 0)
+            quiz_title = data.get('quizTitle') or (f"IT Officer Mains: Day {quiz_day}" if quiz_day else "Custom Assessment")
+            score = float(data.get('score') or 0.0)
+            correct = int(data.get('correct') or 0)
+            incorrect = int(data.get('incorrect') or 0)
+            unattempted = int(data.get('unattempted') or 0)
+            total_q = int(data.get('totalQuestions') or (correct + incorrect + unattempted) or 50)
+            accuracy = round((correct / max(1, correct + incorrect)) * 100) if (correct + incorrect) > 0 else 0
+            user_id = session.get('user_id') or data.get('userId')
+
+            attempt = Attempt(
+                user_id=user_id,
+                exam_id=f"day_{quiz_day}" if quiz_day else "custom",
+                exam_title=quiz_title,
+                exam_day=quiz_day,
+                score=score,
+                correct_count=correct,
+                incorrect_count=incorrect,
+                skipped_count=unattempted,
+                total_questions=total_q,
+                accuracy=accuracy,
+                time_taken_seconds=int(data.get('timeTakenSeconds') or 0),
+                date=datetime.utcnow(),
+                topic_breakdown_json=json.dumps(data.get('topicBreakdown') or {}),
+                answers_json=json.dumps(data.get('userAnswersArray') or [])
+            )
+            session_db.add(attempt)
+            session_db.commit()
+            return jsonify(attempt.to_dict()), 201
+        except Exception as e:
+            session_db.rollback()
+            return jsonify({"error": str(e)}), 400
 
     try:
         attempts = session_db.query(Attempt).order_by(Attempt.date.asc()).all()
