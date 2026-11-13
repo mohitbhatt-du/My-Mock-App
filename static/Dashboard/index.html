@@ -412,12 +412,10 @@ function renderQuizHub(quizzes, results) {
 
 
     function closeQuizPlayer(force = false) {
-      if (force || confirm("Close quiz player and return to dashboard?")) {
-        document.getElementById('quiz-player-overlay').style.display = 'none';
-        document.getElementById('quiz-iframe').src = ''; 
-        exitFullScreen();
-        loadDataFromBackend(); // Auto-refresh analytics!
-      }
+      document.getElementById('quiz-player-overlay').style.display = 'none';
+      document.getElementById('quiz-iframe').src = ''; 
+      exitFullScreen();
+      loadDataFromBackend(); // Auto-refresh analytics!
     }
 
 

@@ -316,6 +316,96 @@
       background: #218838;
     }
 
+    /* TCS In-Page Modals (Fullscreen-Safe, replaces browser confirm) */
+    .tcs-modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 100000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tcs-modal-card {
+      background: #ffffff;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--tcs-border);
+      overflow: hidden;
+    }
+    .tcs-modal-header {
+      background: #f8fafc;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tcs-modal-header h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1c355e;
+      margin: 0;
+    }
+    .tcs-modal-body {
+      padding: 20px;
+    }
+    .tcs-summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 10px 0;
+    }
+    .tcs-summary-table td {
+      padding: 8px 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .tcs-summary-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .tcs-modal-footer {
+      background: #f1f5f9;
+      padding: 14px 20px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .tcs-modal-btn {
+      padding: 9px 18px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s;
+    }
+    .btn-modal-cancel {
+      background: #ffffff;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-modal-cancel:hover {
+      background: #f1f5f9;
+    }
+    .btn-confirm-submit {
+      background: #28a745;
+      color: #ffffff;
+    }
+    .btn-confirm-submit:hover {
+      background: #218838;
+    }
+    .btn-confirm-danger {
+      background: #dc2626 !important;
+      color: #ffffff !important;
+    }
+    .btn-confirm-danger:hover {
+      background: #b91c1c !important;
+    }
+
     /* Right Palette Panel */
     .tcs-palette-panel {
       background: #fdfdfd; padding: 16px; border-left: 1px solid var(--tcs-border);
@@ -489,6 +579,61 @@
       <button class="btn-resume-modal" onclick="togglePause()">
         <i data-lucide="play" size="18"></i> Resume Examination
       </button>
+    </div>
+  </div>
+
+  <!-- TCS iON Exam Submission Summary Modal -->
+  <div id="submit-confirm-modal" class="tcs-modal-backdrop" style="display: none;">
+    <div class="tcs-modal-card">
+      <div class="tcs-modal-header">
+        <i data-lucide="help-circle" size="22" style="color: #0284c7;"></i>
+        <h3>Submit Examination Confirmation</h3>
+      </div>
+      <div class="tcs-modal-body">
+        <p style="color: #475569; margin-bottom: 12px; font-size: 0.95rem;">
+          Are you sure you want to submit the examination? Below is your question summary:
+        </p>
+        <table class="tcs-summary-table">
+          <tr><td><strong>Total Questions</strong></td><td id="modal-sum-total" style="font-weight: bold;">50</td></tr>
+          <tr><td style="color: #16a34a; font-weight: bold;">Answered</td><td id="modal-sum-answered" style="font-weight: bold; color: #16a34a;">0</td></tr>
+          <tr><td style="color: #dc2626; font-weight: bold;">Not Answered</td><td id="modal-sum-not-answered" style="font-weight: bold; color: #dc2626;">0</td></tr>
+          <tr><td style="color: #7b1fa2; font-weight: bold;">Marked for Review</td><td id="modal-sum-marked" style="font-weight: bold; color: #7b1fa2;">0</td></tr>
+          <tr><td style="color: #0f766e; font-weight: bold;">Ans & Marked (Evaluated)</td><td id="modal-sum-ans-marked" style="font-weight: bold; color: #0f766e;">0</td></tr>
+          <tr><td style="color: #64748b; font-weight: bold;">Not Visited</td><td id="modal-sum-not-visited" style="font-weight: bold; color: #64748b;">0</td></tr>
+        </table>
+        <p style="color: #b91c1c; font-size: 0.82rem; font-weight: 600; margin-top: 12px;">
+          ⚠️ Warning: Once submitted, your answers cannot be altered.
+        </p>
+      </div>
+      <div class="tcs-modal-footer">
+        <button class="tcs-modal-btn btn-modal-cancel" onclick="closeSubmitModal()">
+          No, Return to Test
+        </button>
+        <button class="tcs-modal-btn btn-confirm-submit" onclick="confirmFinalSubmit()">
+          Yes, Submit Test
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic Confirmation Modal (Exit / Retake) -->
+  <div id="generic-confirm-modal" class="tcs-modal-backdrop" style="display: none;">
+    <div class="tcs-modal-card" style="max-width: 440px;">
+      <div class="tcs-modal-header">
+        <i id="gen-modal-icon" data-lucide="alert-circle" size="22" style="color: #f59e0b;"></i>
+        <h3 id="gen-modal-title">Confirm Action</h3>
+      </div>
+      <div class="tcs-modal-body">
+        <p id="gen-modal-msg" style="color: #475569; font-size: 0.95rem; line-height: 1.5; margin: 0;"></p>
+      </div>
+      <div class="tcs-modal-footer">
+        <button class="tcs-modal-btn btn-modal-cancel" id="gen-modal-cancel" onclick="closeGenericModal()">
+          Cancel
+        </button>
+        <button class="tcs-modal-btn btn-confirm-submit" id="gen-modal-confirm" onclick="handleGenericConfirm()">
+          Confirm
+        </button>
+      </div>
     </div>
   </div>
 
@@ -785,6 +930,65 @@
       lucide.createIcons();
     }
 
+    /* In-Page Fullscreen-Safe Confirmation Modals */
+    function openSubmitModal() {
+      updatePaletteUI();
+      document.getElementById('modal-sum-total').innerText = questions.length;
+      document.getElementById('modal-sum-answered').innerText = document.getElementById('count-answered').innerText || '0';
+      document.getElementById('modal-sum-not-answered').innerText = document.getElementById('count-not-answered').innerText || '0';
+      document.getElementById('modal-sum-marked').innerText = document.getElementById('count-marked').innerText || '0';
+      document.getElementById('modal-sum-ans-marked').innerText = document.getElementById('count-ans-marked').innerText || '0';
+      document.getElementById('modal-sum-not-visited').innerText = document.getElementById('count-not-visited').innerText || '0';
+      
+      const modal = document.getElementById('submit-confirm-modal');
+      modal.style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    function closeSubmitModal() {
+      const modal = document.getElementById('submit-confirm-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function confirmFinalSubmit() {
+      closeSubmitModal();
+      executeSubmitQuiz();
+    }
+
+    let genericModalConfirmCallback = null;
+
+    function showGenericModal({ title, icon, iconColor, message, confirmText, confirmClass, onConfirm }) {
+      document.getElementById('gen-modal-title').innerText = title || 'Confirm Action';
+      document.getElementById('gen-modal-msg').innerText = message || '';
+      
+      const iconEl = document.getElementById('gen-modal-icon');
+      if (iconEl) {
+        iconEl.setAttribute('data-lucide', icon || 'alert-circle');
+        iconEl.style.color = iconColor || '#f59e0b';
+      }
+      
+      const confirmBtn = document.getElementById('gen-modal-confirm');
+      confirmBtn.innerText = confirmText || 'Confirm';
+      confirmBtn.className = 'tcs-modal-btn ' + (confirmClass || 'btn-confirm-submit');
+      
+      genericModalConfirmCallback = onConfirm;
+      document.getElementById('generic-confirm-modal').style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    function closeGenericModal() {
+      document.getElementById('generic-confirm-modal').style.display = 'none';
+      genericModalConfirmCallback = null;
+    }
+
+    function handleGenericConfirm() {
+      const cb = genericModalConfirmCallback;
+      closeGenericModal();
+      if (typeof cb === 'function') {
+        cb();
+      }
+    }
+
     const elTopic = document.getElementById('q-topic');
     const elCounter = document.getElementById('q-counter');
     const elPanelNum = document.getElementById('q-panel-num');
@@ -817,8 +1021,17 @@
         if (quizId === 'revision') {
           const savedRevision = localStorage.getItem('active_revision_exam');
           if (!savedRevision) {
-            alert('No active revision mock found. Please generate one from the Dashboard first.');
-            returnToDashboard();
+            showGenericModal({
+              title: "Revision Mock Unavailable",
+              icon: "alert-triangle",
+              iconColor: "#dc2626",
+              message: "No active revision mock was found. Please generate one from the Dashboard first.",
+              confirmText: "Back to Dashboard",
+              confirmClass: "btn-confirm-submit",
+              onConfirm: () => {
+                returnToDashboard();
+              }
+            });
             return;
           }
           const parsed = JSON.parse(savedRevision);
@@ -1041,11 +1254,19 @@
     }
 
     function resetQuiz() {
-      if(confirm("Are you sure you want to reset and retake this examination? Your previous score will be cleared.")) {
-        localStorage.removeItem(`it_officer_mains_day${quizDayNum}`);
-        localStorage.removeItem(`quiz_result_day_${quizDayNum}`);
-        location.reload();
-      }
+      showGenericModal({
+        title: "Retake Examination",
+        icon: "rotate-ccw",
+        iconColor: "#ea580c",
+        message: "Are you sure you want to reset and retake this examination? Your previous score and answers will be cleared.",
+        confirmText: "Yes, Retake Test",
+        confirmClass: "btn-confirm-danger",
+        onConfirm: () => {
+          localStorage.removeItem(`it_officer_mains_day${quizDayNum}`);
+          localStorage.removeItem(`quiz_result_day_${quizDayNum}`);
+          location.reload();
+        }
+      });
     }
 
     function startTimer(isResume) {
@@ -1059,7 +1280,8 @@
         if (timeRemaining <= 0) {
           clearInterval(timerInterval);
           elTimer.innerText = "00:00";
-          submitQuiz(true); 
+          closeSubmitModal();
+          executeSubmitQuiz(); 
         } else {
           const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
           const s = (timeRemaining % 60).toString().padStart(2, '0');
@@ -1271,9 +1493,15 @@
 
     let generatedAnalyticsData = {}; 
 
-    async function submitQuiz(force = false) {
-      if (!force && !confirm("Are you sure you want to submit the examination?")) return;
-      
+    function submitQuiz(force = false) {
+      if (!force) {
+        openSubmitModal();
+        return;
+      }
+      executeSubmitQuiz();
+    }
+
+    async function executeSubmitQuiz() {
       quizSubmitted = true;
       if (timerInterval) clearInterval(timerInterval);
       if (isExamPaused) {
@@ -1476,7 +1704,18 @@
 
     function exitQuiz() {
       if (!quizSubmitted) {
-        if (!confirm("Are you sure you want to exit? Your progress has been auto-saved.")) return;
+        showGenericModal({
+          title: "Exit Examination",
+          icon: "log-out",
+          iconColor: "#dc2626",
+          message: "Are you sure you want to exit? Your progress has been automatically saved and you can resume anytime.",
+          confirmText: "Yes, Exit Test",
+          confirmClass: "btn-confirm-danger",
+          onConfirm: () => {
+            returnToDashboard();
+          }
+        });
+        return;
       }
       returnToDashboard();
     }
