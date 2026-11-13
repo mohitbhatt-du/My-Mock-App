@@ -1,0 +1,666 @@
+{
+  "id": "day_19",
+  "day": 19,
+  "title": "IT Officer Mains: Day 19 Verification Mock",
+  "difficulty": "Moderate to Hard",
+  "difficultyLevel": 3,
+  "tags": "OS & Virtual Memory",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 40,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Operating Systems",
+      "text": "Question 1: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 2,
+      "topic": "Operating Systems",
+      "text": "Question 2: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 3,
+      "topic": "Operating Systems",
+      "text": "Question 3: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 4,
+      "topic": "Operating Systems",
+      "text": "Question 4: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 5,
+      "topic": "Operating Systems",
+      "text": "Question 5: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 6,
+      "topic": "Operating Systems",
+      "text": "Question 6: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 7,
+      "topic": "Operating Systems",
+      "text": "Question 7: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 8,
+      "topic": "Operating Systems",
+      "text": "Question 8: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 9,
+      "topic": "Operating Systems",
+      "text": "Question 9: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 10,
+      "topic": "Operating Systems",
+      "text": "Question 10: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 11,
+      "topic": "Operating Systems",
+      "text": "Question 11: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 12,
+      "topic": "Operating Systems",
+      "text": "Question 12: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 13,
+      "topic": "Operating Systems",
+      "text": "Question 13: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 14,
+      "topic": "Operating Systems",
+      "text": "Question 14: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 15,
+      "topic": "Operating Systems",
+      "text": "Question 15: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 16,
+      "topic": "Operating Systems",
+      "text": "Question 16: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 17,
+      "topic": "Operating Systems",
+      "text": "Question 17: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 18,
+      "topic": "Operating Systems",
+      "text": "Question 18: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 19,
+      "topic": "Operating Systems",
+      "text": "Question 19: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 20,
+      "topic": "Operating Systems",
+      "text": "Question 20: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 21,
+      "topic": "Operating Systems",
+      "text": "Question 21: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 22,
+      "topic": "Operating Systems",
+      "text": "Question 22: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 23,
+      "topic": "Operating Systems",
+      "text": "Question 23: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 24,
+      "topic": "Operating Systems",
+      "text": "Question 24: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 25,
+      "topic": "Operating Systems",
+      "text": "Question 25: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 26,
+      "topic": "Operating Systems",
+      "text": "Question 26: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 27,
+      "topic": "Operating Systems",
+      "text": "Question 27: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 28,
+      "topic": "Operating Systems",
+      "text": "Question 28: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 29,
+      "topic": "Operating Systems",
+      "text": "Question 29: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 30,
+      "topic": "Operating Systems",
+      "text": "Question 30: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 31,
+      "topic": "Operating Systems",
+      "text": "Question 31: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 32,
+      "topic": "Operating Systems",
+      "text": "Question 32: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 33,
+      "topic": "Operating Systems",
+      "text": "Question 33: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 34,
+      "topic": "Operating Systems",
+      "text": "Question 34: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 35,
+      "topic": "Operating Systems",
+      "text": "Question 35: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 36,
+      "topic": "Operating Systems",
+      "text": "Question 36: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 37,
+      "topic": "Operating Systems",
+      "text": "Question 37: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 38,
+      "topic": "Operating Systems",
+      "text": "Question 38: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 39,
+      "topic": "Operating Systems",
+      "text": "Question 39: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 40,
+      "topic": "Operating Systems",
+      "text": "Question 40: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 41,
+      "topic": "Operating Systems",
+      "text": "Question 41: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 42,
+      "topic": "Operating Systems",
+      "text": "Question 42: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 43,
+      "topic": "Operating Systems",
+      "text": "Question 43: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 44,
+      "topic": "Operating Systems",
+      "text": "Question 44: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 45,
+      "topic": "Operating Systems",
+      "text": "Question 45: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 46,
+      "topic": "Operating Systems",
+      "text": "Question 46: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 47,
+      "topic": "Operating Systems",
+      "text": "Question 47: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 48,
+      "topic": "Operating Systems",
+      "text": "Question 48: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 49,
+      "topic": "Operating Systems",
+      "text": "Question 49: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    },
+    {
+      "id": 50,
+      "topic": "Operating Systems",
+      "text": "Question 50: What is the primary role of a TLB?",
+      "options": [
+        "Page translation cache",
+        "Disk controller",
+        "ALU pipeline",
+        "RAM driver"
+      ],
+      "correct": 0,
+      "explanation": "Translation Lookaside Buffer caches virtual-to-physical address mappings."
+    }
+  ]
+}

@@ -6,6 +6,11 @@
   <title>Admin Portal | ExamMatrix IT</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Firebase 10.8.0 SDKs & Service -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="/static/firebase-service.js"></script>
   <style>
     :root {
       --bg-base: #09090b;
@@ -378,24 +383,29 @@
 </head>
 <body>
 
-  <!-- ADMIN AUTHENTICATION GATE (Shown if not logged in as Admin) -->
+  <!-- ADMIN AUTHENTICATION GATE (Restricted strictly to mohitbhatt713@gmail.com) -->
   <div id="auth-overlay">
     <div class="auth-box">
       <div style="width: 56px; height: 56px; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: var(--accent-amber);">
         <i data-lucide="shield-lock" size="28"></i>
       </div>
-      <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Admin Authorization</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Enter the Admin Secret Key to access mock management and question publishing tools.</p>
-      
-      <div style="margin-bottom: 18px; text-align: left;">
-        <label for="admin-key-input">Admin Secret Key</label>
-        <input type="password" id="admin-key-input" placeholder="Enter key (default: admin123)" style="width: 100%; margin-top: 6px;" onkeydown="if(event.key==='Enter') unlockAdmin()">
+      <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Restricted Admin Portal</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5;">
+        This management portal is exclusively restricted to authorized administrator:
+        <br><strong style="color: var(--accent-emerald);">mohitbhatt713@gmail.com</strong>
+      </p>
+
+      <!-- 127.0.0.1 Notice if applicable -->
+      <div id="admin-domain-warning" style="display: none; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 0.82rem; color: #fde68a; line-height: 1.45; text-align: left;">
+        <strong>💡 Notice:</strong> Firebase authorizes <code>localhost</code> by default.
+        <br>👉 <a id="admin-switch-link" href="#" style="color: #38bdf8; text-decoration: underline; font-weight: 600;">Switch to localhost:5001/admin</a> for 1-click Google Sign-In.
       </div>
 
-      <div id="auth-error-msg" style="color: var(--accent-rose); font-size: 0.85rem; margin-bottom: 14px; display: none;"></div>
+      <div id="auth-error-msg" style="background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); border-radius: 8px; padding: 12px; color: #fb7185; font-size: 0.86rem; margin-bottom: 16px; display: none; line-height: 1.4;"></div>
 
-      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;" onclick="unlockAdmin()">
-        <i data-lucide="key"></i> Authenticate & Unlock
+      <button class="btn" style="width: 100%; justify-content: center; background: #ffffff; color: #18181b; padding: 13px; border-radius: 10px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none; cursor: pointer; font-size: 0.95rem;" onclick="adminGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+        Sign in with Google (Admin)
       </button>
 
       <div style="margin-top: 18px;">
@@ -888,11 +898,42 @@
 
   <script>
     lucide.createIcons();
-    let currentAdminKey = sessionStorage.getItem('exammatrix_admin_key') || localStorage.getItem('exammatrix_admin_key') || '';
+    let currentAdminKey = '';
     let liveExamsList = [];
 
     window.onload = async () => {
-      // Check current session
+      // Check if domain is 127.0.0.1 and show helper notice
+      if (window.location.hostname === '127.0.0.1') {
+        const warn = document.getElementById('admin-domain-warning');
+        const link = document.getElementById('admin-switch-link');
+        if (warn) warn.style.display = 'block';
+        if (link) {
+          const port = window.location.port ? `:${window.location.port}` : '';
+          link.href = `${window.location.protocol}//localhost${port}/admin`;
+        }
+      }
+
+      // 1. Listen to Firebase Google Auth state
+      if (typeof onFirebaseAuthChange === 'function') {
+        onFirebaseAuthChange(async (firebaseUserProfile) => {
+          if (firebaseUserProfile && firebaseUserProfile.isAdmin) {
+            document.getElementById('auth-overlay').style.display = 'none';
+            await loadAdminStats();
+          } else if (firebaseUserProfile && !firebaseUserProfile.isAdmin) {
+            const errEl = document.getElementById('auth-error-msg');
+            errEl.innerText = `Access Denied: Logged in as ${firebaseUserProfile.username}. This portal is strictly restricted to mohitbhatt713@gmail.com.`;
+            errEl.style.display = 'block';
+            document.getElementById('auth-overlay').style.display = 'flex';
+          } else {
+            await checkAdminSession();
+          }
+        });
+      } else {
+        await checkAdminSession();
+      }
+    };
+
+    async function checkAdminSession() {
       try {
         const res = await fetch('/api/auth/me');
         const data = await res.json();
@@ -900,45 +941,38 @@
           document.getElementById('auth-overlay').style.display = 'none';
           await loadAdminStats();
           return;
+        } else if (data.authenticated && !data.isAdmin) {
+          const errEl = document.getElementById('auth-error-msg');
+          errEl.innerText = "Access Denied: Your account does not have administrator privileges. Only mohitbhatt713@gmail.com is authorized.";
+          errEl.style.display = 'block';
+          document.getElementById('auth-overlay').style.display = 'flex';
+          return;
         }
       } catch (e) {}
+      document.getElementById('auth-overlay').style.display = 'flex';
+    }
 
-      // If cached key exists, test it
-      if (currentAdminKey) {
-        document.getElementById('admin-key-input').value = currentAdminKey;
-        unlockAdmin();
-      }
-    };
-
-    async function unlockAdmin() {
-      const key = document.getElementById('admin-key-input').value.trim();
+    async function adminGoogleSignIn() {
       const errEl = document.getElementById('auth-error-msg');
       errEl.style.display = 'none';
-
-      if (!key) {
-        errEl.innerText = 'Please enter the Admin Secret Key.';
-        errEl.style.display = 'block';
-        return;
-      }
-
       try {
-        const res = await fetch('/api/auth/demo-login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ role: 'admin', adminKey: key })
-        });
-        const data = await res.json();
-        if (res.ok && data.isAdmin) {
-          currentAdminKey = key;
-          sessionStorage.setItem('exammatrix_admin_key', key);
+        if (typeof firebaseGoogleSignIn !== 'function') {
+          throw new Error("Authentication engine is initializing. Please retry in 1 second.");
+        }
+        const profile = await firebaseGoogleSignIn();
+        if (profile && profile.isAdmin) {
           document.getElementById('auth-overlay').style.display = 'none';
           await loadAdminStats();
         } else {
-          errEl.innerText = data.error || 'Authentication failed. Invalid key.';
+          errEl.innerText = "Access Denied: Your account does not have administrator privileges. Only mohitbhatt713@gmail.com is authorized.";
           errEl.style.display = 'block';
         }
       } catch (err) {
-        errEl.innerText = 'Error contacting server: ' + err.message;
+        if (err && (err.code === 'auth/unauthorized-domain' || (err.message && err.message.includes('unauthorized-domain')))) {
+          errEl.innerHTML = "Domain Not Authorized: Firebase allows <code>localhost</code> by default. Please access via <a href='http://localhost:5001/admin' style='color:#38bdf8;text-decoration:underline;font-weight:600;'>http://localhost:5001/admin</a>, or add <code>127.0.0.1</code> to Firebase Authorized Domains.";
+        } else if (err && err.code !== 'auth/popup-closed-by-user') {
+          errEl.innerText = "Sign-in notice: " + (err.message || err);
+        }
         errEl.style.display = 'block';
       }
     }
@@ -948,7 +982,11 @@
       localStorage.removeItem('exammatrix_admin_key');
       currentAdminKey = '';
       try {
-        await fetch('/api/auth/logout', { method: 'POST' });
+        if (typeof firebaseSignOut === 'function') {
+          await firebaseSignOut();
+        } else {
+          await fetch('/api/auth/logout', { method: 'POST' });
+        }
       } catch (e) {}
       window.location.href = '/';
     }

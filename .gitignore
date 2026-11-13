@@ -1,12 +1,31 @@
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+
+# Environments
+.env
+.env.*
+*.env
 .venv/
 env/
 venv/
+ENV/
+
+# Testing & Coverage
 .pytest_cache/
 .coverage
+htmlcov/
+tests/
+scratch/
+test_*.py
+
+# Operating System Files
 .DS_Store
 Thumbs.db
+
+# Databases & Backups
 *.db
 *.sqlite3
+*.log

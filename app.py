@@ -11,18 +11,35 @@ from database import (
     delete_mock_by_id, get_admin_dashboard_stats
 )
 
+# Load environment variables from local .env if present
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+env_file = os.path.join(BASE_DIR, '.env')
+if os.path.exists(env_file):
+    try:
+        with open(env_file, 'r', encoding='utf-8') as ef:
+            for eline in ef:
+                eline = eline.strip()
+                if eline and not eline.startswith('#') and '=' in eline:
+                    ekey, evalue = eline.split('=', 1)
+                    os.environ.setdefault(ekey.strip(), evalue.strip())
+    except Exception:
+        pass
+
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.environ.get('SECRET_KEY', 'exammatrix-secret-key-prod-2026')
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MOCK_PAGES_DIR = os.path.join(BASE_DIR, 'static', 'Mock_Pages')
 ADMIN_DIR = os.path.join(BASE_DIR, 'static', 'admin')
 os.makedirs(MOCK_PAGES_DIR, exist_ok=True)
 os.makedirs(ADMIN_DIR, exist_ok=True)
 
-# Admin & OAuth Configuration
-ADMIN_SECRET_KEY = os.environ.get('EXAMMATRIX_ADMIN_KEY', 'admin123')
-ADMIN_EMAILS = [e.strip().lower() for e in os.environ.get('ADMIN_EMAILS', 'admin@exammatrix.com,mohit@exammatrix.com').split(',') if e.strip()]
+# Admin & OAuth Configuration: Exclusively restricted to mohitbhatt713@gmail.com
+# Hardcoded legacy backdoor keys have been completely removed.
+ADMIN_SECRET_KEY = os.environ.get('EXAMMATRIX_ADMIN_KEY', '').strip()
+ADMIN_EMAILS = [e.strip().lower() for e in os.environ.get('ADMIN_EMAILS', 'mohitbhatt713@gmail.com').split(',') if e.strip()]
+if 'mohitbhatt713@gmail.com' not in ADMIN_EMAILS:
+    ADMIN_EMAILS.append('mohitbhatt713@gmail.com')
+
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 
@@ -34,23 +51,40 @@ def shutdown_session(exception=None):
     db_session.remove()
 
 def is_admin_authorized():
-    """Checks if request is authorized as admin via session, secret key header, or payload."""
-    if session.get('is_admin') is True:
+    """
+    Checks if request is authorized as admin strictly for mohitbhatt713@gmail.com.
+    Any legacy fallback keys are completely rejected.
+    """
+    # 1. Check logged-in session user
+    user_id = session.get('user_id')
+    if user_id:
+        session_db = db_session()
+        try:
+            user = session_db.query(User).filter_by(id=user_id).first()
+            if user and user.email and user.email.lower() == 'mohitbhatt713@gmail.com':
+                return True
+        except Exception:
+            pass
+
+    if session.get('is_admin') is True and session.get('admin_email') == 'mohitbhatt713@gmail.com':
         return True
-    header_key = request.headers.get('X-Admin-Key')
-    if header_key and header_key.strip() == ADMIN_SECRET_KEY:
-        return True
-    if request.is_json:
-        payload = request.get_json(silent=True) or {}
-        if payload.get('adminKey') and str(payload.get('adminKey')).strip() == ADMIN_SECRET_KEY:
+
+    # 2. Server-to-server optional environment secret key (ONLY if explicitly set in environment)
+    if ADMIN_SECRET_KEY:
+        header_key = request.headers.get('X-Admin-Key')
+        if header_key and header_key.strip() == ADMIN_SECRET_KEY:
             return True
+
     return False
 
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not is_admin_authorized():
-            return jsonify({"error": "Admin access required. Please authenticate with admin credentials."}), 403
+            return jsonify({
+                "error": "Admin access restricted to mohitbhatt713@gmail.com. Please sign in with your authorized administrator Google account.",
+                "authorizedAdmin": "mohitbhatt713@gmail.com"
+            }), 403
         return f(*args, **kwargs)
     return decorated_function
 
@@ -102,10 +136,27 @@ def admin_page():
 
 @app.route('/Mock_Pages/<path:filename>')
 def serve_quiz(filename):
-    """Legacy route for backwards compatibility"""
-    return send_from_directory(MOCK_PAGES_DIR, filename)
+    """Clean permanent redirect from legacy Mock_Pages to unified TCS iON Player Engine"""
+    match = re.search(r'\d+', filename)
+    day_num = match.group(0) if match else '1'
+    return redirect(f"/player?quiz=day_{day_num}", code=301)
 
 # ==================== AUTHENTICATION & OAUTH ====================
+
+@app.route('/api/config/firebase', methods=['GET'])
+def get_firebase_config():
+    """
+    Serves Firebase configuration securely at runtime from environment variables,
+    preventing static API key scrapers and web crawlers from indexing credentials.
+    """
+    return jsonify({
+        "apiKey": os.environ.get('FIREBASE_API_KEY', ''),
+        "authDomain": os.environ.get('FIREBASE_AUTH_DOMAIN', 'my-mock-app-3fc00.firebaseapp.com'),
+        "projectId": os.environ.get('FIREBASE_PROJECT_ID', 'my-mock-app-3fc00'),
+        "storageBucket": os.environ.get('FIREBASE_STORAGE_BUCKET', 'my-mock-app-3fc00.firebasestorage.app'),
+        "messagingSenderId": os.environ.get('FIREBASE_MESSAGING_SENDER_ID', '75566869830'),
+        "appId": os.environ.get('FIREBASE_APP_ID', '1:75566869830:web:4c74c29bb09a4b57430947')
+    })
 
 @app.route('/api/auth/me', methods=['GET'])
 def get_current_user():
@@ -126,78 +177,57 @@ def get_current_user():
         return jsonify({"authenticated": False, "isBanned": True, "error": "Your account has been suspended by an administrator."}), 403
 
     user_dict = user.to_dict(include_private=False)
+    # Enforce that isAdmin is strictly true only for mohitbhatt713@gmail.com
+    is_super_admin = bool(user.email and user.email.lower() == 'mohitbhatt713@gmail.com')
     return jsonify({
         "authenticated": True,
         "user": user_dict,
-        "isAdmin": bool(user.is_admin or is_admin)
+        "isAdmin": is_super_admin
+    })
+
+@app.route('/api/auth/session', methods=['POST'])
+def sync_authenticated_session():
+    """
+    Synchronizes authenticated Google Firebase candidate session with Flask backend.
+    Ensures complete anonymity for candidates and enforces that ONLY
+    mohitbhatt713@gmail.com is granted administrative authority.
+    """
+    payload = request.get_json(silent=True) or {}
+    email = str(payload.get('email', '')).strip().lower()
+    google_id = str(payload.get('uid', '')).strip()
+
+    if not email and not google_id:
+        return jsonify({"authenticated": False, "error": "Missing authenticated identity credentials."}), 400
+
+    session_db = db_session()
+    is_admin = (email == 'mohitbhatt713@gmail.com')
+    user = get_or_create_user(session_db, email=email or f"user_{google_id[:10]}@exammatrix.local", google_id=google_id, is_admin=is_admin)
+
+    if user.is_banned:
+        session.clear()
+        return jsonify({"authenticated": False, "isBanned": True, "error": "Your account has been suspended by an administrator."}), 403
+
+    user.is_admin = is_admin
+    session_db.commit()
+
+    session['user_id'] = user.id
+    session['is_admin'] = is_admin
+    if is_admin:
+        session['admin_email'] = 'mohitbhatt713@gmail.com'
+    else:
+        session.pop('admin_email', None)
+
+    return jsonify({
+        "authenticated": True,
+        "user": user.to_dict(include_private=False),
+        "isAdmin": is_admin,
+        "message": "Session synchronized securely."
     })
 
 @app.route('/api/auth/logout', methods=['POST', 'GET'])
 def logout_user():
     session.clear()
     return jsonify({"success": True, "message": "Successfully signed out."})
-
-@app.route('/api/auth/demo-login', methods=['POST'])
-def demo_login():
-    """
-    Seamless One-Click Login for immediate local testing & evaluation.
-    Provides instant anonymous candidate sign-in or admin credential verification.
-    """
-    payload = request.get_json(silent=True) or {}
-    role = payload.get('role', 'candidate').lower()
-    session_db = db_session()
-
-    if role == 'admin':
-        admin_key = payload.get('adminKey', '')
-        if str(admin_key).strip() != ADMIN_SECRET_KEY:
-            return jsonify({"error": "Invalid Admin Secret Key."}), 401
-        
-        admin_user = get_or_create_user(session_db, 'admin@exammatrix.com', is_admin=True)
-        session['user_id'] = admin_user.id
-        session['is_admin'] = True
-        return jsonify({
-            "authenticated": True,
-            "user": admin_user.to_dict(include_private=False),
-            "isAdmin": True,
-            "message": "Authenticated as Admin."
-        })
-
-    # Default: Anonymous Candidate
-    candidate_id = payload.get('candidateId') or secrets.token_hex(4)
-    email = f"candidate_{candidate_id}@exammatrix.local"
-    user = get_or_create_user(session_db, email, is_admin=False)
-
-    if user.is_banned:
-        return jsonify({"error": "Your account has been suspended by an administrator."}), 403
-
-    session['user_id'] = user.id
-    session['is_admin'] = bool(user.is_admin)
-
-    return jsonify({
-        "authenticated": True,
-        "user": user.to_dict(include_private=False),
-        "isAdmin": bool(user.is_admin),
-        "message": f"Welcome, {user.anonymous_name}! Your identity is 100% anonymous."
-    })
-
-@app.route('/api/auth/verify-admin-key', methods=['POST'])
-def verify_admin_key_endpoint():
-    """Elevates current session to Admin if valid Admin Secret Key is provided."""
-    payload = request.get_json(silent=True) or {}
-    key = str(payload.get('adminKey', '')).strip()
-    if key != ADMIN_SECRET_KEY:
-        return jsonify({"success": False, "error": "Invalid Admin Secret Key."}), 401
-
-    session['is_admin'] = True
-    user_id = session.get('user_id')
-    if user_id:
-        session_db = db_session()
-        user = session_db.query(User).filter_by(id=user_id).first()
-        if user:
-            user.is_admin = True
-            session_db.commit()
-
-    return jsonify({"success": True, "isAdmin": True, "message": "Admin privileges granted."})
 
 @app.route('/auth/google', methods=['GET'])
 def google_oauth_login():
@@ -892,4 +922,11 @@ def visitor_count():
     return jsonify({"count": count})
 
 if __name__ == '__main__':
+    print("\n" + "=" * 65)
+    print("  ExamMatrix IT - Server Active")
+    print("  Recommended URL: http://localhost:5001")
+    print("  Admin Portal:    http://localhost:5001/admin")
+    print("  Note: Firebase Google Auth authorizes 'localhost' by default.")
+    print("  To use 127.0.0.1, add it in Firebase Console -> Auth -> Settings.")
+    print("=" * 65 + "\n")
     app.run(debug=False, port=5001)

@@ -185,5 +185,16 @@
     "totalQuestions": 50,
     "file": "day_17.json",
     "legacyHtml": "Day_17.html"
+  },
+  {
+    "id": "day_19",
+    "day": 19,
+    "title": "IT Officer Mains: Day 19 Verification Mock",
+    "difficulty": "Moderate to Hard",
+    "difficultyLevel": 3,
+    "tags": "OS & Virtual Memory",
+    "totalQuestions": 50,
+    "file": "day_19.json",
+    "legacyHtml": "Day_19.html"
   }
 ]
