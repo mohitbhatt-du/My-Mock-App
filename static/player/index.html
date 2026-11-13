@@ -5,13 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="difficulty-level" content="2">
   <title id="page-title">IT Officer Mains Exam</title>
+  
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Prism.js Syntax Highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+  <!-- KaTeX LaTeX Math Formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
   <style>
     :root {
       --bg-dark: #0f172a; --card-bg: #1e293b; --border-color: #334155;
       --text-main: #f8fafc; --text-muted: #94a3b8;
-      --accent-blue: #38bdf8; --accent-green: #4ade80; 
-      --accent-red: #f87171; --accent-yellow: #facc15; --accent-indigo: #818cf8;
+      --accent-blue: #38bdf8; --accent-green: #22c55e; 
+      --accent-red: #ef4444; --accent-yellow: #facc15; --accent-indigo: #818cf8;
       --accent-purple: #a855f7;
     }
 
@@ -38,44 +51,71 @@
     .btn-start-exam { background: var(--accent-green); color: #0f172a; font-size: 1.2rem; font-weight: 700; width: 100%; padding: 16px; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
     .btn-start-exam:hover { opacity: 0.9; transform: translateY(-2px); }
 
-    .quiz-container { max-width: 1100px; margin: 0 auto; display: none; grid-template-columns: 1fr 320px; gap: 20px; }
+    .quiz-container { max-width: 1100px; margin: 0 auto; display: none; grid-template-columns: 1fr 340px; gap: 20px; }
     
     .main-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
     .question-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
-    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; line-height: 1.6; }
     
     /* Tables, Code, and Diagram Containers */
     .matching-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; background: #0f172a; font-size: 0.95rem; }
     .matching-table th, .matching-table td { padding: 10px; border: 1px solid var(--border-color); text-align: left; }
     .matching-table th { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
     
-    .code-block { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); font-family: monospace; font-size: 14px; overflow-x: auto; margin-bottom: 15px; font-weight: normal; white-space: pre-wrap; }
+    .code-block, pre[class*="language-"] {
+      background: #090e17 !important; padding: 14px !important; border-radius: 8px !important;
+      border: 1px solid var(--border-color) !important; font-family: 'Fira Code', Consolas, Monaco, monospace !important;
+      font-size: 0.92rem !important; overflow-x: auto; margin-bottom: 16px !important; line-height: 1.5 !important;
+    }
     .diagram-container { background: #fff; padding: 20px; border-radius: 8px; overflow-x: auto; margin-bottom: 15px; text-align: center; }
     .diagram-container svg { width: 100%; max-width: 480px; min-width: 300px; height: auto; display: block; margin: 0 auto; }
+
+    /* KaTeX Math Formula Tweaks */
+    .katex { font-size: 1.05em; color: #38bdf8; }
+    .katex-display { margin: 10px 0; overflow-x: auto; overflow-y: hidden; }
 
     .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
     .option-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 18px; border-radius: 8px; text-align: left; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
     .option-btn:hover:not(:disabled) { border-color: var(--accent-blue); background: #1e293b; }
     .option-btn.selected { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.15); font-weight: 600; }
-    .option-btn.correct-opt { border-color: var(--accent-green) !important; background: rgba(74, 222, 128, 0.15) !important; font-weight: 600; }
-    .option-btn.wrong-opt { border-color: var(--accent-red) !important; background: rgba(248, 113, 113, 0.15) !important; }
+    .option-btn.correct-opt { border-color: var(--accent-green) !important; background: rgba(34, 197, 94, 0.15) !important; font-weight: 600; }
+    .option-btn.wrong-opt { border-color: var(--accent-red) !important; background: rgba(239, 68, 68, 0.15) !important; }
 
     .sidebar { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; height: fit-content; }
     
     .filter-select { width: 100%; padding: 10px; margin-bottom: 12px; background: #0f172a; color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; outline: none; cursor: pointer; }
     .filter-select:focus { border-color: var(--accent-blue); }
 
-    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
-    .p-btn { background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 0; border-radius: 6px; font-weight: 600; cursor: pointer; text-align: center; font-size: 0.85rem; transition: 0.2s; }
+    /* TCS iON 5-State Palette Styling */
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
+    .p-btn {
+      background: #0f172a; border: 1px solid var(--border-color); color: #64748b;
+      padding: 9px 0; border-radius: 6px; font-weight: 600; cursor: pointer;
+      text-align: center; font-size: 0.88rem; transition: 0.15s; position: relative;
+    }
     .p-btn:hover { border-color: var(--accent-blue); }
-    .p-btn.answered { background: var(--accent-blue); color: #0f172a; border-color: var(--accent-blue); }
-    .p-btn.marked { background: var(--accent-purple); color: #ffffff; border-color: #c084fc; }
-    .p-btn.answered.marked { background: linear-gradient(135deg, var(--accent-blue) 48%, var(--accent-purple) 52%); color: #ffffff; }
-    .p-btn.active { border: 2px solid #ffffff; }
-    .p-btn.review-correct { background: var(--accent-green); color: #0f172a; border-color: var(--accent-green); }
-    .p-btn.review-wrong { background: var(--accent-red); color: #0f172a; border-color: var(--accent-red); }
+    .p-btn.active { outline: 2px solid #ffffff; outline-offset: 1px; }
 
-    .nav-btns { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    /* State 1: Not Visited */
+    .p-btn.not-visited { background: #0f172a; color: #64748b; border-color: #334155; }
+    /* State 2: Not Answered (Red) */
+    .p-btn.not-answered { background: #ef4444; color: #ffffff; border-color: #dc2626; }
+    /* State 3: Answered (Green) */
+    .p-btn.answered { background: #22c55e; color: #000000; border-color: #16a34a; font-weight: 700; }
+    /* State 4: Marked for Review (Purple circle) */
+    .p-btn.marked { background: #a855f7; color: #ffffff; border-color: #9333ea; border-radius: 50%; }
+    /* State 5: Answered & Marked for Review (Purple circle with green dot - Evaluated) */
+    .p-btn.answered-marked { background: #a855f7; color: #ffffff; border-color: #9333ea; border-radius: 50%; }
+    .p-btn.answered-marked::after {
+      content: ''; position: absolute; bottom: 2px; right: 2px; width: 7px; height: 7px;
+      border-radius: 50%; background: #22c55e; border: 1px solid #ffffff;
+    }
+
+    /* Review Mode Colors */
+    .p-btn.review-correct { background: #22c55e !important; color: #000000 !important; border-radius: 6px !important; }
+    .p-btn.review-wrong { background: #ef4444 !important; color: #ffffff !important; border-radius: 6px !important; }
+
+    .nav-btns { display: flex; justify-content: space-between; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
     .btn { background: var(--accent-blue); color: #0f172a; font-weight: 700; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; font-size: 0.92rem; }
     .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
     .btn-secondary:hover { background: rgba(255,255,255,0.05); }
@@ -102,7 +142,7 @@
     .topic-table tr:last-child td { border-bottom: none; }
     
     .scorecard-actions { display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
-    .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-blue); border-radius: 4px; font-size: 0.95rem; line-height: 1.5; }
+    .explanation { display: none; margin-top: 20px; padding: 16px; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-blue); border-radius: 4px; font-size: 0.95rem; line-height: 1.6; }
     .save-indicator { position: absolute; top: 24px; right: 24px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s; }
     .save-indicator.show { opacity: 1; }
 
@@ -152,7 +192,7 @@
 
   <!-- Quiz Taking Interface -->
   <div class="quiz-container" id="quiz-ui">
-    <div class="main-card">
+    <div class="main-card" id="main-card-content">
       <div class="save-indicator" id="save-indicator"><i data-lucide="cloud-lightning" size="16"></i> Auto-saved</div>
       <div class="question-header">
         <span id="q-topic">Topic: Loading...</span>
@@ -168,21 +208,41 @@
           <button class="btn btn-review-mark" onclick="toggleMarkForReview()" id="btn-mark"><i data-lucide="flag"></i> Mark for Review</button>
           <button class="btn btn-secondary" onclick="clearSelection()" id="btn-clear" style="display:none;"><i data-lucide="rotate-ccw"></i> Clear</button>
         </div>
-        <div>
-          <button class="btn" onclick="nextQuestion()" id="btn-next">Next <i data-lucide="chevron-right"></i></button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn btn-submit" onclick="saveAndNext()" id="btn-next">Save & Next <i data-lucide="chevron-right"></i></button>
         </div>
       </div>
     </div>
 
     <!-- Sidebar / Question Palette -->
     <div class="sidebar">
-      <h3 style="font-size: 1rem; margin-bottom: 12px; text-align: center;">Question Palette</h3>
+      <h3 style="font-size: 1rem; margin-bottom: 12px; text-align: center;">TCS iON Question Palette</h3>
       
-      <div class="palette-legend" id="palette-legend" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; font-size: 0.8rem; color: var(--text-muted);">
-        <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 10px; height: 10px; border-radius: 3px; background: var(--accent-blue);"></div> Answered</div>
-        <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 10px; height: 10px; border-radius: 3px; background: var(--accent-purple);"></div> Marked</div>
-        <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 10px; height: 10px; border-radius: 3px; background: #0f172a; border: 1px solid var(--border-color);"></div> Skipped</div>
-        <div style="display: flex; align-items: center; gap: 6px;"><div style="width: 10px; height: 10px; border-radius: 3px; background: #ffffff;"></div> Current</div>
+      <!-- Official IBPS Palette Summary Box -->
+      <div class="ibps-stats-box" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; font-size: 0.76rem;">
+        <div style="display: flex; align-items: center; gap: 6px; background: rgba(34, 197, 94, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(34, 197, 94, 0.25);">
+          <span style="background: #22c55e; color: #000; font-weight: bold; width: 20px; height: 20px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center;" id="count-answered">0</span>
+          <span>Answered</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; background: rgba(239, 68, 68, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.25);">
+          <span style="background: #ef4444; color: #fff; font-weight: bold; width: 20px; height: 20px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center;" id="count-not-answered">0</span>
+          <span>Not Answered</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; background: rgba(168, 85, 247, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(168, 85, 247, 0.25);">
+          <span style="background: #a855f7; color: #fff; font-weight: bold; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;" id="count-marked">0</span>
+          <span>Marked</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; background: rgba(148, 163, 184, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(148, 163, 184, 0.25);">
+          <span style="background: #475569; color: #fff; font-weight: bold; width: 20px; height: 20px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center;" id="count-not-visited">50</span>
+          <span>Not Visited</span>
+        </div>
+        <div style="grid-column: span 2; display: flex; align-items: center; gap: 6px; background: rgba(168, 85, 247, 0.1); padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(34, 197, 94, 0.35);">
+          <span style="position: relative; width: 20px; height: 20px; border-radius: 50%; background: #a855f7; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: bold;">
+            <span id="count-ans-marked">0</span>
+            <span style="position: absolute; bottom: -2px; right: -2px; width: 7px; height: 7px; border-radius: 50%; background: #22c55e; border: 1px solid #fff;"></span>
+          </span>
+          <span style="font-size: 0.74rem;">Ans & Marked (Evaluated in IBPS)</span>
+        </div>
       </div>
 
       <div id="review-filters" style="display: none;">
@@ -191,7 +251,7 @@
           <option value="correct">Show Correct Only</option>
           <option value="wrong">Show Incorrect Only</option>
           <option value="skipped">Show Skipped Only</option>
-          <option value="marked">Show Marked Only</option>
+          <option value="marked">Show Marked for Review Only</option>
         </select>
       </div>
 
@@ -244,6 +304,7 @@
     let currentQ = 0;
     let userAnswers = [];
     let markedForReview = new Set();
+    let visitedQuestions = new Set();
     let isReviewMode = false;
     let quizSubmitted = false;
     let timeRemaining = 0;
@@ -336,7 +397,7 @@
       window.addEventListener('keydown', function(e) {
         if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
         if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'n') {
-          nextQuestion();
+          saveAndNext();
         } else if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'p') {
           prevQuestion();
         } else if (e.key.toLowerCase() === 'm') {
@@ -383,6 +444,7 @@
           if (parsed && parsed.timeRemaining > 0 && !parsed.quizSubmitted) {
             userAnswers = parsed.userAnswers;
             markedForReview = new Set(parsed.markedForReview || []);
+            visitedQuestions = new Set(parsed.visitedQuestions || [0]);
             timeRemaining = parsed.timeRemaining;
             currentQ = parsed.currentQ;
             
@@ -449,6 +511,7 @@
       document.getElementById('main-header').style.display = 'flex';
       document.getElementById('quiz-ui').style.display = 'grid';
       
+      visitedQuestions.add(0);
       buildPalette();
       loadQuestion(0);
       triggerAutoSave();
@@ -460,12 +523,13 @@
       elPalette.innerHTML = '';
       for (let i = 0; i < questions.length; i++) {
         const btn = document.createElement('button');
-        btn.className = 'p-btn';
+        btn.className = 'p-btn not-visited';
         btn.id = `pal-${i}`;
         btn.innerText = i + 1;
         btn.onclick = () => jumpToQuestion(i);
         elPalette.appendChild(btn);
       }
+      updatePaletteUI();
     }
 
     function toggleMarkForReview() {
@@ -485,6 +549,7 @@
         currentQ,
         userAnswers,
         markedForReview: Array.from(markedForReview),
+        visitedQuestions: Array.from(visitedQuestions),
         timeRemaining,
         quizSubmitted
       };
@@ -523,12 +588,13 @@
 
     function loadQuestion(index) {
       currentQ = index;
+      visitedQuestions.add(index);
       const q = questions[index];
       
       elTopic.innerText = `Topic: ${q.topic}`;
       elCounter.innerText = `Question ${index + 1} of ${questions.length}`;
       
-      // CRITICAL: innerHTML used so diagrams, SVGs, tables and code blocks render perfectly!
+      // Render question text (HTML / Diagram support)
       elText.innerHTML = q.text; 
 
       elOptions.innerHTML = '';
@@ -543,7 +609,7 @@
           if (userAnswers[index] === i && i !== q.correct) btn.classList.add('wrong-opt');
         }
 
-        btn.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> ${opt}`;
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> <span>${opt}</span>`;
         if (!isReviewMode) btn.onclick = () => selectOption(i);
         elOptions.appendChild(btn);
       });
@@ -573,8 +639,39 @@
       } else {
         elExplanation.style.display = 'none';
       }
+
       updatePaletteUI();
       lucide.createIcons();
+
+      // Apply Prism Syntax Highlighting and KaTeX Math formatting
+      setTimeout(applyCodeAndMathFormatting, 20);
+    }
+
+    function applyCodeAndMathFormatting() {
+      // Auto-wrap bare pre or code blocks with prism classes
+      document.querySelectorAll('#main-card-content pre, #main-card-content .code-block').forEach(el => {
+        if (!el.classList.contains('language-python') && !el.classList.contains('language-java') && !el.classList.contains('language-sql')) {
+          el.classList.add('language-python');
+        }
+      });
+
+      // Highlight syntax with Prism
+      if (window.Prism) {
+        Prism.highlightAllUnder(document.getElementById('main-card-content'));
+      }
+
+      // Render LaTeX formulas with KaTeX
+      if (window.renderMathInElement) {
+        renderMathInElement(document.getElementById('main-card-content'), {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError: false
+        });
+      }
     }
 
     function selectOption(optIndex) {
@@ -589,7 +686,7 @@
       loadQuestion(currentQ);
     }
 
-    function nextQuestion() {
+    function saveAndNext() {
       if (currentQ < questions.length - 1) {
         if (isReviewMode) {
           let next = currentQ + 1;
@@ -620,20 +717,62 @@
     function jumpToQuestion(index) { loadQuestion(index); }
 
     function updatePaletteUI() {
+      let countAnswered = 0;
+      let countNotAnswered = 0;
+      let countMarked = 0;
+      let countAnsMarked = 0;
+      let countNotVisited = 0;
+
       for (let i = 0; i < questions.length; i++) {
         const btn = document.getElementById(`pal-${i}`);
         if (!btn) continue;
         
         btn.className = 'p-btn';
         if (isReviewMode) {
-          if (userAnswers[i] === questions[i].correct) btn.classList.add('review-correct');
-          else if (userAnswers[i] !== null) btn.classList.add('review-wrong');
+          if (userAnswers[i] === questions[i].correct) {
+            btn.classList.add('review-correct');
+          } else if (userAnswers[i] !== null) {
+            btn.classList.add('review-wrong');
+          } else {
+            btn.classList.add('not-visited');
+          }
         } else {
-          if (userAnswers[i] !== null) btn.classList.add('answered');
-          if (markedForReview.has(i)) btn.classList.add('marked');
+          const hasAnswer = userAnswers[i] !== null;
+          const isMarked = markedForReview.has(i);
+          const isVisited = visitedQuestions.has(i);
+
+          if (hasAnswer && isMarked) {
+            btn.classList.add('answered-marked');
+            countAnsMarked++;
+          } else if (hasAnswer) {
+            btn.classList.add('answered');
+            countAnswered++;
+          } else if (isMarked) {
+            btn.classList.add('marked');
+            countMarked++;
+          } else if (isVisited) {
+            btn.classList.add('not-answered');
+            countNotAnswered++;
+          } else {
+            btn.classList.add('not-visited');
+            countNotVisited++;
+          }
         }
         if (i === currentQ) btn.classList.add('active');
       }
+
+      // Update TCS iON / IBPS live counter badges
+      const elAns = document.getElementById('count-answered');
+      const elNotAns = document.getElementById('count-not-answered');
+      const elMarked = document.getElementById('count-marked');
+      const elNotVis = document.getElementById('count-not-visited');
+      const elAnsMark = document.getElementById('count-ans-marked');
+
+      if (elAns) elAns.innerText = countAnswered;
+      if (elNotAns) elNotAns.innerText = countNotAnswered;
+      if (elMarked) elMarked.innerText = countMarked;
+      if (elNotVis) elNotVis.innerText = countNotVisited;
+      if (elAnsMark) elAnsMark.innerText = countAnsMarked;
     }
 
     function applyReviewFilter() {
