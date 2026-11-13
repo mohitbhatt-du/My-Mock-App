@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal | ExamMatrix IT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-base: #09090b;
+      --bg-surface: rgba(24, 24, 27, 0.7);
+      --bg-surface-elevated: rgba(39, 39, 42, 0.8);
+      --border-light: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.22);
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --accent-cyan: #22d3ee;
+      --accent-emerald: #34d399;
+      --accent-rose: #fb7185;
+      --accent-amber: #fbbf24;
+      --accent-indigo: #818cf8;
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body {
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(251, 191, 36, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(34, 211, 238, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 32px 5%;
+    }
+    .glass-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      box-shadow: var(--glass-shadow);
+      transition: all 0.2s ease;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-light);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(to right, #fff, #cbd5e1);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-title i {
+      color: var(--accent-amber);
+      -webkit-text-fill-color: initial;
+    }
+    .admin-badge {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.2s ease;
+      border: none;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: rgba(34, 211, 238, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+      transform: translateY(-2px);
+    }
+    .btn-success {
+      background: rgba(52, 211, 153, 0.18);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(52, 211, 153, 0.35);
+    }
+    .btn-success:hover {
+      background: var(--accent-emerald);
+      color: #000;
+      box-shadow: 0 0 18px rgba(52, 211, 153, 0.45);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--border-light);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
+    }
+    .btn-danger {
+      background: rgba(251, 113, 133, 0.15);
+      color: var(--accent-rose);
+      border: 1px solid rgba(251, 113, 133, 0.3);
+    }
+    .btn-danger:hover {
+      background: var(--accent-rose);
+      color: #000;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .kpi-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .kpi-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    input, select, textarea {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(34, 211, 238, 0.2);
+      background: rgba(255, 255, 255, 0.07);
+    }
+    select option {
+      background: #18181b;
+      color: #f8fafc;
+    }
+    .json-editor-container {
+      margin-bottom: 20px;
+    }
+    .json-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 16px;
+      border: 1px solid var(--border-light);
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .json-textarea {
+      width: 100%;
+      height: 380px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      border-radius: 0 0 10px 10px;
+      resize: vertical;
+      white-space: pre;
+    }
+    .validation-status {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      font-size: 0.9rem;
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.4;
+    }
+    .validation-status.success {
+      display: flex;
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: #6ee7b7;
+    }
+    .validation-status.error {
+      display: flex;
+      background: rgba(251, 113, 133, 0.12);
+      border: 1px solid rgba(251, 113, 133, 0.3);
+      color: #fca5a5;
+    }
+    .table-container {
+      padding: 24px;
+      overflow-x: auto;
+      margin-top: 28px;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--border-light); font-size: 0.92rem; }
+    th { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+    tr:hover { background: rgba(255,255,255,0.02); }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; display: inline-block; }
+    .badge-diff { background: rgba(129, 140, 248, 0.15); color: var(--accent-indigo); border: 1px solid rgba(129, 140, 248, 0.3); }
+    .badge-tag { background: rgba(167, 139, 250, 0.15); color: #c084fc; border: 1px solid rgba(167, 139, 250, 0.3); }
+    
+    /* Auth Modal Overlay */
+    #auth-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(9, 9, 11, 0.88);
+      backdrop-filter: blur(20px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .auth-box {
+      background: #18181b;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      text-align: center;
+    }
+    
+    /* Edit Modal */
+    #edit-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .edit-box {
+      background: #18181b;
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: var(--glass-shadow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN AUTHENTICATION GATE (Shown if not logged in as Admin) -->
+  <div id="auth-overlay">
+    <div class="auth-box">
+      <div style="width: 56px; height: 56px; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: var(--accent-amber);">
+        <i data-lucide="shield-lock" size="28"></i>
+      </div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Admin Authorization</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Enter the Admin Secret Key to access mock management and question publishing tools.</p>
+      
+      <div style="margin-bottom: 18px; text-align: left;">
+        <label for="admin-key-input">Admin Secret Key</label>
+        <input type="password" id="admin-key-input" placeholder="Enter key (default: admin123)" style="width: 100%; margin-top: 6px;" onkeydown="if(event.key==='Enter') unlockAdmin()">
+      </div>
+
+      <div id="auth-error-msg" style="color: var(--accent-rose); font-size: 0.85rem; margin-bottom: 14px; display: none;"></div>
+
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;" onclick="unlockAdmin()">
+        <i data-lucide="key"></i> Authenticate & Unlock
+      </button>
+
+      <div style="margin-top: 18px;">
+        <a href="/" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+          <i data-lucide="arrow-left" size="14"></i> Return to Candidate Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN ADMIN CONSOLE CONTENT -->
+  <header>
+    <div class="brand-title">
+      <i data-lucide="shield-check"></i>
+      <span>ExamMatrix Admin Console</span>
+      <span class="admin-badge"><i data-lucide="lock" size="12"></i> Secured Access</span>
+    </div>
+
+    <div class="nav-actions">
+      <a href="/" class="btn btn-secondary">
+        <i data-lucide="layout-dashboard"></i> Live Dashboard
+      </a>
+      <a href="/player?quiz=day_1" target="_blank" class="btn btn-secondary">
+        <i data-lucide="play-circle"></i> Player Engine
+      </a>
+      <button class="btn btn-danger" onclick="logoutAdmin()">
+        <i data-lucide="log-out"></i> Exit Admin
+      </button>
+    </div>
+  </header>
+
+  <!-- KPI SUMMARY -->
+  <section class="kpi-grid">
+    <div class="glass-card kpi-card">
+      <span class="kpi-title"><i data-lucide="book-open"></i> Total Mocks Live</span>
+      <div class="kpi-value" id="kpi-exams" style="color: var(--accent-cyan);">...</div>
+    </div>
+    <div class="glass-card kpi-card">
+      <span class="kpi-title"><i data-lucide="help-circle"></i> Questions in Bank</span>
+      <div class="kpi-value" id="kpi-questions" style="color: var(--accent-emerald);">...</div>
+    </div>
+    <div class="glass-card kpi-card">
+      <span class="kpi-title"><i data-lucide="check-check"></i> Candidate Attempts</span>
+      <div class="kpi-value" id="kpi-attempts" style="color: var(--accent-amber);">...</div>
+    </div>
+    <div class="glass-card kpi-card">
+      <span class="kpi-title"><i data-lucide="users"></i> Registered Candidates</span>
+      <div class="kpi-value" id="kpi-users" style="color: var(--accent-indigo);">...</div>
+    </div>
+  </section>
+
+  <!-- CREATE NEW MOCK SECTION -->
+  <section class="glass-card" style="padding: 28px; margin-bottom: 32px; border-left: 4px solid var(--accent-cyan);">
+    <div class="section-title">
+      <i data-lucide="plus-circle" style="color: var(--accent-cyan);"></i>
+      <span>Create & Publish New Mock Exam</span>
+    </div>
+    <p class="section-desc">
+      Configure exam parameters and paste a 50-question JSON set. The engine automatically seeds SQLite, creates the quiz file, and updates the exam manifest.
+    </p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="mock-day">Day Number</label>
+        <input type="number" id="mock-day" min="1" max="100" placeholder="e.g. 18" oninput="updateAutoTitle()">
+      </div>
+      <div class="form-group">
+        <label for="mock-title">Mock Title</label>
+        <input type="text" id="mock-title" placeholder="IT Officer Mains: Day 18">
+      </div>
+      <div class="form-group">
+        <label for="mock-difficulty">Difficulty Rating</label>
+        <select id="mock-difficulty">
+          <option value="Easy to Moderate">Easy to Moderate</option>
+          <option value="Moderate" selected>Moderate</option>
+          <option value="Moderate to Hard">Moderate to Hard</option>
+          <option value="Hard">Hard / Challenging</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="mock-tags">Syllabus Tags</label>
+        <input type="text" id="mock-tags" value="Balanced" placeholder="e.g. Balanced, DBMS Special">
+      </div>
+      <div class="form-group">
+        <label for="mock-time">Timer (Minutes)</label>
+        <input type="number" id="mock-time" value="40" min="10" max="120">
+      </div>
+    </div>
+
+    <!-- JSON EDITOR WORKSPACE -->
+    <div class="json-editor-container">
+      <div class="json-toolbar">
+        <div style="font-size: 0.88rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="code" size="16"></i> Paste 50-Question JSON Set
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;" onclick="loadSampleTemplate()">
+            <i data-lucide="copy" size="14"></i> Insert 50-Q Template
+          </button>
+          <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;" onclick="validatePastedJson()">
+            <i data-lucide="check" size="14"></i> Validate JSON
+          </button>
+        </div>
+      </div>
+
+      <textarea id="mock-json" class="json-textarea" placeholder='Paste your 50-question JSON here. Format:
+[
+  {
+    "text": "Question text here...",
+    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+    "correct": 0,
+    "topic": "Database Systems",
+    "explanation": "Why option 0 is correct..."
+  },
+  ... 50 questions
+]'></textarea>
+    </div>
+
+    <div id="validation-box" class="validation-status"></div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+      <button class="btn btn-secondary" onclick="clearCreateForm()">
+        <i data-lucide="refresh-cw"></i> Reset Form
+      </button>
+      <button class="btn btn-success" id="btn-publish" onclick="submitNewMock()">
+        <i data-lucide="upload-cloud"></i> Process & Publish Mock
+      </button>
+    </div>
+  </section>
+
+  <!-- EXISTING MOCKS DIRECTORY -->
+  <section class="glass-card table-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+      <div class="section-title" style="margin-bottom: 0;">
+        <i data-lucide="layers" style="color: var(--accent-amber);"></i>
+        <span>Live Mock Exams Directory</span>
+      </div>
+      <button class="btn btn-secondary" style="font-size: 0.85rem;" onclick="loadAdminStats()">
+        <i data-lucide="refresh-cw"></i> Refresh Directory
+      </button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Mock Title</th>
+          <th>Difficulty</th>
+          <th>Tags</th>
+          <th>Questions</th>
+          <th>Attempts</th>
+          <th>Avg Score</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="mocks-table-body">
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 40px;">Loading mocks ledger...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- QUICK EDIT MODAL -->
+  <div id="edit-modal">
+    <div class="edit-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <h3 style="font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="edit-3" style="color: var(--accent-cyan);"></i> Edit Mock Details
+        </h3>
+        <button onclick="closeEditModal()" style="background: none; border: none; color: var(--text-muted); cursor: pointer;">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="edit-exam-id">
+
+      <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
+        <div class="form-group">
+          <label for="edit-title">Exam Title</label>
+          <input type="text" id="edit-title">
+        </div>
+        <div class="form-group">
+          <label for="edit-difficulty">Difficulty</label>
+          <select id="edit-difficulty">
+            <option value="Easy to Moderate">Easy to Moderate</option>
+            <option value="Moderate">Moderate</option>
+            <option value="Moderate to Hard">Moderate to Hard</option>
+            <option value="Hard">Hard / Challenging</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edit-tags">Tags</label>
+          <input type="text" id="edit-tags">
+        </div>
+        <div class="form-group">
+          <label for="edit-time">Time Limit (Minutes)</label>
+          <input type="number" id="edit-time" min="10" max="120">
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveMockEdits()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    let currentAdminKey = localStorage.getItem('exammatrix_admin_key') || '';
+    let liveExamsList = [];
+
+    window.onload = async () => {
+      // Check current session
+      try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        if (data.authenticated && data.isAdmin) {
+          document.getElementById('auth-overlay').style.display = 'none';
+          await loadAdminStats();
+          return;
+        }
+      } catch (e) {}
+
+      // If cached key exists, test it
+      if (currentAdminKey) {
+        document.getElementById('admin-key-input').value = currentAdminKey;
+        unlockAdmin();
+      }
+    };
+
+    async function unlockAdmin() {
+      const key = document.getElementById('admin-key-input').value.trim();
+      const errEl = document.getElementById('auth-error-msg');
+      errEl.style.display = 'none';
+
+      if (!key) {
+        errEl.innerText = 'Please enter the Admin Secret Key.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/demo-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'admin', adminKey: key })
+        });
+        const data = await res.json();
+        if (res.ok && data.isAdmin) {
+          currentAdminKey = key;
+          localStorage.setItem('exammatrix_admin_key', key);
+          document.getElementById('auth-overlay').style.display = 'none';
+          await loadAdminStats();
+        } else {
+          errEl.innerText = data.error || 'Authentication failed. Invalid key.';
+          errEl.style.display = 'block';
+        }
+      } catch (err) {
+        errEl.innerText = 'Error contacting server: ' + err.message;
+        errEl.style.display = 'block';
+      }
+    }
+
+    async function logoutAdmin() {
+      localStorage.removeItem('exammatrix_admin_key');
+      currentAdminKey = '';
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+      } catch (e) {}
+      window.location.href = '/';
+    }
+
+    async function loadAdminStats() {
+      try {
+        const res = await fetch('/api/admin/stats', {
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        if (res.status === 403 || res.status === 401) {
+          document.getElementById('auth-overlay').style.display = 'flex';
+          return;
+        }
+        const data = await res.json();
+        
+        document.getElementById('kpi-exams').innerText = data.totalExams;
+        document.getElementById('kpi-questions').innerText = data.totalQuestions;
+        document.getElementById('kpi-attempts').innerText = data.totalAttempts;
+        document.getElementById('kpi-users').innerText = data.totalUsers;
+
+        liveExamsList = data.exams || [];
+        renderMocksTable(liveExamsList);
+
+        // Auto calculate next day number
+        const maxDay = liveExamsList.reduce((max, ex) => Math.max(max, ex.day || 0), 0);
+        const nextDay = maxDay + 1;
+        document.getElementById('mock-day').value = nextDay;
+        updateAutoTitle();
+      } catch (err) {
+        console.error("Failed to load admin stats:", err);
+      }
+    }
+
+    function updateAutoTitle() {
+      const dayVal = document.getElementById('mock-day').value;
+      if (dayVal) {
+        document.getElementById('mock-title').value = `IT Officer Mains: Day ${dayVal}`;
+      }
+    }
+
+    function renderMocksTable(exams) {
+      const tbody = document.getElementById('mocks-table-body');
+      tbody.innerHTML = '';
+
+      if (exams.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 40px;">No mock exams found.</td></tr>`;
+        return;
+      }
+
+      exams.forEach(ex => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>Day ${ex.day}</strong></td>
+          <td><strong style="color: var(--text-main);">${ex.title}</strong></td>
+          <td><span class="badge badge-diff">${ex.difficulty}</span></td>
+          <td><span class="badge badge-tag">${ex.tags || 'Balanced'}</span></td>
+          <td>${ex.totalQuestions} Qs</td>
+          <td>${ex.attemptsCount || 0}</td>
+          <td style="color: var(--accent-cyan); font-weight: 600;">${(ex.averageScore || 0).toFixed(2)}</td>
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <a href="/player?quiz=${ex.id}" target="_blank" class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.8rem;" title="Test in Player">
+                <i data-lucide="external-link" size="14"></i>
+              </a>
+              <button class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.8rem;" onclick="openEditModal('${ex.id}')" title="Edit Metadata">
+                <i data-lucide="edit-2" size="14"></i>
+              </button>
+              <button class="btn btn-danger" style="padding: 6px 10px; font-size: 0.8rem;" onclick="confirmDeleteMock('${ex.id}', ${ex.day})" title="Delete Mock">
+                <i data-lucide="trash-2" size="14"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    function openEditModal(examId) {
+      const exam = liveExamsList.find(e => e.id === examId);
+      if (!exam) return;
+
+      document.getElementById('edit-exam-id').value = exam.id;
+      document.getElementById('edit-title').value = exam.title;
+      document.getElementById('edit-difficulty').value = exam.difficulty;
+      document.getElementById('edit-tags').value = exam.tags || '';
+      document.getElementById('edit-time').value = exam.timeLimitMinutes || 40;
+
+      document.getElementById('edit-modal').style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').style.display = 'none';
+    }
+
+    async function saveMockEdits() {
+      const examId = document.getElementById('edit-exam-id').value;
+      const title = document.getElementById('edit-title').value.trim();
+      const difficulty = document.getElementById('edit-difficulty').value;
+      const tags = document.getElementById('edit-tags').value.trim();
+      const timeLimitMinutes = parseInt(document.getElementById('edit-time').value) || 40;
+
+      try {
+        const res = await fetch(`/api/admin/exams/${examId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Key': currentAdminKey
+          },
+          body: JSON.stringify({ title, difficulty, tags, timeLimitMinutes })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          closeEditModal();
+          alert('Mock details updated successfully!');
+          await loadAdminStats();
+        } else {
+          alert('Update failed: ' + (data.error || 'Server error'));
+        }
+      } catch (err) {
+        alert('Request failed: ' + err.message);
+      }
+    }
+
+    async function confirmDeleteMock(examId, dayNum) {
+      const confirmDelete = confirm(`⚠️ Are you sure you want to delete Day ${dayNum} mock exam? This cannot be undone.`);
+      if (!confirmDelete) return;
+
+      try {
+        const res = await fetch(`/api/admin/exams/${examId}`, {
+          method: 'DELETE',
+          headers: { 'X-Admin-Key': currentAdminKey }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(`Mock Day ${dayNum} deleted successfully.`);
+          await loadAdminStats();
+        } else {
+          alert('Delete failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Delete failed: ' + err.message);
+      }
+    }
+
+    function validatePastedJson() {
+      const raw = document.getElementById('mock-json').value.trim();
+      const valBox = document.getElementById('validation-box');
+
+      if (!raw) {
+        valBox.className = 'validation-status error';
+        valBox.innerHTML = '<i data-lucide="alert-circle"></i><span>JSON text area is empty. Please paste question set.</span>';
+        lucide.createIcons();
+        return false;
+      }
+
+      try {
+        let parsed = JSON.parse(raw);
+        let questions = [];
+        if (Array.isArray(parsed)) {
+          questions = parsed;
+        } else if (parsed && Array.isArray(parsed.questions)) {
+          questions = parsed.questions;
+        } else {
+          valBox.className = 'validation-status error';
+          valBox.innerHTML = '<i data-lucide="alert-circle"></i><span>JSON must be an array of questions or an object with a "questions" key.</span>';
+          lucide.createIcons();
+          return false;
+        }
+
+        const count = questions.length;
+        const topicCounts = {};
+        for (let i = 0; i < count; i++) {
+          const q = questions[i];
+          if (!q.text) {
+            valBox.className = 'validation-status error';
+            valBox.innerHTML = `<i data-lucide="alert-circle"></i><span>Question #${i+1} is missing the "text" field.</span>`;
+            lucide.createIcons();
+            return false;
+          }
+          if (!Array.isArray(q.options) || q.options.length < 2) {
+            valBox.className = 'validation-status error';
+            valBox.innerHTML = `<i data-lucide="alert-circle"></i><span>Question #${i+1} must have at least 2 options (found ${q.options ? q.options.length : 0}).</span>`;
+            lucide.createIcons();
+            return false;
+          }
+          const topic = q.topic || 'General IT';
+          topicCounts[topic] = (topicCounts[topic] || 0) + 1;
+        }
+
+        const topicBadges = Object.keys(topicCounts).map(t => `<span class="badge badge-diff">${t}: ${topicCounts[t]}</span>`).join(' ');
+
+        valBox.className = 'validation-status success';
+        valBox.innerHTML = `
+          <i data-lucide="check-circle" size="20"></i>
+          <div>
+            <strong>Valid Question Set Passed Validation!</strong><br>
+            Detected: <strong>${count} Questions</strong> ${count === 50 ? '✅ (Official 50-Q Pattern)' : 'ℹ️'}<br>
+            <div style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px;">${topicBadges}</div>
+          </div>
+        `;
+        lucide.createIcons();
+        return questions;
+      } catch (err) {
+        valBox.className = 'validation-status error';
+        valBox.innerHTML = `<i data-lucide="alert-circle"></i><span>JSON Syntax Error: ${err.message}</span>`;
+        lucide.createIcons();
+        return false;
+      }
+    }
+
+    async function submitNewMock() {
+      const questions = validatePastedJson();
+      if (!questions) return;
+
+      const day = parseInt(document.getElementById('mock-day').value);
+      const title = document.getElementById('mock-title').value.trim();
+      const difficulty = document.getElementById('mock-difficulty').value;
+      const tags = document.getElementById('mock-tags').value.trim();
+      const timeLimitMinutes = parseInt(document.getElementById('mock-time').value) || 40;
+
+      if (!day) {
+        alert('Please specify a valid Day number.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-publish');
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader"></i> Publishing...';
+
+      try {
+        const payload = {
+          day,
+          title,
+          difficulty,
+          difficultyLevel: difficulty === 'Hard' ? 4 : (difficulty.includes('Hard') ? 3 : 2),
+          tags,
+          timeLimitMinutes,
+          questions
+        };
+
+        const res = await fetch('/api/admin/exams/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Key': currentAdminKey
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          alert(`🎉 Success! ${data.message}`);
+          clearCreateForm();
+          await loadAdminStats();
+        } else {
+          alert(`Publishing error: ${data.error || 'Server rejected request'}`);
+        }
+      } catch (err) {
+        alert(`Request failed: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="upload-cloud"></i> Process & Publish Mock';
+        lucide.createIcons();
+      }
+    }
+
+    function clearCreateForm() {
+      document.getElementById('mock-json').value = '';
+      document.getElementById('validation-box').style.display = 'none';
+      loadAdminStats();
+    }
+
+    function loadSampleTemplate() {
+      const topics = [
+        "Database Systems", "Computer Networks", "Operating Systems",
+        "Data Structures & Algorithms", "Software Engineering & SDLC",
+        "Cyber Security & IT Act", "Programming & OOPs"
+      ];
+      const sample = [];
+      for (let i = 1; i <= 50; i++) {
+        const top = topics[i % topics.length];
+        sample.push({
+          "text": `Sample Question ${i}: Which of the following technical characteristics is essential in high-availability ${top} architecture?`,
+          "options": [
+            `Option A: Primary redundancy and fault isolation in ${top}`,
+            `Option B: Linear non-blocking scaling mechanism`,
+            `Option C: Asynchronous buffer pool checkpointing`,
+            `Option D: Deterministic transactional rollback`
+          ],
+          "correct": (i % 4),
+          "topic": top,
+          "explanation": `In ${top}, redundancy and fault isolation prevent cascading failovers across distributed cluster nodes.`
+        });
+      }
+      document.getElementById('mock-json').value = JSON.stringify(sample, null, 2);
+      validatePastedJson();
+    }
+  </script>
+</body>
+</html>

@@ -1,7 +1,9 @@
 import os
 import json
+import random
+import time
 from datetime import datetime, timedelta
-from sqlalchemy import create_engine, Column, Integer, Float, String, Text, DateTime, ForeignKey, select, update, or_, func, desc
+from sqlalchemy import create_engine, Column, Integer, Float, String, Text, DateTime, Boolean, ForeignKey, select, update, or_, func, desc
 from sqlalchemy.orm import declarative_base, sessionmaker, scoped_session, relationship
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -81,10 +83,112 @@ class Question(Base):
             q_data["explanation"] = self.explanation
         return q_data
 
+FRUITY_ADJECTIVES = [
+    "Velvet", "Crisp", "Golden", "Cosmic", "Zesty", "Frosty", "Electric", "Sunlit",
+    "Ruby", "Emerald", "Midnight", "Breezy", "Sparkling", "Neon", "Gentle", "Swift",
+    "Solar", "Luminous", "Wild", "Mystic", "Crimson", "Radiant", "Glacial", "Vibrant"
+]
+
+FRUITS = [
+    ("Mango", "🥭", "#f59e0b"),
+    ("Kiwi", "🥝", "#10b981"),
+    ("Guava", "🍈", "#84cc16"),
+    ("Papaya", "🍉", "#f97316"),
+    ("Tangerine", "🍊", "#fb923c"),
+    ("Dragonfruit", "🐲", "#ec4899"),
+    ("Apricot", "🍑", "#f472b6"),
+    ("Lychee", "🍓", "#f43f5e"),
+    ("Fig", "🫐", "#8b5cf6"),
+    ("Kumquat", "🍋", "#eab308"),
+    ("Pineapple", "🍍", "#eab308"),
+    ("Plum", "🍇", "#a855f7"),
+    ("Melon", "🍈", "#22c55e"),
+    ("Cherry", "🍒", "#ef4444"),
+    ("Passionfruit", "🥭", "#d946ef"),
+    ("Coconut", "🥥", "#06b6d4")
+]
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    google_id = Column(String(100), unique=True, nullable=True)
+    email = Column(String(150), unique=True, nullable=False)
+    anonymous_name = Column(String(100), unique=True, nullable=False)
+    fruit_emoji = Column(String(10), default="🥭")
+    avatar_color = Column(String(30), default="#10b981")
+    is_admin = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    last_login = Column(DateTime, default=datetime.utcnow)
+
+    attempts = relationship("Attempt", back_populates="user")
+
+    def to_dict(self, include_private=False):
+        data = {
+            "id": self.id,
+            "anonymousName": self.anonymous_name,
+            "fruitEmoji": self.fruit_emoji,
+            "avatarColor": self.avatar_color,
+            "isAdmin": bool(self.is_admin),
+            "createdAt": self.created_at.isoformat() if self.created_at else None
+        }
+        if include_private:
+            data["email"] = self.email
+        return data
+
+def generate_unique_fruity_name(session):
+    for _ in range(500):
+        adj = random.choice(FRUITY_ADJECTIVES)
+        fruit_name, emoji, color = random.choice(FRUITS)
+        num = random.randint(100, 999)
+        candidate_name = f"{adj} {fruit_name} #{num}"
+        
+        existing = session.query(User).filter_by(anonymous_name=candidate_name).first()
+        if not existing:
+            return candidate_name, emoji, color
+    suffix = int(time.time() % 10000)
+    return f"Cosmic Mango #{suffix}", "🥭", "#f59e0b"
+
+def get_or_create_user(session, email, google_id=None, is_admin=False):
+    """
+    Finds or creates a User with a unique anonymous fruity name.
+    Strictly preserves candidate anonymity.
+    """
+    user = session.query(User).filter_by(email=email).first()
+    if not user and google_id:
+        user = session.query(User).filter_by(google_id=google_id).first()
+
+    now = datetime.utcnow()
+    if user:
+        user.last_login = now
+        if google_id and not user.google_id:
+            user.google_id = google_id
+        if is_admin:
+            user.is_admin = True
+        session.commit()
+        return user
+
+    # Generate unique fruity name
+    anon_name, emoji, color = generate_unique_fruity_name(session)
+    user = User(
+        email=email,
+        google_id=google_id,
+        anonymous_name=anon_name,
+        fruit_emoji=emoji,
+        avatar_color=color,
+        is_admin=is_admin,
+        created_at=now,
+        last_login=now
+    )
+    session.add(user)
+    session.commit()
+    return user
+
 class Attempt(Base):
     __tablename__ = 'attempts'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     exam_id = Column(String(50), nullable=False)
     exam_title = Column(String(150), nullable=False)
     exam_day = Column(Integer, default=1)
@@ -103,6 +207,8 @@ class Attempt(Base):
     wrong_questions_json = Column(Text, default="[]")
     skipped_questions_json = Column(Text, default="[]")
     playable_mistakes_json = Column(Text, default="[]")
+
+    user = relationship("User", back_populates="attempts")
 
     def to_dict(self):
         try:
@@ -142,7 +248,10 @@ class Attempt(Base):
             "wrongQuestions": wrong_log,
             "skippedQuestions": skipped_log,
             "playableMistakes": playable_mistakes,
-            "userAnswersArray": user_answers
+            "userAnswersArray": user_answers,
+            "userId": self.user_id,
+            "userFruitEmoji": self.user.fruit_emoji if self.user else None,
+            "userAnonymousName": self.user.anonymous_name if self.user else None
         }
 
 class SiteMetric(Base):
@@ -512,8 +621,22 @@ def get_cutoff_prediction(session):
         "avgPacingSeconds": avg_pacing
     }
 
+def ensure_schema():
+    """Ensure SQLite schema has newest columns without requiring manual migrations."""
+    try:
+        with engine.connect() as conn:
+            cursor = conn.connection.cursor()
+            cursor.execute("PRAGMA table_info(attempts);")
+            attempt_cols = [row[1] for row in cursor.fetchall()]
+            if 'user_id' not in attempt_cols:
+                cursor.execute("ALTER TABLE attempts ADD COLUMN user_id INTEGER REFERENCES users(id);")
+                conn.connection.commit()
+    except Exception as e:
+        print(f"Schema check error: {e}")
+
 def init_db():
     Base.metadata.create_all(bind=engine)
+    ensure_schema()
     seed_database_if_empty()
     sync_stats_from_existing_attempts()
 
@@ -602,3 +725,259 @@ def seed_database_if_empty():
         print(f"Database seeding error: {e}")
     finally:
         session.close()
+
+def create_or_update_mock(session, mock_data):
+    """
+    Creates or updates an exam from a mock_data dictionary.
+    mock_data should contain:
+    - day: int
+    - title: str
+    - difficulty: str
+    - difficultyLevel: int
+    - tags: str
+    - timeLimitMinutes: int
+    - questions: list of dicts: {text, options, correct, topic, explanation}
+    """
+    day = int(mock_data.get('day', 1))
+    exam_id = f"day_{day}"
+    title = mock_data.get('title') or f"IT Officer Mains: Day {day}"
+    difficulty = mock_data.get('difficulty', 'Moderate')
+    difficulty_level = int(mock_data.get('difficultyLevel', 2))
+    tags = mock_data.get('tags', 'Balanced')
+    time_limit = int(mock_data.get('timeLimitMinutes', 40))
+    raw_questions = mock_data.get('questions', [])
+
+    if not raw_questions:
+        raise ValueError("Questions list cannot be empty.")
+
+    validated_questions = []
+    for idx, q in enumerate(raw_questions):
+        text = str(q.get('text', '')).strip()
+        if not text:
+            raise ValueError(f"Question {idx+1} has empty text.")
+        options = q.get('options', [])
+        if not isinstance(options, list) or len(options) < 2:
+            raise ValueError(f"Question {idx+1} must have at least 2 options (found {len(options) if isinstance(options, list) else 'invalid'}).")
+        
+        raw_correct = q.get('correct', 0)
+        try:
+            correct_idx = int(raw_correct)
+        except Exception:
+            letter_map = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4}
+            correct_idx = letter_map.get(str(raw_correct).strip().lower(), 0)
+
+        if correct_idx < 0 or correct_idx >= len(options):
+            correct_idx = 0
+
+        topic = str(q.get('topic') or 'General IT').strip()
+        explanation = str(q.get('explanation') or '').strip()
+
+        validated_questions.append({
+            "id": idx + 1,
+            "topic": topic,
+            "text": text,
+            "options": [str(opt).strip() for opt in options],
+            "correct": correct_idx,
+            "explanation": explanation
+        })
+
+    # Check or create Exam in DB
+    exam = session.query(Exam).filter_by(id=exam_id).first()
+    if not exam:
+        exam = Exam(
+            id=exam_id,
+            day=day,
+            title=title,
+            difficulty=difficulty,
+            difficulty_level=difficulty_level,
+            tags=tags,
+            time_limit_minutes=time_limit,
+            total_questions=len(validated_questions)
+        )
+        session.add(exam)
+        session.flush()
+    else:
+        exam.title = title
+        exam.difficulty = difficulty
+        exam.difficulty_level = difficulty_level
+        exam.tags = tags
+        exam.time_limit_minutes = time_limit
+        exam.total_questions = len(validated_questions)
+        session.query(Question).filter_by(exam_id=exam_id).delete()
+        session.flush()
+
+    for q in validated_questions:
+        q_obj = Question(
+            exam_id=exam.id,
+            q_num=q['id'],
+            topic=q['topic'],
+            text=q['text'],
+            options_json=json.dumps(q['options']),
+            correct=q['correct'],
+            explanation=q['explanation']
+        )
+        session.add(q_obj)
+
+    session.commit()
+
+    # Synchronize to filesystem: data/quizzes/day_X.json
+    quizzes_dir = os.path.join(DATA_DIR, 'quizzes')
+    os.makedirs(quizzes_dir, exist_ok=True)
+    quiz_file_path = os.path.join(quizzes_dir, f"{exam_id}.json")
+    
+    quiz_file_payload = {
+        "id": exam_id,
+        "day": day,
+        "title": title,
+        "difficulty": difficulty,
+        "difficultyLevel": difficulty_level,
+        "tags": tags,
+        "totalQuestions": len(validated_questions),
+        "timeLimitMinutes": time_limit,
+        "markingScheme": {
+            "correct": 2,
+            "incorrect": -0.5
+        },
+        "questions": validated_questions
+    }
+    with open(quiz_file_path, 'w', encoding='utf-8') as f:
+        json.dump(quiz_file_payload, f, indent=2, ensure_ascii=False)
+
+    # Update manifest.json
+    manifest_path = os.path.join(quizzes_dir, 'manifest.json')
+    manifest_items = []
+    if os.path.exists(manifest_path):
+        try:
+            with open(manifest_path, 'r', encoding='utf-8') as mf:
+                manifest_items = json.load(mf)
+        except Exception:
+            manifest_items = []
+
+    found = False
+    for item in manifest_items:
+        if item.get('id') == exam_id or item.get('day') == day:
+            item['id'] = exam_id
+            item['day'] = day
+            item['title'] = title
+            item['difficulty'] = difficulty
+            item['difficultyLevel'] = difficulty_level
+            item['tags'] = tags
+            item['totalQuestions'] = len(validated_questions)
+            item['file'] = f"{exam_id}.json"
+            item['legacyHtml'] = f"Day_{day}.html"
+            found = True
+            break
+    
+    if not found:
+        manifest_items.append({
+            "id": exam_id,
+            "day": day,
+            "title": title,
+            "difficulty": difficulty,
+            "difficultyLevel": difficulty_level,
+            "tags": tags,
+            "totalQuestions": len(validated_questions),
+            "file": f"{exam_id}.json",
+            "legacyHtml": f"Day_{day}.html"
+        })
+
+    manifest_items.sort(key=lambda x: x.get('day', 0))
+    with open(manifest_path, 'w', encoding='utf-8') as mf:
+        json.dump(manifest_items, mf, indent=2)
+
+    return exam.to_dict(include_questions=True, include_answers=True)
+
+def update_mock_metadata(session, exam_id, metadata):
+    """Updates title, difficulty, difficultyLevel, tags, timeLimitMinutes for an exam."""
+    exam = session.query(Exam).filter_by(id=exam_id).first()
+    if not exam:
+        return None
+
+    if 'title' in metadata:
+        exam.title = str(metadata['title']).strip()
+    if 'difficulty' in metadata:
+        exam.difficulty = str(metadata['difficulty']).strip()
+    if 'difficultyLevel' in metadata:
+        try:
+            exam.difficulty_level = int(metadata['difficultyLevel'])
+        except Exception:
+            pass
+    if 'tags' in metadata:
+        exam.tags = str(metadata['tags']).strip()
+    if 'timeLimitMinutes' in metadata:
+        try:
+            exam.time_limit_minutes = int(metadata['timeLimitMinutes'])
+        except Exception:
+            pass
+
+    session.commit()
+
+    quizzes_dir = os.path.join(DATA_DIR, 'quizzes')
+    quiz_file_path = os.path.join(quizzes_dir, f"{exam_id}.json")
+    if os.path.exists(quiz_file_path):
+        try:
+            with open(quiz_file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            data['title'] = exam.title
+            data['difficulty'] = exam.difficulty
+            data['difficultyLevel'] = exam.difficulty_level
+            data['tags'] = exam.tags
+            data['timeLimitMinutes'] = exam.time_limit_minutes
+            with open(quiz_file_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"Error updating quiz file {quiz_file_path}: {e}")
+
+    manifest_path = os.path.join(quizzes_dir, 'manifest.json')
+    if os.path.exists(manifest_path):
+        try:
+            with open(manifest_path, 'r', encoding='utf-8') as mf:
+                manifest_items = json.load(mf)
+            for item in manifest_items:
+                if item.get('id') == exam_id:
+                    item['title'] = exam.title
+                    item['difficulty'] = exam.difficulty
+                    item['difficultyLevel'] = exam.difficulty_level
+                    item['tags'] = exam.tags
+            with open(manifest_path, 'w', encoding='utf-8') as mf:
+                json.dump(manifest_items, mf, indent=2)
+        except Exception as e:
+            print(f"Error updating manifest: {e}")
+
+    return exam.to_dict()
+
+def delete_mock_by_id(session, exam_id):
+    """Deletes an exam and associated questions from DB."""
+    exam = session.query(Exam).filter_by(id=exam_id).first()
+    if not exam:
+        return False
+    session.delete(exam)
+    session.commit()
+    return True
+
+def get_admin_dashboard_stats(session):
+    """Aggregates system-wide stats for the Admin management portal."""
+    total_exams = session.query(Exam).count()
+    total_questions = session.query(Question).count()
+    total_attempts = session.query(Attempt).count()
+    total_users = session.query(User).count()
+    
+    exams = session.query(Exam).order_by(Exam.day.asc()).all()
+    exam_list = []
+    for ex in exams:
+        att_count = session.query(Attempt).filter_by(exam_id=ex.id).count()
+        avg_score_res = session.query(func.avg(Attempt.score)).filter_by(exam_id=ex.id).scalar()
+        avg_score = round(float(avg_score_res), 2) if avg_score_res is not None else 0.0
+        ex_dict = ex.to_dict()
+        ex_dict["attemptsCount"] = att_count
+        ex_dict["averageScore"] = avg_score
+        exam_list.append(ex_dict)
+
+    return {
+        "totalExams": total_exams,
+        "totalQuestions": total_questions,
+        "totalAttempts": total_attempts,
+        "totalUsers": total_users,
+        "exams": exam_list
+    }
+
