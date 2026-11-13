@@ -257,6 +257,375 @@
     .view-section.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Tab Pill Badges */
+    .badge-tab-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      vertical-align: middle;
+    }
+    .badge-tab-pill.coming-soon {
+      background: rgba(129, 140, 248, 0.18);
+      color: var(--accent-indigo);
+      border: 1px solid rgba(129, 140, 248, 0.35);
+    }
+    .badge-tab-pill.notif-pill {
+      background: rgba(251, 113, 133, 0.22);
+      color: var(--accent-rose);
+      border: 1px solid rgba(251, 113, 133, 0.45);
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.82; transform: scale(1.05); }
+    }
+
+    /* Notification Bell in Header */
+    .notif-bell-btn {
+      position: relative;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .notif-bell-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
+      color: var(--accent-cyan);
+    }
+    .notif-dot-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: var(--accent-rose);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--bg-base);
+    }
+
+    /* Deepened Analytics Widgets */
+    .readiness-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .readiness-card {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .readiness-icon-wrap {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .readiness-info h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .readiness-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .readiness-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Coming Soon Teaser Banner */
+    .coming-soon-banner {
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.1), rgba(34, 211, 238, 0.06));
+      border: 1px dashed rgba(129, 140, 248, 0.35);
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin-bottom: 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    /* Community Posts Styles */
+    .posts-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .post-composer-card {
+      padding: 20px 24px;
+    }
+    .post-card {
+      padding: 22px 24px;
+    }
+    .post-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .post-author-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .post-author-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .post-author-handle {
+      font-size: 0.78rem;
+      color: var(--accent-emerald);
+    }
+    .post-time {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .post-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .post-content {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .post-tag-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .post-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      font-weight: 500;
+    }
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .post-actions-group {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .post-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.84rem;
+      transition: color 0.15s;
+    }
+    .post-action-btn:hover { color: var(--accent-cyan); }
+
+    /* Notifications Board */
+    .notif-board {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 940px;
+      margin: 0 auto;
+    }
+    .notif-filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      max-width: 940px;
+      margin: 0 auto 18px auto;
+    }
+    .notif-card {
+      padding: 22px 24px;
+      border-left: 4px solid var(--border-light);
+      transition: all 0.2s ease;
+    }
+    .notif-card.official { border-left-color: var(--accent-rose); }
+    .notif-card.admit-card { border-left-color: var(--accent-amber); }
+    .notif-card.mock-release { border-left-color: var(--accent-emerald); }
+    .notif-card.advisory { border-left-color: var(--accent-cyan); }
+    .notif-card:hover { transform: translateY(-2px); }
+    .notif-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .notif-category {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+    .notif-category.official { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); }
+    .notif-category.admit-card { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); }
+    .notif-category.mock-release { background: rgba(52, 211, 153, 0.15); color: var(--accent-emerald); }
+    .notif-category.advisory { background: rgba(34, 211, 238, 0.15); color: var(--accent-cyan); }
+    .notif-time { font-size: 0.8rem; color: var(--text-muted); }
+    .notif-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .notif-body {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .notif-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Study Groups & Chat */
+    .chat-rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .chat-room-card {
+      padding: 22px;
+      cursor: pointer;
+      border: 1px solid var(--border-light);
+    }
+    .chat-room-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+    }
+    .chat-room-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .chat-room-icon {
+      font-size: 1.6rem;
+    }
+    .chat-room-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-emerald);
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      padding: 3px 8px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .chat-room-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .chat-room-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .chat-preview-feed {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .chat-bubble {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .chat-bubble-content {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 10px 14px;
+      max-width: 80%;
+    }
+    .chat-bubble-author {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chat-bubble-text {
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+
     /* Buttons */
     .btn {
       padding: 10px 20px;
@@ -568,6 +937,12 @@
         <i data-lucide="shield"></i> Admin Portal
       </a>
 
+      <!-- Quick Notification Bell -->
+      <button class="notif-bell-btn" onclick="switchTab('notifications')" title="Exam Notifications & Alerts">
+        <i data-lucide="bell" size="18"></i>
+        <span class="notif-dot-badge">3</span>
+      </button>
+
       <!-- Anonymous User Pill or Sign In Button -->
       <div id="user-auth-container">
         <!-- Rendered dynamically by checkAuth() -->
@@ -603,13 +978,25 @@
   <!-- NAVIGATION TABS -->
   <div class="tab-container">
     <button class="tab-btn active" onclick="switchTab('analytics')" id="tab-analytics">
-      <i data-lucide="bar-chart-2"></i> Performance & Cutoff Intel
+      <i data-lucide="bar-chart-2"></i> Performance & Cutoff
     </button>
     <button class="tab-btn" onclick="switchTab('quizzes')" id="tab-quizzes">
       <i data-lucide="book-open"></i> Full Mock Papers (50 Qs)
     </button>
     <button class="tab-btn" onclick="switchTab('drills')" id="tab-drills">
       <i data-lucide="crosshair"></i> Topic Drills (15 Qs)
+    </button>
+    <button class="tab-btn" onclick="switchTab('notifications')" id="tab-notifications">
+      <i data-lucide="bell"></i> Notifications
+      <span class="badge-tab-pill notif-pill">3 New</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('posts')" id="tab-posts">
+      <i data-lucide="message-square"></i> Community Posts
+      <span class="badge-tab-pill coming-soon">Coming Soon</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('chats')" id="tab-chats">
+      <i data-lucide="users"></i> Group Chats
+      <span class="badge-tab-pill coming-soon">Coming Soon</span>
     </button>
   </div>
 
@@ -675,6 +1062,45 @@
         <span id="cutoff-advice-text">Complete mock tests to calculate your real-time IBPS SO cutoff probability.</span>
       </div>
     </section>
+
+    <!-- DEEP DIAGNOSTIC & READINESS STRIP -->
+    <div class="readiness-strip">
+      <div class="glass-card readiness-card">
+        <div class="readiness-icon-wrap" style="background: rgba(34, 211, 238, 0.12); color: var(--accent-cyan); border: 1px solid rgba(34, 211, 238, 0.25);">
+          <i data-lucide="award" size="22"></i>
+        </div>
+        <div class="readiness-info">
+          <h4>Mains Readiness Score</h4>
+          <div class="readiness-val" id="readiness-index-val">0% <span style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted);">index</span></div>
+          <div class="readiness-sub" id="readiness-level-text">Awaiting first mock attempt</div>
+        </div>
+      </div>
+
+      <div class="glass-card readiness-card">
+        <div class="readiness-icon-wrap" style="background: rgba(251, 113, 133, 0.12); color: var(--accent-rose); border: 1px solid rgba(251, 113, 133, 0.25);">
+          <i data-lucide="alert-octagon" size="22"></i>
+        </div>
+        <div class="readiness-info" style="flex: 1;">
+          <h4>Weakest Topic Diagnosis</h4>
+          <div class="readiness-val" id="diagnostic-topic-val" style="font-size: 1.1rem; color: var(--accent-rose);">None Detected</div>
+          <div class="readiness-sub" id="diagnostic-action-text">Solve mocks to identify knowledge leaks</div>
+        </div>
+        <button id="btn-fix-weak-topic" class="btn btn-secondary" style="font-size: 0.78rem; padding: 6px 12px; display: none;" onclick="launchWeakTopicFix()">
+          Fix Topic
+        </button>
+      </div>
+
+      <div class="glass-card readiness-card">
+        <div class="readiness-icon-wrap" style="background: rgba(52, 211, 153, 0.12); color: var(--accent-emerald); border: 1px solid rgba(52, 211, 153, 0.25);">
+          <i data-lucide="flame" size="22"></i>
+        </div>
+        <div class="readiness-info">
+          <h4>Preparation Streak</h4>
+          <div class="readiness-val" id="streak-counter-val">Active <span style="font-size: 0.82rem; color: var(--accent-emerald);">🔥</span></div>
+          <div class="readiness-sub" id="streak-sub-text">Consistency is key to cracking Mains</div>
+        </div>
+      </div>
+    </div>
 
     <!-- CORE KPIS -->
     <section class="kpi-grid">
@@ -760,6 +1186,391 @@
     </div>
   </div>
 
+  <!-- ==================== VIEW 4: NOTIFICATIONS RADAR ==================== -->
+  <div id="view-notifications" class="view-section">
+    <div style="margin-bottom: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+      <div>
+        <h2 style="font-size: 1.45rem; font-weight: 800; display: flex; align-items: center; gap: 10px; color: var(--text-main);">
+          <i data-lucide="bell" style="color: var(--accent-rose);"></i> Exam Notifications & Release Radar
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+          Live tracking for IBPS SO IT Officer official notices, admit cards, exam schedules, and mock releases.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span class="status-badge-server" style="background: rgba(251, 113, 133, 0.1); border-color: rgba(251, 113, 133, 0.3); color: var(--accent-rose);">
+          <i data-lucide="radio" size="14"></i> Live Scanner Active
+        </span>
+      </div>
+    </div>
+
+    <!-- Notification Filter Bar -->
+    <div class="notif-filter-bar">
+      <span class="chip active" onclick="filterNotifs('all', this)">All Notices (4)</span>
+      <span class="chip" onclick="filterNotifs('official', this)">Official IBPS Releases (2)</span>
+      <span class="chip" onclick="filterNotifs('admit-card', this)">Admit Card Radar (1)</span>
+      <span class="chip" onclick="filterNotifs('mock-release', this)">Mock Papers (1)</span>
+    </div>
+
+    <div class="notif-board">
+      <!-- Notification Card 1 -->
+      <article class="glass-card notif-card official" data-category="official">
+        <div class="notif-card-header">
+          <span class="notif-category official"><i data-lucide="alert-circle" size="13"></i> Official IBPS Advisory</span>
+          <span class="notif-time">Updated 2 days ago • ibps.in</span>
+        </div>
+        <h3 class="notif-title">IBPS SO (Scale-I) IT Officer Mains 2026: Official Examination Structure Confirmed</h3>
+        <p class="notif-body">
+          The Institute of Banking Personnel Selection has issued the confirmed pattern for Phase-II Mains. The Professional Knowledge assessment comprises <strong>60 Questions for 60 Marks</strong> with a strictly enforced time limit of <strong>45 minutes</strong>. A negative penalty of <strong>0.25 marks</strong> is deducted for each incorrect answer. Bilingual delivery in English and Hindi will be active across all authorized TCS iON venues.
+        </p>
+        <div class="notif-actions">
+          <a href="https://www.ibps.in" target="_blank" class="btn btn-secondary" style="font-size: 0.84rem; padding: 7px 16px;">
+            <i data-lucide="external-link" size="14"></i> Official IBPS Portal
+          </a>
+          <button class="btn btn-secondary" style="font-size: 0.84rem; padding: 7px 16px;" onclick="switchTab('quizzes')">
+            <i data-lucide="book-open" size="14"></i> Practice Matching Mocks
+          </button>
+        </div>
+      </article>
+
+      <!-- Notification Card 2 -->
+      <article class="glass-card notif-card admit-card" data-category="admit-card">
+        <div class="notif-card-header">
+          <span class="notif-category admit-card"><i data-lucide="file-text" size="13"></i> Call Letter Radar</span>
+          <span class="notif-time">Active Window Monitoring</span>
+        </div>
+        <h3 class="notif-title">Phase-II Mains Call Letter & Venue Allocation Window Approaching</h3>
+        <p class="notif-body">
+          Admit cards for Phase-II Mains are scheduled for release 10 to 14 days before the exam date. Keep your Registration Number, Roll Number, and Password / Date of Birth (DD-MM-YY format) accessible. ExamMatrix automated monitoring will broadcast immediate alerts once the direct download gateway goes live on the official server.
+        </p>
+        <div class="notif-actions">
+          <span style="font-size: 0.85rem; color: var(--accent-amber); display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="clock" size="14"></i> Direct Download Link will populate here automatically
+          </span>
+        </div>
+      </article>
+
+      <!-- Notification Card 3 -->
+      <article class="glass-card notif-card mock-release" data-category="mock-release">
+        <div class="notif-card-header">
+          <span class="notif-category mock-release"><i data-lucide="sparkles" size="13"></i> Content Release</span>
+          <span class="notif-time">Latest System Update</span>
+        </div>
+        <h3 class="notif-title">Full 17-Day Mock Test Ledger with Dynamic TCS iON Player Active</h3>
+        <p class="notif-body">
+          All 17 daily full-length mock papers (850 total Professional Knowledge questions) are synchronized with Cloud Firestore. Featuring high-yield coverage across Database Management, Computer Networks, Operating Systems, Data Structures, Software Engineering, and Web Technologies with KaTeX mathematical formatting and real-time cloud autosaves.
+        </p>
+        <div class="notif-actions">
+          <button class="btn btn-play" style="width: auto; padding: 7px 18px; font-size: 0.84rem;" onclick="switchTab('quizzes')">
+            <i data-lucide="play" size="14"></i> Explore 17 Mock Papers
+          </button>
+        </div>
+      </article>
+
+      <!-- Notification Card 4 -->
+      <article class="glass-card notif-card advisory" data-category="official">
+        <div class="notif-card-header">
+          <span class="notif-category advisory"><i data-lucide="trending-up" size="13"></i> High-Yield Syllabus Focus</span>
+          <span class="notif-time">ExamMatrix Curriculum Radar</span>
+        </div>
+        <h3 class="notif-title">High-Weightage Banking IT Trends: Information Security & Cloud Infrastructure</h3>
+        <p class="notif-body">
+          Analysis of recent Specialist Officer exam cycles indicates elevated weightage for Cloud Computing (IaaS/PaaS/SaaS architectures), Cryptography (RSA, AES, Digital Certificates, PKI), and Network Firewalls. Candidates are advised to prioritize these high-yield topics alongside classical Relational Normalization and SQL subqueries.
+        </p>
+        <div class="notif-actions">
+          <button class="btn btn-secondary" style="font-size: 0.84rem; padding: 7px 16px;" onclick="switchTab('drills')">
+            <i data-lucide="crosshair" size="14"></i> Launch Topic Drills
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- ==================== VIEW 5: COMMUNITY POSTS ==================== -->
+  <div id="view-posts" class="view-section">
+    <!-- Coming Soon Teaser Banner -->
+    <div class="coming-soon-banner">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(129, 140, 248, 0.15); border: 1px solid rgba(129, 140, 248, 0.35); display: flex; align-items: center; justify-content: center; color: var(--accent-indigo); font-size: 1.5rem; flex-shrink: 0;">
+          <i data-lucide="message-square"></i>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main);">Candidate Community & Doubts Feed</h3>
+            <span class="badge-tab-pill coming-soon">Phase 6 • Coming Soon</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.88rem; max-width: 680px;">
+            Post difficult MCQs, debate tricky answers, and share short IT notes 100% anonymously. Your author identity is your permanent Fruity Username (e.g. <strong id="preview-user-handle" style="color: var(--accent-emerald);">@fruity_candidate</strong>), keeping your real name and email completely private!
+          </p>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.88rem;" onclick="alert('You are registered! You will be notified the moment community posts go live.')">
+        <i data-lucide="bell" size="15"></i> Notify Me When Live
+      </button>
+    </div>
+
+    <div class="posts-container">
+      <!-- Post Composer Box (Disabled Teaser) -->
+      <div class="glass-card post-composer-card">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+          <div class="user-avatar-circle" id="composer-user-avatar" style="width: 36px; height: 36px; font-size: 1.2rem;">🥭</div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);" id="composer-username">Candidate</div>
+            <div style="font-size: 0.75rem; color: var(--accent-emerald);">Publishing with anonymous Fruity identity</div>
+          </div>
+        </div>
+
+        <textarea placeholder="Ask an IT Officer question, share an exam shortcut, or discuss a mock test doubt..." style="width: 100%; height: 85px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: 10px; padding: 12px 14px; color: var(--text-main); font-size: 0.9rem; resize: none; margin-bottom: 12px;" disabled></textarea>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; gap: 8px;">
+            <span class="post-tag">#DBMS</span>
+            <span class="post-tag">#Networking</span>
+            <span class="post-tag">#OperatingSystems</span>
+            <span class="post-tag">#SQL</span>
+          </div>
+
+          <button class="btn btn-secondary" style="opacity: 0.6; cursor: not-allowed; font-size: 0.85rem; padding: 8px 18px;" disabled>
+            <i data-lucide="send" size="14"></i> Publish Post (Launching Soon)
+          </button>
+        </div>
+      </div>
+
+      <!-- Feed Preview Posts -->
+      <!-- Post 1 -->
+      <article class="glass-card post-card">
+        <div class="post-card-header">
+          <div class="post-author-box">
+            <div class="user-avatar-circle" style="background: rgba(245, 158, 11, 0.2); width: 36px; height: 36px;">🥭</div>
+            <div>
+              <div class="post-author-name">Velvet Mango #482</div>
+              <div class="post-author-handle">@velvet_mango_482 • IT Officer Aspirant</div>
+            </div>
+          </div>
+          <span class="post-time">2 hours ago</span>
+        </div>
+
+        <h4 class="post-title">Strict 2PL vs Rigorous 2PL: Crucial Distinction for Cascading Aborts</h4>
+        <p class="post-content">
+          Saw a tricky question in Day 3 Mock Q34 regarding Concurrency Control protocols:
+          <br><br>
+          • <strong>Strict 2PL</strong>: Holds all <em>exclusive (write)</em> locks until commit/abort. This guarantees strict schedules and <strong>prevents cascading rollbacks</strong> completely!
+          <br>
+          • <strong>Rigorous 2PL</strong>: Holds <em>BOTH shared (read) and exclusive (write)</em> locks until commit. Produces strict serializability where transaction commit order equals serialization order.
+          <br><br>
+          Quick mnemonic: "Strict locks Writes; Rigorous locks Both." Don't lose 0.50 marks on this in Mains!
+        </p>
+
+        <div class="post-tag-group">
+          <span class="post-tag">#DBMS</span>
+          <span class="post-tag">#ConcurrencyControl</span>
+          <span class="post-tag">#HighYieldNotes</span>
+        </div>
+
+        <div class="post-footer">
+          <div class="post-actions-group">
+            <button class="post-action-btn" onclick="alert('Social upvoting active in Phase 6!')"><i data-lucide="arrow-big-up" size="16"></i> 38 Upvotes</button>
+            <button class="post-action-btn" onclick="alert('Discussion threads active in Phase 6!')"><i data-lucide="message-circle" size="16"></i> 9 Explanations</button>
+          </div>
+          <button class="post-action-btn"><i data-lucide="bookmark" size="15"></i> Save Note</button>
+        </div>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="glass-card post-card">
+        <div class="post-card-header">
+          <div class="post-author-box">
+            <div class="user-avatar-circle" style="background: rgba(16, 185, 129, 0.2); width: 36px; height: 36px;">🥝</div>
+            <div>
+              <div class="post-author-name">Cosmic Kiwi #312</div>
+              <div class="post-author-handle">@cosmic_kiwi_312 • Scale-I Target</div>
+            </div>
+          </div>
+          <span class="post-time">5 hours ago</span>
+        </div>
+
+        <h4 class="post-title">Subnetting Shortcut: Finding Usable Host IP Range in /28 Subnet</h4>
+        <p class="post-content">
+          Given IP: <code>192.168.10.38/28</code>. What is the valid host range?
+          <br><br>
+          1. Host bits = 32 - 28 = 4 bits. Block size = 2^4 = <strong>16</strong>.
+          <br>
+          2. Multiples of 16 around 38: 0, 16, <strong>32</strong>, 48.
+          <br>
+          3. Network ID = <code>192.168.10.32</code>. Broadcast ID = <code>192.168.10.47</code>.
+          <br>
+          4. <strong>Usable Range</strong> = <code>192.168.10.33</code> to <code>192.168.10.46</code> (14 hosts).
+          <br><br>
+          Takes literally 15 seconds once you know the block size trick!
+        </p>
+
+        <div class="post-tag-group">
+          <span class="post-tag">#ComputerNetworks</span>
+          <span class="post-tag">#Subnetting</span>
+          <span class="post-tag">#SpeedTrick</span>
+        </div>
+
+        <div class="post-footer">
+          <div class="post-actions-group">
+            <button class="post-action-btn" onclick="alert('Social upvoting active in Phase 6!')"><i data-lucide="arrow-big-up" size="16"></i> 52 Upvotes</button>
+            <button class="post-action-btn" onclick="alert('Discussion threads active in Phase 6!')"><i data-lucide="message-circle" size="16"></i> 14 Explanations</button>
+          </div>
+          <button class="post-action-btn"><i data-lucide="bookmark" size="15"></i> Save Note</button>
+        </div>
+      </article>
+
+      <!-- Post 3 -->
+      <article class="glass-card post-card">
+        <div class="post-card-header">
+          <div class="post-author-box">
+            <div class="user-avatar-circle" style="background: rgba(249, 115, 22, 0.2); width: 36px; height: 36px;">🍈</div>
+            <div>
+              <div class="post-author-name">Radiant Guava #518</div>
+              <div class="post-author-handle">@radiant_guava_518 • Mains Strategist</div>
+            </div>
+          </div>
+          <span class="post-time">1 day ago</span>
+        </div>
+
+        <h4 class="post-title">My 3-Round Strategy for 50 Questions in 40 Minutes</h4>
+        <p class="post-content">
+          After giving 6 mocks on ExamMatrix, my score improved from 42 to 67.5 by eliminating blind guessing:
+          <br><br>
+          • <strong>Round 1 (0 to 18 min)</strong>: Answer direct memory/concept questions (OS scheduling names, software models, basic SQL commands). Mark tricky ones for review.
+          <br>
+          • <strong>Round 2 (18 to 32 min)</strong>: Solve mathematical/algorithmic problems (Subnetting, Dijkstra iterations, Normalization candidate keys).
+          <br>
+          • <strong>Round 3 (32 to 40 min)</strong>: Review 50/50 marked questions. If you cannot logically eliminate 2 options, <strong>SKIP IT</strong>. A skipped question costs 0, a wrong guess costs 0.50!
+        </p>
+
+        <div class="post-tag-group">
+          <span class="post-tag">#Strategy</span>
+          <span class="post-tag">#NegativeMarking</span>
+          <span class="post-tag">#IBPS_SO</span>
+        </div>
+
+        <div class="post-footer">
+          <div class="post-actions-group">
+            <button class="post-action-btn" onclick="alert('Social upvoting active in Phase 6!')"><i data-lucide="arrow-big-up" size="16"></i> 64 Upvotes</button>
+            <button class="post-action-btn" onclick="alert('Discussion threads active in Phase 6!')"><i data-lucide="message-circle" size="16"></i> 21 Explanations</button>
+          </div>
+          <button class="post-action-btn"><i data-lucide="bookmark" size="15"></i> Save Note</button>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- ==================== VIEW 6: GROUP CHATS ==================== -->
+  <div id="view-chats" class="view-section">
+    <!-- Coming Soon Teaser Banner -->
+    <div class="coming-soon-banner">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.35); display: flex; align-items: center; justify-content: center; color: var(--accent-emerald); font-size: 1.5rem; flex-shrink: 0;">
+          <i data-lucide="users"></i>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main);">Anonymous Peer Study Groups</h3>
+            <span class="badge-tab-pill coming-soon">Phase 6 • Coming Soon</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.88rem; max-width: 680px;">
+            Collaborate in live study rooms, solve daily speed drills together, and clarify doubts in real-time. Full anonymity guaranteed through your assigned Fruity persona!
+          </p>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.88rem;" onclick="alert('You are registered for early study room beta access!')">
+        <i data-lucide="user-plus" size="15"></i> Join Room Beta Waitlist
+      </button>
+    </div>
+
+    <!-- Active Study Rooms Grid -->
+    <div class="chat-rooms-grid">
+      <div class="glass-card chat-room-card" onclick="alert('Study room launching in Phase 6!')">
+        <div class="chat-room-header">
+          <span class="chat-room-icon">🛡️</span>
+          <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> 34 Online</span>
+        </div>
+        <h4 class="chat-room-title">IT Core Specialists</h4>
+        <p class="chat-room-desc">DBMS Normalization, OS Deadlocks, TCP/IP congestion, and Data Structure complexities.</p>
+        <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
+      </div>
+
+      <div class="glass-card chat-room-card" onclick="alert('Study room launching in Phase 6!')">
+        <div class="chat-room-header">
+          <span class="chat-room-icon">⚡</span>
+          <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> 21 Online</span>
+        </div>
+        <h4 class="chat-room-title">Speed Optimization Squad</h4>
+        <p class="chat-room-desc">Targeting 48s per question. Rapid elimination techniques and negative marking reduction.</p>
+        <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
+      </div>
+
+      <div class="glass-card chat-room-card" onclick="alert('Study room launching in Phase 6!')">
+        <div class="chat-room-header">
+          <span class="chat-room-icon">🎯</span>
+          <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> 28 Online</span>
+        </div>
+        <h4 class="chat-room-title">Daily Doubt Clearance</h4>
+        <p class="chat-room-desc">Post tricky questions from today's mock tests and get instant peer breakdowns.</p>
+        <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
+      </div>
+
+      <div class="glass-card chat-room-card" onclick="alert('Study room launching in Phase 6!')">
+        <div class="chat-room-header">
+          <span class="chat-room-icon">📢</span>
+          <span class="chat-room-badge"><i data-lucide="radio" size="12"></i> 47 Online</span>
+        </div>
+        <h4 class="chat-room-title">IBPS SO Intel & Vacancies</h4>
+        <p class="chat-room-desc">Discuss vacancy updates, previous year cutoffs, bank preferences, and exam logistics.</p>
+        <button class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 7px;">Preview Room</button>
+      </div>
+    </div>
+
+    <!-- Live Chat Mock Preview -->
+    <div style="margin-bottom: 12px;">
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="terminal" size="18" style="color: var(--accent-cyan);"></i> Study Room Live Feed Preview (IT Core Specialists)
+      </h3>
+    </div>
+
+    <div class="chat-preview-feed">
+      <div class="chat-bubble">
+        <div class="user-avatar-circle" style="background: rgba(245, 158, 11, 0.2); width: 32px; height: 32px; font-size: 1rem;">🥭</div>
+        <div class="chat-bubble-content">
+          <div class="chat-bubble-author">Velvet Mango #482 <span style="color: var(--text-muted); font-weight: 400; font-size: 0.72rem;">11:15 AM</span></div>
+          <div class="chat-bubble-text">Hey guys, why does Dijkstra algorithm fail on graphs with negative edge weights even if there are no negative cycles?</div>
+        </div>
+      </div>
+
+      <div class="chat-bubble">
+        <div class="user-avatar-circle" style="background: rgba(16, 185, 129, 0.2); width: 32px; height: 32px; font-size: 1rem;">🥝</div>
+        <div class="chat-bubble-content">
+          <div class="chat-bubble-author">Cosmic Kiwi #312 <span style="color: var(--text-muted); font-weight: 400; font-size: 0.72rem;">11:17 AM</span></div>
+          <div class="chat-bubble-text">Because Dijkstra follows a Greedy approach: once a vertex is marked visited and added to the finalized set, it assumes its shortest distance is permanent and never relaxes its edges again. A negative edge later can invalidate that assumption!</div>
+        </div>
+      </div>
+
+      <div class="chat-bubble">
+        <div class="user-avatar-circle" style="background: rgba(249, 115, 22, 0.2); width: 32px; height: 32px; font-size: 1rem;">🍈</div>
+        <div class="chat-bubble-content">
+          <div class="chat-bubble-author">Radiant Guava #518 <span style="color: var(--text-muted); font-weight: 400; font-size: 0.72rem;">11:19 AM</span></div>
+          <div class="chat-bubble-text">Exactly! Bellman-Ford on the other hand relaxes all edges |V| - 1 times, which is why it can handle negative edges in O(VE) time. Very common direct MCQ!</div>
+        </div>
+      </div>
+
+      <!-- Chat Input Mock (Disabled) -->
+      <div style="display: flex; gap: 10px; margin-top: 8px;">
+        <input type="text" placeholder="Type a message as your anonymous fruity persona..." style="flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border-light); border-radius: 8px; padding: 10px 14px; color: var(--text-main); font-size: 0.88rem;" disabled>
+        <button class="btn btn-secondary" style="opacity: 0.6; cursor: not-allowed; font-size: 0.85rem;" disabled>
+          <i data-lucide="send" size="14"></i> Send
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer>
     <div class="footer-left">
@@ -807,8 +1618,11 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(`tab-${tabId}`).classList.add('active');
-      document.getElementById(`view-${tabId}`).classList.add('active');
+      const tabBtn = document.getElementById(`tab-${tabId}`);
+      const viewSec = document.getElementById(`view-${tabId}`);
+      if (tabBtn) tabBtn.classList.add('active');
+      if (viewSec) viewSec.classList.add('active');
+      lucide.createIcons();
     }
 
     window.onload = async () => {
@@ -899,6 +1713,14 @@
           </div>
         </div>
       `;
+
+      const composerAvatar = document.getElementById('composer-user-avatar');
+      const composerName = document.getElementById('composer-username');
+      const previewHandle = document.getElementById('preview-user-handle');
+      if (composerAvatar) composerAvatar.innerText = emoji;
+      if (composerName) composerName.innerText = username;
+      if (previewHandle) previewHandle.innerText = handle;
+
       lucide.createIcons();
     }
 
@@ -1359,8 +2181,31 @@
       const tableBody = document.getElementById('history-rows');
       tableBody.innerHTML = '';
 
+      const readinessEl = document.getElementById('readiness-index-val');
+      const readinessSubEl = document.getElementById('readiness-level-text');
+      const diagValEl = document.getElementById('diagnostic-topic-val');
+      const diagSubEl = document.getElementById('diagnostic-action-text');
+      const btnFixTopic = document.getElementById('btn-fix-weak-topic');
+      const streakValEl = document.getElementById('streak-counter-val');
+      const streakSubEl = document.getElementById('streak-sub-text');
+
       if (results.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="inbox"></i><h3>No Attempt History Recorded</h3></div></td></tr>`;
+        document.getElementById('kpi-total').textContent = 0;
+        document.getElementById('kpi-avg').textContent = "0.00";
+        document.getElementById('kpi-high').textContent = 0;
+        document.getElementById('kpi-questions').textContent = 0;
+
+        if (readinessEl) readinessEl.innerHTML = `0% <span style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted);">index</span>`;
+        if (readinessSubEl) readinessSubEl.innerText = "Awaiting first mock attempt";
+        if (diagValEl) {
+          diagValEl.innerText = "None Detected";
+          diagValEl.style.color = "var(--accent-rose)";
+        }
+        if (diagSubEl) diagSubEl.innerText = "Solve mocks to identify knowledge leaks";
+        if (btnFixTopic) btnFixTopic.style.display = 'none';
+        if (streakValEl) streakValEl.innerHTML = `Active <span style="font-size: 0.82rem; color: var(--accent-emerald);">🔥</span>`;
+        if (streakSubEl) streakSubEl.innerText = "Consistency is key to cracking Mains";
         return;
       }
 
@@ -1408,9 +2253,82 @@
       document.getElementById('kpi-high').textContent = parseFloat(highestScoreVal.toFixed(2));
       document.getElementById('kpi-questions').textContent = totalCorrect;
 
+      // Deep Diagnostics & Readiness Calculation
+      let weakestTopicName = '';
+      let weakestTopicAcc = 100;
+      let weakestMissedCount = 0;
+
+      Object.entries(topicMastery).forEach(([topic, stats]) => {
+        if (stats.total >= 1) {
+          const acc = Math.round((stats.correct / stats.total) * 100);
+          const missed = stats.total - stats.correct;
+          if (acc < weakestTopicAcc || (acc === weakestTopicAcc && missed > weakestMissedCount)) {
+            weakestTopicAcc = acc;
+            weakestTopicName = topic;
+            weakestMissedCount = missed;
+          }
+        }
+      });
+
+      const overallAcc = (totalCorrect + totalIncorrect) > 0 ? Math.round((totalCorrect / (totalCorrect + totalIncorrect)) * 100) : 0;
+      const normalizedScore = Math.min(100, Math.round(parseFloat(avgScore)));
+      const readinessPct = Math.min(99, Math.round((overallAcc * 0.45) + (normalizedScore * 0.45) + Math.min(10, totalQuizzes * 2)));
+
+      if (readinessEl) readinessEl.innerHTML = `${readinessPct}% <span style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted);">index</span>`;
+      if (readinessSubEl) {
+        if (readinessPct >= 75) readinessSubEl.innerText = "🎯 Safe Interview Shortlist Zone";
+        else if (readinessPct >= 55) readinessSubEl.innerText = "⚡ Cutoff Clearing Trajectory";
+        else readinessSubEl.innerText = "📈 Foundational Practice Required";
+      }
+
+      if (streakValEl) streakValEl.innerHTML = `${totalQuizzes} Mock${totalQuizzes > 1 ? 's' : ''} <span style="font-size: 0.82rem; color: var(--accent-emerald);">🔥</span>`;
+      if (streakSubEl) streakSubEl.innerText = `${totalCorrect} questions answered correctly`;
+
+      if (weakestTopicName && weakestTopicAcc < 75) {
+        if (diagValEl) {
+          diagValEl.innerText = weakestTopicName;
+          diagValEl.style.color = "var(--accent-rose)";
+        }
+        if (diagSubEl) diagSubEl.innerText = `${weakestTopicAcc}% Accuracy (${weakestMissedCount} missed)`;
+        if (btnFixTopic) {
+          btnFixTopic.style.display = 'inline-flex';
+          btnFixTopic.dataset.topic = weakestTopicName;
+        }
+      } else {
+        if (diagValEl) {
+          diagValEl.innerText = "Strong Balance";
+          diagValEl.style.color = "var(--accent-emerald)";
+        }
+        if (diagSubEl) diagSubEl.innerText = "All attempted topics above 75% accuracy";
+        if (btnFixTopic) btnFixTopic.style.display = 'none';
+      }
+
       renderTrendChart(labels, scorePercentages);
       renderAccuracyChart(totalCorrect, totalIncorrect, totalUnattempted);
       renderTopicChart(topicMastery);
+    }
+
+    function launchWeakTopicFix() {
+      const btn = document.getElementById('btn-fix-weak-topic');
+      const topic = btn ? btn.dataset.topic : '';
+      if (topic) {
+        launchTopicDrill(encodeURIComponent(topic));
+      } else {
+        switchTab('drills');
+      }
+    }
+
+    function filterNotifs(category, el) {
+      document.querySelectorAll('.notif-filter-bar .chip').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      const cards = document.querySelectorAll('.notif-card');
+      cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     }
 
     function renderTrendChart(labels, scores) {
