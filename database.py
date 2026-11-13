@@ -112,9 +112,11 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    google_id = Column(String(100), unique=True, nullable=True)
-    email = Column(String(150), unique=True, nullable=False)
-    anonymous_name = Column(String(100), unique=True, nullable=False)
+    google_id = Column(String(100), unique=True, nullable=True, index=True)
+    email = Column(String(150), unique=True, nullable=False) # strictly private for authentication
+    username = Column(String(100), unique=True, nullable=False, index=True) # Public unique fruity username
+    handle = Column(String(100), unique=True, nullable=True, index=True) # e.g. @velvet_mango_482 for social mentions
+    anonymous_name = Column(String(100), unique=True, nullable=True) # backwards compatibility alias
     fruit_emoji = Column(String(10), default="🥭")
     avatar_color = Column(String(30), default="#10b981")
     is_admin = Column(Boolean, default=False)
@@ -124,9 +126,13 @@ class User(Base):
     attempts = relationship("Attempt", back_populates="user")
 
     def to_dict(self, include_private=False):
+        name = self.username or self.anonymous_name or f"Candidate #{self.id}"
+        handle = self.handle or f"@{name.lower().replace(' ', '_').replace('#', '')}"
         data = {
             "id": self.id,
-            "anonymousName": self.anonymous_name,
+            "username": name,
+            "handle": handle,
+            "anonymousName": name,
             "fruitEmoji": self.fruit_emoji,
             "avatarColor": self.avatar_color,
             "isAdmin": bool(self.is_admin),
@@ -142,17 +148,20 @@ def generate_unique_fruity_name(session):
         fruit_name, emoji, color = random.choice(FRUITS)
         num = random.randint(100, 999)
         candidate_name = f"{adj} {fruit_name} #{num}"
+        handle = f"@{adj.lower()}_{fruit_name.lower()}_{num}"
         
-        existing = session.query(User).filter_by(anonymous_name=candidate_name).first()
+        existing = session.query(User).filter(
+            or_(User.username == candidate_name, User.anonymous_name == candidate_name)
+        ).first()
         if not existing:
-            return candidate_name, emoji, color
+            return candidate_name, handle, emoji, color
     suffix = int(time.time() % 10000)
-    return f"Cosmic Mango #{suffix}", "🥭", "#f59e0b"
+    return f"Cosmic Mango #{suffix}", f"@cosmic_mango_{suffix}", "🥭", "#f59e0b"
 
 def get_or_create_user(session, email, google_id=None, is_admin=False):
     """
-    Finds or creates a User with a unique anonymous fruity name.
-    Strictly preserves candidate anonymity.
+    Finds or creates a User with a unique anonymous fruity username and handle.
+    Strictly preserves candidate anonymity for social posting, leaderboards, and attempts.
     """
     user = session.query(User).filter_by(email=email).first()
     if not user and google_id:
@@ -165,15 +174,22 @@ def get_or_create_user(session, email, google_id=None, is_admin=False):
             user.google_id = google_id
         if is_admin:
             user.is_admin = True
+        if not user.username:
+            user.username = user.anonymous_name or f"Candidate #{user.id}"
+        if not user.handle:
+            clean = user.username.lower().replace(' ', '_').replace('#', '')
+            user.handle = f"@{clean}"
         session.commit()
         return user
 
-    # Generate unique fruity name
-    anon_name, emoji, color = generate_unique_fruity_name(session)
+    # Generate unique fruity username
+    username, handle, emoji, color = generate_unique_fruity_name(session)
     user = User(
         email=email,
         google_id=google_id,
-        anonymous_name=anon_name,
+        username=username,
+        handle=handle,
+        anonymous_name=username,
         fruit_emoji=emoji,
         avatar_color=color,
         is_admin=is_admin,
@@ -250,8 +266,10 @@ class Attempt(Base):
             "playableMistakes": playable_mistakes,
             "userAnswersArray": user_answers,
             "userId": self.user_id,
+            "username": (self.user.username or self.user.anonymous_name) if self.user else None,
+            "userHandle": self.user.handle if self.user else None,
             "userFruitEmoji": self.user.fruit_emoji if self.user else None,
-            "userAnonymousName": self.user.anonymous_name if self.user else None
+            "userAnonymousName": (self.user.username or self.user.anonymous_name) if self.user else None
         }
 
 class SiteMetric(Base):
@@ -630,7 +648,32 @@ def ensure_schema():
             attempt_cols = [row[1] for row in cursor.fetchall()]
             if 'user_id' not in attempt_cols:
                 cursor.execute("ALTER TABLE attempts ADD COLUMN user_id INTEGER REFERENCES users(id);")
-                conn.connection.commit()
+
+            cursor.execute("PRAGMA table_info(users);")
+            user_cols = [row[1] for row in cursor.fetchall()]
+            if user_cols:
+                if 'username' not in user_cols:
+                    cursor.execute("ALTER TABLE users ADD COLUMN username VARCHAR(100);")
+                if 'handle' not in user_cols:
+                    cursor.execute("ALTER TABLE users ADD COLUMN handle VARCHAR(100);")
+            conn.connection.commit()
+            
+        # Backfill existing users with username & handle if null
+        session = db_session()
+        try:
+            existing_users = session.query(User).all()
+            for u in existing_users:
+                if not u.username:
+                    u.username = u.anonymous_name or f"Candidate #{u.id}"
+                if not u.handle:
+                    clean = u.username.lower().replace(' ', '_').replace('#', '')
+                    u.handle = f"@{clean}"
+            session.commit()
+        except Exception:
+            session.rollback()
+        finally:
+            session.close()
+
     except Exception as e:
         print(f"Schema check error: {e}")
 
