@@ -104,6 +104,27 @@
       border-color: var(--border-hover);
       transform: translateY(-2px);
     }
+
+    /* Phase 4: Cutoff Predictor & Topic Drills Styles */
+    .cutoff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
+    .cutoff-metric-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .cutoff-metric-label { font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; }
+    .cutoff-metric-val { font-size: 1.8rem; font-weight: 700; line-height: 1.1; }
+    .cutoff-metric-sub { font-size: 0.8rem; color: var(--text-muted); }
+    .cutoff-advice-box { background: rgba(34, 211, 238, 0.08); border: 1px solid rgba(34, 211, 238, 0.25); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: #e2e8f0; line-height: 1.5; }
+    
+    .section-title-bar { margin-bottom: 16px; margin-top: 24px; }
+    .section-title-bar h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    
+    .drill-card { padding: 20px; display: flex; flex-direction: column; justify-content: space-between; min-height: 190px; }
+    .drill-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .drill-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); line-height: 1.3; }
+    .drill-progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin: 10px 0 14px; }
+    .drill-progress-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+    
+    .badge-mastered { background: rgba(52, 211, 153, 0.15); color: var(--accent-emerald); border: 1px solid rgba(52, 211, 153, 0.3); }
+    .badge-moderate { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.3); }
+    .badge-needs-drill { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); border: 1px solid rgba(251, 113, 133, 0.3); }
   </style>
 
 </head>
@@ -152,6 +173,50 @@
       </div>
     </div>
     <!-- END UPDATED HEADER -->
+
+    <!-- IBPS SO CUTOFF & INTELLIGENCE PREDICTOR CARD -->
+    <section class="glass-card cutoff-container" style="margin-bottom: 28px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
+        <div class="chart-header" style="margin-bottom: 0;">
+          <i data-lucide="shield-check" style="color: var(--accent-amber)"></i> IBPS SO Scale-I Cutoff & Standing Predictor
+        </div>
+        <div id="cutoff-status-badge" class="badge badge-warning" style="font-size: 0.85rem; padding: 6px 14px;">
+          Calculating...
+        </div>
+      </div>
+
+      <div class="cutoff-grid">
+        <div class="cutoff-metric-box">
+          <span class="cutoff-metric-label">Historical Cutoff Benchmark</span>
+          <div class="cutoff-metric-val" style="color: #cbd5e1;">65.00 <span style="font-size: 0.95rem; color: var(--text-muted);">/ 100</span></div>
+          <span class="cutoff-metric-sub">Interview Merit Shortlist Target</span>
+        </div>
+
+        <div class="cutoff-metric-box">
+          <span class="cutoff-metric-label">Your Average Mock Score</span>
+          <div class="cutoff-metric-val" id="cutoff-avg-score" style="color: var(--accent-cyan);">0.00 <span style="font-size: 0.95rem; color: var(--text-muted);">/ 100</span></div>
+          <span class="cutoff-metric-sub" id="cutoff-delta">0.0 to target</span>
+        </div>
+
+        <div class="cutoff-metric-box">
+          <span class="cutoff-metric-label">Negative Marking Loss</span>
+          <div class="cutoff-metric-val" id="cutoff-neg-loss" style="color: var(--accent-rose);">-0.00 <span style="font-size: 0.95rem; color: var(--text-muted);">marks</span></div>
+          <span class="cutoff-metric-sub" id="cutoff-neg-avg">~0.0 lost per test</span>
+        </div>
+
+        <div class="cutoff-metric-box">
+          <span class="cutoff-metric-label">Average Question Pace</span>
+          <div class="cutoff-metric-val" id="cutoff-pacing" style="color: var(--accent-emerald);">0.0s <span style="font-size: 0.95rem; color: var(--text-muted);">/ question</span></div>
+          <span class="cutoff-metric-sub">Target Pace: 48.0s (50Q/40m)</span>
+        </div>
+      </div>
+
+      <div class="cutoff-advice-box" id="cutoff-advice">
+        <i data-lucide="info" size="18" style="color: var(--accent-cyan); flex-shrink: 0;"></i>
+        <span id="cutoff-advice-text">Complete mock tests to calculate your real-time IBPS SO cutoff probability.</span>
+      </div>
+    </section>
+
     <section class="kpi-grid">
       <div class="glass-card kpi-card"><span class="kpi-title"><i data-lucide="target"></i> Quizzes Attempted</span><div class="kpi-value" id="kpi-total">0</div></div>
       <div class="glass-card kpi-card"><span class="kpi-title"><i data-lucide="bar-chart-2"></i> Average Score</span><div class="kpi-value" id="kpi-avg" style="color: var(--accent-cyan);">0%</div></div>
@@ -176,8 +241,48 @@
 
   <!-- QUIZ HUB VIEW -->
   <div id="view-quizzes" class="view-section">
+    
+    <!-- SECTION 1: ADAPTIVE REVISION MOCK -->
+    <div class="section-title-bar">
+      <h2><i data-lucide="brain" style="color: var(--accent-indigo)"></i> Adaptive Spaced Repetition Mock</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Auto-generates questions you missed or skipped in previous tests using the Leitner 5-box algorithm.</p>
+    </div>
+    
+    <div class="glass-card" style="margin-bottom: 32px; padding: 24px; border-left: 4px solid var(--accent-indigo);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <h3 style="font-size: 1.25rem; color: var(--text-main);">IT Officer Mains: Adaptive Revision Paper</h3>
+            <span class="badge badge-diff">Leitner Engine</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 650px;">
+            Targets vulnerable topics dynamically. Questions answered correctly advance to higher review intervals; failed questions return for immediate reinforcement.
+          </p>
+        </div>
+        <div>
+          <button class="btn btn-play" style="width: auto; padding: 12px 28px;" onclick="launchAdaptiveRevisionMock()">
+            <i data-lucide="zap"></i> Launch Adaptive Revision
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: TARGETED TOPIC DRILLS -->
+    <div class="section-title-bar">
+      <h2><i data-lucide="crosshair" style="color: var(--accent-cyan)"></i> High-Yield Topic Drills (15 Questions Each)</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Focused 15-question speed tests with instant answer keys to eliminate subject-specific weak spots.</p>
+    </div>
+    <div id="topic-drills-grid" class="quiz-grid" style="margin-bottom: 40px;">
+      <div class="empty-state" style="grid-column: 1 / -1;"><i data-lucide="loader"></i><h3>Loading Topic Drills...</h3></div>
+    </div>
+
+    <!-- SECTION 3: FULL DAILY MOCKS -->
+    <div class="section-title-bar">
+      <h2><i data-lucide="calendar" style="color: var(--accent-emerald)"></i> Full 50-Question Daily Mocks (Official Exam Pattern)</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Full 50-question mock exams timed for 40 minutes under official TCS iON exam rules.</p>
+    </div>
     <div id="quiz-grid" class="quiz-grid">
-      <div class="empty-state" style="grid-column: 1 / -1;"><i data-lucide="loader"></i><h3>Scanning Mock_Pages Folder...</h3></div>
+      <div class="empty-state" style="grid-column: 1 / -1;"><i data-lucide="loader"></i><h3>Scanning Mock Tests...</h3></div>
     </div>
   </div>
 <!-- FOOTER -->
@@ -222,43 +327,147 @@
     };
 
     async function loadDataFromBackend() {
-          try {
-            // Fetch Quizzes, Visitor Count, Database Attempts, AND GitHub Stars simultaneously
-            const [quizRes, visitorRes, attemptsRes, githubRes] = await Promise.all([
-              fetch('/api/quizzes'),
-              fetch('/api/visitors'),
-              fetch('/api/attempts').catch(() => null),
-              fetch('https://api.github.com/repos/mohitbhatt-du/My-Mock-App').catch(() => null)
-            ]);
-            
-            globalQuizzes = await quizRes.json();
-            const visitorData = await visitorRes.json();
-            document.getElementById('visitor-counter').innerText = visitorData.count;
-            
-            // Parse GitHub Stars if the request succeeded
-            if (githubRes && githubRes.ok) {
-              const repoData = await githubRes.json();
-              document.getElementById('star-counter').innerText = repoData.stargazers_count || 0;
-            } else {
-              document.getElementById('star-counter').innerText = '0';
-            }
-            
-            let dbAttempts = [];
-            if (attemptsRes && attemptsRes.ok) {
-              try { dbAttempts = await attemptsRes.json(); } catch(e) {}
-            }
-
-            // Load results merged from DB & LocalStorage
-            const results = loadMergedResults(dbAttempts);
-            
-            processDataAndRenderAnalytics(results);
-            renderQuizHub(globalQuizzes, results);
-          } catch (err) {
-            console.error("Backend connection failed.", err);
-            document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Connection Issue</h3></div></td></tr>`;
-            lucide.createIcons();
-          }
+      try {
+        // Fetch Quizzes, Visitor Count, Database Attempts, GitHub Stars, Cutoff Predictor, AND Topic Mastery
+        const [quizRes, visitorRes, attemptsRes, githubRes, cutoffRes, masteryRes] = await Promise.all([
+          fetch('/api/quizzes'),
+          fetch('/api/visitors'),
+          fetch('/api/attempts').catch(() => null),
+          fetch('https://api.github.com/repos/mohitbhatt-du/My-Mock-App').catch(() => null),
+          fetch('/api/analytics/cutoff-predictor').catch(() => null),
+          fetch('/api/topics/mastery').catch(() => null)
+        ]);
+        
+        globalQuizzes = await quizRes.json();
+        const visitorData = await visitorRes.json();
+        document.getElementById('visitor-counter').innerText = visitorData.count;
+        
+        // Parse GitHub Stars
+        if (githubRes && githubRes.ok) {
+          const repoData = await githubRes.json();
+          document.getElementById('star-counter').innerText = repoData.stargazers_count || 0;
+        } else {
+          document.getElementById('star-counter').innerText = '0';
         }
+        
+        let dbAttempts = [];
+        if (attemptsRes && attemptsRes.ok) {
+          try { dbAttempts = await attemptsRes.json(); } catch(e) {}
+        }
+
+        // Render Cutoff Predictor
+        if (cutoffRes && cutoffRes.ok) {
+          try {
+            const cutoffData = await cutoffRes.json();
+            renderCutoffPredictor(cutoffData);
+          } catch(e) {}
+        }
+
+        // Render Topic Drills
+        if (masteryRes && masteryRes.ok) {
+          try {
+            const masteryData = await masteryRes.json();
+            renderTopicDrills(masteryData);
+          } catch(e) {}
+        }
+
+        // Load results merged from DB & LocalStorage
+        const results = loadMergedResults(dbAttempts);
+        
+        processDataAndRenderAnalytics(results);
+        renderQuizHub(globalQuizzes, results);
+      } catch (err) {
+        console.error("Backend connection failed.", err);
+        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Connection Issue</h3></div></td></tr>`;
+        lucide.createIcons();
+      }
+    }
+
+    function renderCutoffPredictor(data) {
+      if (!data) return;
+      const statusEl = document.getElementById('cutoff-status-badge');
+      const avgScoreEl = document.getElementById('cutoff-avg-score');
+      const deltaEl = document.getElementById('cutoff-delta');
+      const negLossEl = document.getElementById('cutoff-neg-loss');
+      const negAvgEl = document.getElementById('cutoff-neg-avg');
+      const pacingEl = document.getElementById('cutoff-pacing');
+      const adviceEl = document.getElementById('cutoff-advice-text');
+
+      if (statusEl) {
+        statusEl.innerText = data.status;
+        statusEl.className = 'badge ' + (data.statusClass === 'status-green' ? 'badge-success' : (data.statusClass === 'status-amber' ? 'badge-warning' : 'badge-danger'));
+      }
+      if (avgScoreEl) avgScoreEl.innerHTML = `${data.averageScore.toFixed(2)} <span style="font-size: 0.95rem; color: var(--text-muted);">/ 100</span>`;
+      if (deltaEl) {
+        const diff = data.averageScore - data.targetCutoff;
+        deltaEl.innerText = diff >= 0 ? `+${diff.toFixed(2)} above target (65.0)` : `${diff.toFixed(2)} to target (65.0)`;
+        deltaEl.style.color = diff >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)';
+      }
+      if (negLossEl) negLossEl.innerHTML = `-${data.totalMarksLostToNegative.toFixed(2)} <span style="font-size: 0.95rem; color: var(--text-muted);">marks</span>`;
+      if (negAvgEl) negAvgEl.innerText = `~${data.avgNegativeLoss.toFixed(2)} lost per test`;
+      if (pacingEl) pacingEl.innerHTML = `${data.avgPacingSeconds}s <span style="font-size: 0.95rem; color: var(--text-muted);">/ question</span>`;
+      if (adviceEl) adviceEl.innerText = data.message;
+    }
+
+    function renderTopicDrills(topics) {
+      const container = document.getElementById('topic-drills-grid');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      if (!Array.isArray(topics) || topics.length === 0) {
+        container.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><p>No topic drills available.</p></div>`;
+        return;
+      }
+
+      topics.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'glass-card drill-card';
+        const fillWidth = Math.max(5, Math.min(100, t.accuracy || (t.seen > 0 ? 30 : 0)));
+        const fillColor = t.accuracy >= 75 ? 'var(--accent-emerald)' : (t.accuracy >= 50 ? 'var(--accent-amber)' : 'var(--accent-rose)');
+        
+        card.innerHTML = `
+          <div>
+            <div class="drill-header">
+              <div class="drill-title">${t.topic}</div>
+              <span class="badge ${t.badgeClass}">${t.mastery}</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between; margin-top: 4px;">
+              <span>Pool: <strong>${t.totalQuestions} Qs</strong></span>
+              <span>Accuracy: <strong style="color: ${fillColor}">${t.accuracy}%</strong></span>
+            </div>
+            <div class="drill-progress-bar">
+              <div class="drill-progress-fill" style="width: ${fillWidth}%; background: ${fillColor}"></div>
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
+              Attempted: ${t.attempted} &nbsp;|&nbsp; Correct: <span style="color: var(--accent-emerald)">${t.correct}</span> &nbsp;|&nbsp; Incorrect: <span style="color: var(--accent-rose)">${t.incorrect}</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary" style="font-size: 0.88rem; padding: 10px;" onclick="launchTopicDrill('${encodeURIComponent(t.topic)}')">
+            <i data-lucide="play"></i> Start 15-Q Drill
+          </button>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function launchTopicDrill(encodedTopic) {
+      const topic = decodeURIComponent(encodedTopic);
+      const playerUrl = `/player?quiz=drill&topic=${encodeURIComponent(topic)}&count=15`;
+      document.getElementById('quiz-iframe').src = playerUrl;
+      const overlay = document.getElementById('quiz-player-overlay');
+      overlay.style.display = 'flex'; overlay.style.opacity = '0';
+      setTimeout(() => overlay.style.opacity = '1', 50);
+      enterFullScreen();
+    }
+
+    function launchAdaptiveRevisionMock() {
+      document.getElementById('quiz-iframe').src = '/player?quiz=revision';
+      const overlay = document.getElementById('quiz-player-overlay');
+      overlay.style.display = 'flex'; overlay.style.opacity = '0';
+      setTimeout(() => overlay.style.opacity = '1', 50);
+      enterFullScreen();
+    }
 
     function loadMergedResults(dbAttempts = []) {
       const resultsMap = new Map();
@@ -290,36 +499,9 @@
       return merged;
     }
 
-
-
-function renderQuizHub(quizzes, results) {
+    function renderQuizHub(quizzes, results) {
       const grid = document.getElementById('quiz-grid');
       grid.innerHTML = '';
-
-      // === NEW: PINNED DYNAMIC REVISION CARD ===
-      const revisionCard = document.createElement('div');
-      revisionCard.className = 'glass-card quiz-launch-card';
-      revisionCard.style.borderColor = 'var(--accent-indigo)';
-      revisionCard.style.background = 'linear-gradient(145deg, rgba(30,41,59,0.4) 0%, rgba(15,23,42,0.8) 100%)';
-      revisionCard.innerHTML = `
-        <div>
-          <h3 style="color: var(--accent-indigo); display: flex; align-items: center; gap: 8px;">
-            <i data-lucide="refresh-cw"></i> Dynamic Revision Mock
-          </h3>
-          <div class="quiz-meta" style="margin-bottom: 10px;">
-            <span class="badge" style="background: rgba(129, 140, 248, 0.15); color: var(--accent-indigo); border: 1px solid rgba(129, 140, 248, 0.3);">Mistakes & Skipped</span>
-            <span class="badge badge-custom">Up to 50 Qs</span>
-          </div>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
-            Instantly generates a custom mock test pulling exclusively from your incorrect and unattempted questions across previous exams.
-          </p>
-        </div>
-        <button class="btn" style="background: var(--accent-indigo); color: #000; border: none;" onclick="generateAndLaunchRevision()">
-          <i data-lucide="zap"></i> Generate & Launch
-        </button>
-      `;
-      grid.appendChild(revisionCard);
-      // ==========================================
 
       if (quizzes.length === 0) {
         grid.innerHTML += `<div class="empty-state" style="grid-column: 1 / -1;"><i data-lucide="file-x"></i><h3>No Quizzes Found</h3><p>Add HTML files to your Mock_Pages folder.</p></div>`;
@@ -587,53 +769,7 @@ function renderQuizHub(quizzes, results) {
     }
 
     function generateAndLaunchRevision() {
-        let mistakePool = [];
-        
-        // 1. Gather all playable mistakes from local storage
-        for (let i = 0; i < localStorage.length; i++) {
-            let key = localStorage.key(i);
-            if (key.startsWith('quiz_result_day_')) {
-                try {
-                    let res = JSON.parse(localStorage.getItem(key));
-                    // We will inject this 'playableMistakes' array in Day 12 and beyond
-                    if (res.playableMistakes && res.playableMistakes.length > 0) {
-                        mistakePool = mistakePool.concat(res.playableMistakes);
-                    }
-                } catch(e) {}
-            }
-        }
-
-        // 2. Alert if the user hasn't generated any mistakes yet
-        if (mistakePool.length === 0) {
-            alert("No data yet! Complete Day 12 (or later) to start collecting incorrect and skipped questions for your revision pool.");
-            return;
-        }
-
-        // 3. Shuffle the pool of mistakes randomly
-        for (let i = mistakePool.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [mistakePool[i], mistakePool[j]] = [mistakePool[j], mistakePool[i]];
-        }
-
-        // 4. Cap at 50 questions
-        let finalSet = mistakePool.slice(0, 50);
-
-        // 5. Save the generated exam to memory
-        localStorage.setItem('active_revision_exam', JSON.stringify({
-            questions: finalSet,
-            generatedAt: new Date().toISOString()
-        }));
-
-        // 6. Launch the special player
-        const pt = document.getElementById('player-title');
-        if (pt) pt.innerText = "Dynamic Revision Mock";
-        document.getElementById('quiz-iframe').src = "/player?quiz=revision"; 
-        
-        const overlay = document.getElementById('quiz-player-overlay');
-        overlay.style.display = 'flex'; overlay.style.opacity = '0';
-        setTimeout(() => overlay.style.opacity = '1', 50);
-
-        enterFullScreen();
+      launchAdaptiveRevisionMock();
     }
   </script>
 </body>

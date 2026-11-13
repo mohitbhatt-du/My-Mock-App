@@ -1018,33 +1018,40 @@
 
     async function loadQuizDataAndInit() {
       try {
+        const urlParams = new URLSearchParams(window.location.search);
         if (quizId === 'revision') {
-          const savedRevision = localStorage.getItem('active_revision_exam');
-          if (!savedRevision) {
-            showGenericModal({
-              title: "Revision Mock Unavailable",
-              icon: "alert-triangle",
-              iconColor: "#dc2626",
-              message: "No active revision mock was found. Please generate one from the Dashboard first.",
-              confirmText: "Back to Dashboard",
-              confirmClass: "btn-confirm-submit",
-              onConfirm: () => {
-                returnToDashboard();
-              }
-            });
-            return;
+          // 1. Spaced Repetition Adaptive Revision Mock from Database
+          const res = await fetch('/api/quizzes/revision');
+          if (res.ok) {
+            quizData = await res.json();
+            questions = quizData.questions || [];
+          } else {
+            const savedRevision = localStorage.getItem('active_revision_exam');
+            if (savedRevision) {
+              const parsed = JSON.parse(savedRevision);
+              questions = parsed.questions || [];
+              quizData = {
+                id: 'revision',
+                day: 0,
+                title: 'IT Officer Mains: Adaptive Revision Mock',
+                difficulty: 'Adaptive',
+                tags: 'Spaced Repetition',
+                questions: questions
+              };
+            } else {
+              throw new Error("No revision mock available yet. Please attempt more mock tests first.");
+            }
           }
-          const parsed = JSON.parse(savedRevision);
-          questions = parsed.questions || [];
-          quizData = {
-            id: 'revision',
-            day: 'Revision',
-            title: 'IT Officer Mains: Dynamic Revision Mock',
-            difficulty: 'Adaptive',
-            tags: 'Mistakes & Skipped',
-            questions: questions
-          };
+        } else if (quizId.startsWith('drill')) {
+          // 2. Targeted Topic Drill Mode
+          const topicParam = urlParams.get('topic') || 'Database Systems';
+          const countParam = urlParams.get('count') || '15';
+          const res = await fetch(`/api/quizzes/drill?topic=${encodeURIComponent(topicParam)}&count=${countParam}`);
+          if (!res.ok) throw new Error("Could not generate topic drill");
+          quizData = await res.json();
+          questions = quizData.questions || [];
         } else {
+          // 3. Full Daily Mock Paper
           const res = await fetch(`/api/quizzes/${quizId}`);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           quizData = await res.json();
@@ -1523,18 +1530,21 @@
       let score = 0;
       let timeSpent = Math.max(0, (selectedTimeMinutes * 60) - timeRemaining);
 
-      // Server-Side Evaluation (Phase 2 Database Backed)
+      // Server-Side Evaluation (Database Backed)
       let serverEvaluated = false;
-      if (quizId !== 'revision') {
-        try {
-          const res = await fetch(`/api/quizzes/${quizId}/submit`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              answers: userAnswers,
-              timeTakenSeconds: timeSpent
-            })
-          });
+      try {
+        const qDbIds = questions.map(q => q.db_id || q.id);
+        const urlParams = new URLSearchParams(window.location.search);
+        const res = await fetch(`/api/quizzes/${quizId}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            answers: userAnswers,
+            questionDbIds: qDbIds,
+            drillTopic: urlParams.get('topic') || '',
+            timeTakenSeconds: timeSpent
+          })
+        });
           if (res.ok) {
             const serverData = await res.json();
             score = serverData.score;

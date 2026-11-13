@@ -2,7 +2,9 @@ from flask import Flask, jsonify, request, send_from_directory
 import os, json, re
 from datetime import datetime
 from database import (
-    init_db, db_session, Exam, Question, Attempt, SiteMetric, increment_visitors
+    init_db, db_session, Exam, Question, Attempt, SiteMetric, QuestionStat,
+    increment_visitors, record_question_stat, generate_revision_mock,
+    generate_topic_drill, get_topic_mastery_list, get_cutoff_prediction
 )
 
 app = Flask(__name__, static_folder='static')
@@ -52,6 +54,17 @@ def get_quiz_detail(quiz_id):
     
     session = db_session()
     try:
+        if clean_id == 'revision':
+            limit = int(request.args.get('limit', 50))
+            rev_mock = generate_revision_mock(session, limit=limit)
+            return jsonify(rev_mock)
+        
+        if clean_id.startswith('drill'):
+            topic = request.args.get('topic', 'Database Systems')
+            count = int(request.args.get('count', 15))
+            drill_mock = generate_topic_drill(session, topic, count=count)
+            return jsonify(drill_mock)
+
         exam = session.query(Exam).filter_by(id=clean_id).first()
         if not exam:
             # Fallback by day number
@@ -73,25 +86,49 @@ def submit_quiz_evaluation(quiz_id):
     clean_id = quiz_id.replace('.html', '').replace('.json', '').lower()
     payload = request.get_json(silent=True) or {}
     user_answers = payload.get('answers', []) # Array of 0-based option index or null
+    question_db_ids = payload.get('questionDbIds', []) # Optional list of Question.id for dynamic quizzes
     time_taken = payload.get('timeTakenSeconds', 0)
+    drill_topic = payload.get('drillTopic', '')
 
     session = db_session()
     try:
-        exam = session.query(Exam).filter_by(id=clean_id).first()
-        if not exam:
-            match = re.search(r'\d+', clean_id)
-            if match:
-                exam = session.query(Exam).filter_by(day=int(match.group())).first()
+        exam_title = ""
+        exam_day = 0
+        questions = []
 
-        if not exam:
-            return jsonify({"error": f"Exam '{quiz_id}' not found."}), 404
+        if question_db_ids:
+            # Dynamic revision or drill quiz with specific question IDs
+            questions = [session.query(Question).filter_by(id=qid).first() for qid in question_db_ids]
+            questions = [q for q in questions if q is not None]
+            if clean_id.startswith('drill'):
+                exam_title = f"Topic Drill: {drill_topic or 'Targeted Practice'}"
+            elif clean_id == 'revision':
+                exam_title = "IT Officer Mains: Adaptive Revision Mock"
+            else:
+                exam_title = payload.get('quizTitle', 'Custom Assessment')
+        else:
+            exam = session.query(Exam).filter_by(id=clean_id).first()
+            if not exam:
+                match = re.search(r'\d+', clean_id)
+                if match:
+                    exam = session.query(Exam).filter_by(day=int(match.group())).first()
 
-        questions = exam.questions
+            if not exam and clean_id == 'revision':
+                rev = generate_revision_mock(session, 50)
+                q_ids = [q['db_id'] for q in rev['questions']]
+                questions = [session.query(Question).filter_by(id=qid).first() for qid in q_ids]
+                exam_title = "IT Officer Mains: Adaptive Revision Mock"
+            elif exam:
+                questions = exam.questions
+                exam_title = exam.title
+                exam_day = exam.day
+            else:
+                return jsonify({"error": f"Exam '{quiz_id}' not found."}), 404
+
         total_q = len(questions)
 
         # Pad or slice user_answers
         if isinstance(user_answers, dict):
-            # Format: {"0": 1, "1": 3, ...}
             raw_answers = [None] * total_q
             for k, v in user_answers.items():
                 try:
@@ -125,7 +162,8 @@ def submit_quiz_evaluation(quiz_id):
             opts = json.loads(q.options_json)
 
             q_full_data = {
-                "id": q.q_num,
+                "id": idx + 1,
+                "db_id": q.id,
                 "topic": q.topic,
                 "text": q.text,
                 "options": opts,
@@ -133,7 +171,7 @@ def submit_quiz_evaluation(quiz_id):
                 "explanation": q.explanation
             }
             answer_keys.append({
-                "qNum": q.q_num,
+                "qNum": idx + 1,
                 "correct": q.correct,
                 "explanation": q.explanation
             })
@@ -143,9 +181,11 @@ def submit_quiz_evaluation(quiz_id):
                 topic_stats[topic]["skipped"] += 1
                 skipped_log.append({"qNum": idx + 1, "topic": topic, "text": q.text})
                 playable_mistakes.append(q_full_data)
+                record_question_stat(session, q.id, 'skipped')
             elif u_ans == q.correct:
                 correct_count += 1
                 topic_stats[topic]["correct"] += 1
+                record_question_stat(session, q.id, 'correct')
             else:
                 wrong_count += 1
                 topic_stats[topic]["wrong"] += 1
@@ -159,6 +199,7 @@ def submit_quiz_evaluation(quiz_id):
                     "correctAnswer": correct_ans_text
                 })
                 playable_mistakes.append(q_full_data)
+                record_question_stat(session, q.id, 'incorrect')
 
         # Official IBPS scoring: +2.0 for correct, -0.5 penalty for incorrect
         raw_score = (correct_count * 2.0) - (wrong_count * 0.5)
@@ -168,9 +209,9 @@ def submit_quiz_evaluation(quiz_id):
 
         # Persist Attempt in SQLite Database
         attempt = Attempt(
-            exam_id=exam.id,
-            exam_title=exam.title,
-            exam_day=exam.day,
+            exam_id=clean_id,
+            exam_title=exam_title,
+            exam_day=exam_day,
             score=score,
             correct_count=correct_count,
             incorrect_count=wrong_count,
@@ -196,6 +237,26 @@ def submit_quiz_evaluation(quiz_id):
         session.rollback()
         print(f"Error evaluating exam: {e}")
         return jsonify({"error": f"Evaluation error: {str(e)}"}), 500
+
+# API: Topic Mastery Analytics & Drill Directory
+@app.route('/api/topics/mastery', methods=['GET'])
+def get_topic_mastery():
+    session = db_session()
+    try:
+        data = get_topic_mastery_list(session)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify([]), 500
+
+# API: Cutoff Predictor & Exam Intelligence
+@app.route('/api/analytics/cutoff-predictor', methods=['GET'])
+def get_cutoff_analytics():
+    session = db_session()
+    try:
+        data = get_cutoff_prediction(session)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # API: Get All Attempts History (For Dashboard Persistence)
 @app.route('/api/attempts', methods=['GET', 'DELETE'])
