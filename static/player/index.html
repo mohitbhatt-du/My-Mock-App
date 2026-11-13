@@ -209,6 +209,113 @@
     .btn-prev { background: #ffffff; color: #374151; border-color: #d1d5db; }
     .btn-prev:hover { background: #f3f4f6; }
 
+    .btn-pause {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+    .btn-pause:hover {
+      background: rgba(255, 255, 255, 0.32);
+      border-color: #ffffff;
+    }
+    .btn-pause.paused {
+      background: #f59e0b;
+      color: #000000;
+      border-color: #d97706;
+    }
+
+    /* Pause Overlay Modal */
+    .pause-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(6px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pause-modal-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 32px 28px;
+      max-width: 440px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--tcs-border);
+    }
+    .pause-icon-circle {
+      width: 64px; height: 64px;
+      background: #eff6ff;
+      color: #2563eb;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .pause-modal-card h2 {
+      font-size: 1.4rem;
+      color: #1c355e;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .pause-modal-card p {
+      color: #64748b;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .pause-stats-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 22px;
+    }
+    .pause-stats-summary div span {
+      display: block;
+      font-size: 0.72rem;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .pause-stats-summary div strong {
+      font-size: 1.15rem;
+      color: #0f172a;
+    }
+    .btn-resume-modal {
+      background: #28a745;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .btn-resume-modal:hover {
+      background: #218838;
+    }
+
     /* Right Palette Panel */
     .tcs-palette-panel {
       background: #fdfdfd; padding: 16px; border-left: 1px solid var(--tcs-border);
@@ -359,6 +466,32 @@
 
   <div id="pdf-export-area" style="display:none;"></div>
 
+  <!-- Pause Modal Overlay -->
+  <div id="pause-modal" class="pause-modal" style="display: none;">
+    <div class="pause-modal-card">
+      <div class="pause-icon-circle">
+        <i data-lucide="pause-circle" size="44"></i>
+      </div>
+      <h2>Examination Paused</h2>
+      <p>The exam timer is temporarily paused. Question content is hidden during the break to preserve assessment integrity.</p>
+      
+      <div class="pause-stats-summary">
+        <div>
+          <span>Time Remaining</span>
+          <strong id="pause-time-left">40:00</strong>
+        </div>
+        <div>
+          <span>Current Position</span>
+          <strong id="pause-current-q">Question 1</strong>
+        </div>
+      </div>
+
+      <button class="btn-resume-modal" onclick="togglePause()">
+        <i data-lucide="play" size="18"></i> Resume Examination
+      </button>
+    </div>
+  </div>
+
   <!-- Setup Screen -->
   <div class="setup-screen" id="setup-screen">
     <div style="width: 56px; height: 56px; background: #eff6ff; color: #1d4ed8; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
@@ -413,6 +546,9 @@
           <span id="timer-text">40:00</span>
         </div>
 
+        <button class="tcs-btn btn-pause" id="btn-pause" onclick="togglePause()" title="Pause examination timer">
+          <i data-lucide="pause" size="14"></i> <span>Pause</span>
+        </button>
         <button class="tcs-btn btn-clear" style="padding: 6px 12px; font-size: 0.8rem;" onclick="exitQuiz()">Exit</button>
       </div>
     </header>
@@ -596,6 +732,58 @@
     let timeRemaining = 0;
     let timerInterval = null;
     let selectedTimeMinutes = 40; // Default Official Exam Time
+    let isExamPaused = false;
+
+    function triggerFullScreen() {
+      try {
+        const target = (window.parent && window.parent.document && window.parent.document.documentElement) 
+          ? window.parent.document.documentElement 
+          : document.documentElement;
+          
+        if (target.requestFullscreen) {
+          target.requestFullscreen().catch(() => {});
+        } else if (target.webkitRequestFullscreen) {
+          target.webkitRequestFullscreen().catch(() => {});
+        } else if (target.msRequestFullscreen) {
+          target.msRequestFullscreen().catch(() => {});
+        }
+      } catch (err) {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        }
+      }
+    }
+
+    function togglePause() {
+      if (quizSubmitted || isReviewMode) return;
+      isExamPaused = !isExamPaused;
+      
+      const modal = document.getElementById('pause-modal');
+      const btnPause = document.getElementById('btn-pause');
+      
+      if (isExamPaused) {
+        if (timerInterval) clearInterval(timerInterval);
+        const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+        const s = (timeRemaining % 60).toString().padStart(2, '0');
+        document.getElementById('pause-time-left').innerText = `${m}:${s}`;
+        document.getElementById('pause-current-q').innerText = `Question ${currentQ + 1} of ${questions.length}`;
+        modal.style.display = 'flex';
+        
+        if (btnPause) {
+          btnPause.innerHTML = `<i data-lucide="play" size="14"></i> <span>Resume</span>`;
+          btnPause.classList.add('paused');
+        }
+      } else {
+        modal.style.display = 'none';
+        if (btnPause) {
+          btnPause.innerHTML = `<i data-lucide="pause" size="14"></i> <span>Pause</span>`;
+          btnPause.classList.remove('paused');
+        }
+        startTimer(true);
+        triggerFullScreen();
+      }
+      lucide.createIcons();
+    }
 
     const elTopic = document.getElementById('q-topic');
     const elCounter = document.getElementById('q-counter');
@@ -614,6 +802,7 @@
 
     window.onload = async () => {
       lucide.createIcons();
+      triggerFullScreen();
       const params = new URLSearchParams(window.location.search);
       quizId = params.get('quiz') || 'day_1';
       
@@ -742,6 +931,9 @@
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('tcs-main-container').style.display = 'flex';
             
+            const btnPause = document.getElementById('btn-pause');
+            if (btnPause) btnPause.style.display = 'inline-flex';
+
             buildPalette();
             loadQuestion(currentQ);
             startTimer(true);
@@ -797,9 +989,13 @@
     }
 
     function startExamFromSetup() {
+      triggerFullScreen();
       timeRemaining = selectedTimeMinutes * 60;
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('tcs-main-container').style.display = 'flex';
+      
+      const btnPause = document.getElementById('btn-pause');
+      if (btnPause) btnPause.style.display = 'inline-flex';
       
       visitedQuestions.add(0);
       buildPalette();
@@ -1080,6 +1276,13 @@
       
       quizSubmitted = true;
       if (timerInterval) clearInterval(timerInterval);
+      if (isExamPaused) {
+        isExamPaused = false;
+        const modal = document.getElementById('pause-modal');
+        if (modal) modal.style.display = 'none';
+      }
+      const btnPause = document.getElementById('btn-pause');
+      if (btnPause) btnPause.style.display = 'none';
       localStorage.removeItem(`it_officer_mains_day${quizDayNum}`);
 
       document.getElementById('tcs-main-container').style.display = 'none';
@@ -1192,6 +1395,9 @@
 
     function reviewAnswers() {
       isReviewMode = true;
+      const btnPause = document.getElementById('btn-pause');
+      if (btnPause) btnPause.style.display = 'none';
+
       document.getElementById('scorecard').style.display = 'none';
       document.getElementById('tcs-main-container').style.display = 'flex';
       document.getElementById('btn-submit-sidebar').style.display = 'none';
@@ -1276,8 +1482,17 @@
     }
 
     function returnToDashboard() {
+      try {
+        const pDoc = (window.parent && window.parent.document) ? window.parent.document : document;
+        if (pDoc.fullscreenElement || pDoc.webkitFullscreenElement || pDoc.msFullscreenElement) {
+          if (pDoc.exitFullscreen) pDoc.exitFullscreen().catch(() => {});
+          else if (pDoc.webkitExitFullscreen) pDoc.webkitExitFullscreen().catch(() => {});
+          else if (pDoc.msExitFullscreen) pDoc.msExitFullscreen().catch(() => {});
+        }
+      } catch (e) {}
+
       if (window.parent && window.parent.closeQuizPlayer) {
-        window.parent.closeQuizPlayer();
+        window.parent.closeQuizPlayer(true);
       } else {
         window.location.href = '/';
       }
