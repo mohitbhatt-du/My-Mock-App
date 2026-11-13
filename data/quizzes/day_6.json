@@ -1,0 +1,666 @@
+{
+  "id": "day_6",
+  "day": 6,
+  "title": "IT Officer Mains: Day 6",
+  "difficulty": "Easy to Moderate",
+  "difficultyLevel": 2,
+  "tags": "Balanced",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Operating Systems",
+      "text": "Based on the Wait-For graph shown below, which of the following statements is true?<br><br><div class='diagram-container'><svg viewBox='0 0 200 150' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='40' r='15' fill='white' stroke='black' stroke-width='2'/><text x='50' y='45' text-anchor='middle'>P1</text><circle cx='150' cy='40' r='15' fill='white' stroke='black' stroke-width='2'/><text x='150' y='45' text-anchor='middle'>P2</text><circle cx='100' cy='110' r='15' fill='white' stroke='black' stroke-width='2'/><text x='100' y='115' text-anchor='middle'>P3</text><defs><marker id='arrow' markerWidth='10' markerHeight='10' refX='9' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,6 L9,3 z' fill='black'/></marker></defs><line x1='65' y1='40' x2='130' y2='40' stroke='black' stroke-width='2' marker-end='url(#arrow)'/><line x1='140' y1='52' x2='110' y2='98' stroke='black' stroke-width='2' marker-end='url(#arrow)'/><line x1='88' y1='100' x2='58' y2='52' stroke='black' stroke-width='2' marker-end='url(#arrow)'/></svg></div>",
+      "options": [
+        "The system is in a safe state with no deadlock.",
+        "A deadlock exists involving processes P1, P2, and P3.",
+        "Process P1 is starved but not deadlocked.",
+        "Process P3 can finish execution immediately."
+      ],
+      "correct": 1,
+      "explanation": "A Wait-For graph with a directed cycle (P1 waits for P2, P2 waits for P3, P3 waits for P1) indicates a circular wait. In a single-instance resource system, a cycle implies a deadlock."
+    },
+    {
+      "id": 2,
+      "topic": "Python Programming",
+      "text": "What is the output of the following Python slice operation?<br><br><div class='code-block'>text = 'EXAMMATRIX'\nprint(text[::-2])</div>",
+      "options": [
+        "XMARI",
+        "XIAMXE",
+        "XIRAME",
+        "XIAMX"
+      ],
+      "correct": 2,
+      "explanation": "The slice `[::-2]` reverses the string and steps by 2. Reversed string is 'XIRTAMMAXE'. Taking every 2nd character: X (index 0), I (index 2), R (index 4), A (index 6), M (index 8), E (index 10 - out of bounds). Wait, text='EXAMMATRIX'. Reversed: 'XIRTAMMAXE'. 0:X, 2:R, 4:A, 6:M, 8:E. Result is 'XIRAME'."
+    },
+    {
+      "id": 3,
+      "topic": "Computer Networks",
+      "text": "An organization is granted the block 211.17.180.0/24. The administrator wants to create 32 subnets. What will be the new subnet mask and the number of usable hosts per subnet?",
+      "options": [
+        "255.255.255.224, 30 hosts",
+        "255.255.255.248, 6 hosts",
+        "255.255.255.240, 14 hosts",
+        "255.255.255.252, 2 hosts"
+      ],
+      "correct": 1,
+      "explanation": "To get 32 subnets, we need 5 bits (2<sup>5</sup> = 32). The new mask borrows 5 bits from the host portion: /24 + 5 = /29. A /29 mask is 255.255.255.248. Remaining host bits = 3. Usable hosts = 2<sup>3</sup> - 2 = 6."
+    },
+    {
+      "id": 4,
+      "topic": "Database Systems",
+      "text": "Match the ACID properties of a database transaction with their correct definitions:<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. Atomicity</td><td>1. Concurrent execution mimics serial execution</td></tr><tr><td>Q. Consistency</td><td>2. Data is permanently saved post-commit</td></tr><tr><td>R. Isolation</td><td>3. Entire transaction succeeds or entirely fails</td></tr><tr><td>S. Durability</td><td>4. Database remains in a valid state</td></tr></table>",
+      "options": [
+        "P-3, Q-4, R-1, S-2",
+        "P-3, Q-1, R-4, S-2",
+        "P-4, Q-3, R-1, S-2",
+        "P-1, Q-4, R-2, S-3"
+      ],
+      "correct": 0,
+      "explanation": "Atomicity ensures 'all or nothing' (3). Consistency ensures valid state transitions (4). Isolation separates concurrent transactions (1). Durability saves commits permanently (2)."
+    },
+    {
+      "id": 5,
+      "topic": "Data Structures & Algorithms",
+      "text": "What is the worst-case time complexity for inserting a new element into a standard Binary Min-Heap containing 'n' elements?",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n log n)"
+      ],
+      "correct": 1,
+      "explanation": "Insertion into a heap involves adding the element to the bottom level and 'bubbling up' (heapify) to restore the heap property. The maximum number of swaps is the height of the tree, which is O(log n)."
+    },
+    {
+      "id": 6,
+      "topic": "Java Programming",
+      "text": "What will be printed when the following Java code executes?<br><br><div class='code-block'>public class Main {\n    public static void main(String[] args) {\n        String s1 = \"Java\";\n        String s2 = new String(\"Java\");\n        System.out.print((s1 == s2) + \" \" + s1.equals(s2));\n    }\n}</div>",
+      "options": [
+        "true true",
+        "false false",
+        "true false",
+        "false true"
+      ],
+      "correct": 3,
+      "explanation": "The `==` operator compares memory references. `s1` is in the string pool, `s2` is a new object in heap memory, so `s1 == s2` is false. The `.equals()` method compares the actual string content, which matches, returning true."
+    },
+    {
+      "id": 7,
+      "topic": "Software Engineering",
+      "text": "In Agile methodology, what is the primary purpose of a 'Scrum Master'?",
+      "options": [
+        "To dictate the software architecture and write core code.",
+        "To assign daily tasks to individual developers.",
+        "To facilitate the process, remove impediments, and ensure Scrum practices are followed.",
+        "To directly manage the project budget and client billing."
+      ],
+      "correct": 2,
+      "explanation": "A Scrum Master is a servant-leader who coaches the team, facilitates Scrum events, and clears roadblocks, rather than acting as a traditional top-down manager."
+    },
+    {
+      "id": 8,
+      "topic": "Digital Logic",
+      "text": "What is the 2's complement of the binary number 10110010?",
+      "options": [
+        "01001101",
+        "01001110",
+        "10110011",
+        "01001111"
+      ],
+      "correct": 1,
+      "explanation": "To find 2's complement, first invert all bits (1's complement) -> 01001101. Then add 1 to the LSB: 01001101 + 1 = 01001110."
+    },
+    {
+      "id": 9,
+      "topic": "Cyber Security",
+      "text": "Which cybersecurity threat involves an attacker acquiring a registered domain name that is a slight misspelling of a popular target domain?",
+      "options": [
+        "Spear Phishing",
+        "Typosquatting",
+        "Ransomware",
+        "Watering Hole Attack"
+      ],
+      "correct": 1,
+      "explanation": "Typosquatting (or URL hijacking) relies on mistakes such as typos made by users inputting a website address into a web browser (e.g., gogle.com instead of google.com)."
+    },
+    {
+      "id": 10,
+      "topic": "Compiler Design",
+      "text": "Which grammar type from the Chomsky hierarchy is used to specify the syntactic structure of most programming languages?",
+      "options": [
+        "Type-0 (Unrestricted Grammar)",
+        "Type-1 (Context-Sensitive Grammar)",
+        "Type-2 (Context-Free Grammar)",
+        "Type-3 (Regular Grammar)"
+      ],
+      "correct": 2,
+      "explanation": "Type-2 Context-Free Grammars (CFGs) are used for syntax analysis (parsing) because they are powerful enough to represent nested structures like loops and parentheses, yet efficient to parse."
+    },
+    {
+      "id": 11,
+      "topic": "Object Oriented Programming",
+      "text": "Which concept is demonstrated when a base class provides an interface, but the specific implementation is entirely deferred to the child classes?",
+      "options": [
+        "Data Hiding",
+        "Concrete Implementation",
+        "Abstract Classes / Pure Virtual Functions",
+        "Multiple Inheritance"
+      ],
+      "correct": 2,
+      "explanation": "Abstract classes (or interfaces) define pure virtual functions that establish a contract or interface, forcing derived classes to provide the specific concrete implementations."
+    },
+    {
+      "id": 12,
+      "topic": "C/C++ Programming",
+      "text": "Examine the following C++ code. What is its output?<br><br><div class='code-block'>#include &lt;iostream&gt;\nusing namespace std;\nvoid solve(int &x, int y) {\n    x = x + 10;\n    y = y + 10;\n}\nint main() {\n    int a = 5, b = 5;\n    solve(a, b);\n    cout << a << \" \" << b;\n    return 0;\n}</div>",
+      "options": [
+        "5 5",
+        "15 15",
+        "15 5",
+        "5 15"
+      ],
+      "correct": 2,
+      "explanation": "`x` is passed by reference, so modifying it inside `solve` changes `a` in main to 15. `y` is passed by value, so modifying it does not affect `b` in main, leaving it as 5."
+    },
+    {
+      "id": 13,
+      "topic": "Web Technologies",
+      "text": "In HTTP, what does a status code in the 4xx range indicate?",
+      "options": [
+        "Informational response",
+        "Successful request",
+        "Client Error (e.g., Bad Request, Not Found)",
+        "Server Error (e.g., Internal Server Error)"
+      ],
+      "correct": 2,
+      "explanation": "4xx codes indicate client-side errors (the client sent a bad request, requested a non-existent resource, or lacks authorization). 5xx indicates server-side errors."
+    },
+    {
+      "id": 14,
+      "topic": "Misc (IT Act 2000)",
+      "text": "Under the Information Technology Act, 2000, what is the maximum penalty for introducing a computer virus into a network without permission under Section 43?",
+      "options": [
+        "Imprisonment up to 3 years",
+        "Fine up to Rs. 1 Lakh",
+        "Payment of compensation by way of damages",
+        "Life imprisonment"
+      ],
+      "correct": 2,
+      "explanation": "Section 43 prescribes payment of compensation by way of damages to the person affected. (Note: Section 66 makes dishonest/fraudulent acts punishable with imprisonment, but 43 strictly deals with compensation)."
+    },
+    {
+      "id": 15,
+      "topic": "Misc (Cloud Computing)",
+      "text": "AWS Lambda and Azure Functions are prominent examples of which cloud computing paradigm?",
+      "options": [
+        "Infrastructure as a Service (IaaS)",
+        "Platform as a Service (PaaS)",
+        "Serverless Computing (FaaS)",
+        "Software as a Service (SaaS)"
+      ],
+      "correct": 2,
+      "explanation": "They are Function as a Service (FaaS) or Serverless computing platforms where developers deploy code without provisioning or managing the underlying servers."
+    },
+    {
+      "id": 16,
+      "topic": "Operating Systems",
+      "text": "Which memory management scheme eliminates external fragmentation but introduces internal fragmentation?",
+      "options": [
+        "Segmentation",
+        "Dynamic Partitioning",
+        "Paging",
+        "Swapping"
+      ],
+      "correct": 2,
+      "explanation": "Paging divides physical memory into fixed-size frames and logical memory into pages. This completely eliminates external fragmentation, but the last page of a process might not be fully utilized, causing internal fragmentation."
+    },
+    {
+      "id": 17,
+      "topic": "Data Structures & Algorithms",
+      "text": "A hash table uses open addressing with linear probing. If the hash function is H(x) = x mod 10, in which index will the key 45 be placed if indices 5 and 6 are already occupied?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "correct": 3,
+      "explanation": "H(45) = 45 mod 10 = 5. Index 5 is occupied. Linear probing checks the next index (5+1=6). Index 6 is occupied. It checks the next index (6+1=7). Index 7 is free, so 45 is placed there."
+    },
+    {
+      "id": 18,
+      "topic": "Computer Networks",
+      "text": "Which field in an IPv4 packet header is used to prevent the packet from endlessly looping in the network?",
+      "options": [
+        "Checksum",
+        "Protocol",
+        "Time to Live (TTL)",
+        "Header Length"
+      ],
+      "correct": 2,
+      "explanation": "The TTL field is decremented by 1 every time the packet passes through a router. If it reaches 0, the packet is discarded, preventing infinite routing loops."
+    },
+    {
+      "id": 19,
+      "topic": "Database Systems",
+      "text": "Identify the SQL function used to return the number of distinct, non-NULL values in a column.",
+      "options": [
+        "COUNT(*)",
+        "SUM(DISTINCT column_name)",
+        "COUNT(DISTINCT column_name)",
+        "DISTINCT(COUNT(column_name))"
+      ],
+      "correct": 2,
+      "explanation": "The `COUNT(DISTINCT column_name)` syntax evaluates the column, ignores NULLs, and counts only the unique values."
+    },
+    {
+      "id": 20,
+      "topic": "Python Programming",
+      "text": "What is the mechanism used by Python's garbage collector to manage memory?",
+      "options": [
+        "Manual memory allocation only",
+        "Reference Counting and Cyclic Garbage Collection",
+        "Strict Mark-and-Sweep only",
+        "Pointers and destructors like C++"
+      ],
+      "correct": 1,
+      "explanation": "Python primarily uses Reference Counting to deallocate objects when their reference count drops to zero, backed by a generational cyclic garbage collector to detect circular references."
+    },
+    {
+      "id": 21,
+      "topic": "Java Programming",
+      "text": "Which of the following statements about Java interfaces is incorrect?",
+      "options": [
+        "An interface can contain default methods with a body.",
+        "An interface can implement another interface.",
+        "An interface can extend multiple other interfaces.",
+        "An interface cannot be instantiated directly."
+      ],
+      "correct": 1,
+      "explanation": "An interface cannot *implement* another interface; it can only *extend* other interfaces using the `extends` keyword."
+    },
+    {
+      "id": 22,
+      "topic": "Digital Logic",
+      "text": "A combinational circuit that converts a 3-bit binary input into an 8-bit output where only one output line goes HIGH is called a:",
+      "options": [
+        "Multiplexer",
+        "Demultiplexer",
+        "Decoder",
+        "Encoder"
+      ],
+      "correct": 2,
+      "explanation": "A 3-to-8 Decoder takes a 3-bit binary input and activates exactly one of its 8 output lines based on the input value."
+    },
+    {
+      "id": 23,
+      "topic": "Software Engineering",
+      "text": "Match the following UML Diagrams with their types:<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. Use Case Diagram</td><td>1. Structural Diagram</td></tr><tr><td>Q. Class Diagram</td><td>2. Behavioral Diagram</td></tr><tr><td>R. Deployment Diagram</td><td>3. Structural Diagram</td></tr></table>",
+      "options": [
+        "P-2, Q-1, R-3",
+        "P-1, Q-2, R-3",
+        "P-2, Q-3, R-1",
+        "P-3, Q-1, R-2"
+      ],
+      "correct": 0,
+      "explanation": "Use Case diagrams show system behavior/interactions (Behavioral). Class and Deployment diagrams model the static architecture (Structural)."
+    },
+    {
+      "id": 24,
+      "topic": "Cyber Security",
+      "text": "Which protocol is used in a VPN to secure data at the IP layer by encrypting and authenticating packets?",
+      "options": [
+        "PPTP",
+        "IPSec",
+        "L2TP",
+        "GRE"
+      ],
+      "correct": 1,
+      "explanation": "IPSec (Internet Protocol Security) is a suite of protocols that secures IP communications by authenticating and encrypting each IP packet in a data stream."
+    },
+    {
+      "id": 25,
+      "topic": "Misc (Banking IT)",
+      "text": "What technology forms the backbone of the 'RuPay' card network launched by NPCI?",
+      "options": [
+        "Blockchain distributed ledgers",
+        "A proprietary domestic payment gateway connecting ATMs and PoS",
+        "SWIFT international routing",
+        "Tokenized cryptocurrency networks"
+      ],
+      "correct": 1,
+      "explanation": "RuPay is India's indigenous payment clearing network developed by the National Payments Corporation of India (NPCI) to establish a domestic, open, and multilateral system."
+    },
+    {
+      "id": 26,
+      "topic": "Computer Architecture",
+      "text": "If a processor has a cache hit rate of 90%, a cache access time of 2 ns, and a main memory access time of 100 ns, what is the Effective Access Time (EAT)?",
+      "options": [
+        "10 ns",
+        "11.8 ns",
+        "12 ns",
+        "92 ns"
+      ],
+      "correct": 1,
+      "explanation": "EAT = (Hit Rate * Cache Time) + (Miss Rate * Main Memory Time). EAT = (0.90 * 2) + (0.10 * 100) = 1.8 + 10 = 11.8 ns."
+    },
+    {
+      "id": 27,
+      "topic": "Compiler Design",
+      "text": "In compiler optimization, identifying and removing variables that are assigned a value but never subsequently used is known as:",
+      "options": [
+        "Constant Folding",
+        "Dead Code Elimination",
+        "Loop Unrolling",
+        "Strength Reduction"
+      ],
+      "correct": 1,
+      "explanation": "Dead Code Elimination removes code that does not affect the program results, such as computing values that are never used."
+    },
+    {
+      "id": 28,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which of the following sorting algorithms is NOT an 'in-place' sorting algorithm (i.e., it requires O(n) extra auxiliary space)?",
+      "options": [
+        "Quick Sort",
+        "Heap Sort",
+        "Merge Sort",
+        "Insertion Sort"
+      ],
+      "correct": 2,
+      "explanation": "Merge Sort requires O(n) auxiliary space to merge the two halves together. The others can be implemented in-place (requiring O(1) or O(log n) extra space)."
+    },
+    {
+      "id": 29,
+      "topic": "C/C++ Programming",
+      "text": "In C++, the `virtual` keyword is omitted in a derived class's overriding method. How does the compiler handle this?",
+      "options": [
+        "It throws a compilation error.",
+        "The method behaves statically and cannot achieve runtime polymorphism.",
+        "The method remains virtual implicitly if it was virtual in the base class.",
+        "It hides the base class method permanently for all objects."
+      ],
+      "correct": 2,
+      "explanation": "If a function is declared virtual in the base class, it remains virtual in all derived classes, even if the `virtual` keyword is omitted in the derived class."
+    },
+    {
+      "id": 30,
+      "topic": "Operating Systems",
+      "text": "What is the primary role of the Translation Lookaside Buffer (TLB)?",
+      "options": [
+        "To cache frequently accessed disk blocks.",
+        "To cache recent virtual-to-physical address translations.",
+        "To buffer I/O streams for slower devices.",
+        "To store the Process Control Blocks (PCBs) of active threads."
+      ],
+      "correct": 1,
+      "explanation": "The TLB is a high-speed memory cache inside the CPU that stores recent translations of virtual memory to physical memory to speed up memory access."
+    },
+    {
+      "id": 31,
+      "topic": "Python Programming",
+      "text": "Consider the following Python set operations:<br><br><div class='code-block'>s1 = {1, 2, 3}\ns2 = {3, 4, 5}\nprint(s1 ^ s2)</div>",
+      "options": [
+        "{1, 2, 3, 4, 5}",
+        "{3}",
+        "{1, 2, 4, 5}",
+        "Syntax Error"
+      ],
+      "correct": 2,
+      "explanation": "The `^` operator computes the Symmetric Difference of two sets, returning elements that are in either set, but not in their intersection. Thus, 3 is removed."
+    },
+    {
+      "id": 32,
+      "topic": "Computer Networks",
+      "text": "Which HTTP header is utilized by web servers to instruct the browser to remember stateful information (like a session ID)?",
+      "options": [
+        "Authorization",
+        "Set-Cookie",
+        "Content-Type",
+        "Cache-Control"
+      ],
+      "correct": 1,
+      "explanation": "The `Set-Cookie` HTTP response header is used to send cookies from the server to the user agent, enabling stateful sessions over stateless HTTP."
+    },
+    {
+      "id": 33,
+      "topic": "Database Systems",
+      "text": "Which concurrency control protocol uses timestamps to determine the serializability order of transactions without using locks?",
+      "options": [
+        "Two-Phase Locking (2PL)",
+        "Timestamp Ordering Protocol",
+        "Strict 2PL",
+        "Graph-based Protocol"
+      ],
+      "correct": 1,
+      "explanation": "The Timestamp Ordering Protocol assigns a unique timestamp to each transaction and uses these to resolve conflicting operations without the use of explicit locks."
+    },
+    {
+      "id": 34,
+      "topic": "Software Engineering",
+      "text": "In software metrics, 'Cyclomatic Complexity' measures:",
+      "options": [
+        "The number of lines of source code.",
+        "The amount of memory required by the software.",
+        "The number of independent logical paths through a program's source code.",
+        "The time taken to develop the software module."
+      ],
+      "correct": 2,
+      "explanation": "Cyclomatic Complexity is a software metric used to indicate the complexity of a program, directly measuring the number of linearly independent paths through the code."
+    },
+    {
+      "id": 35,
+      "topic": "Cyber Security",
+      "text": "A digital signature provides which of the following security services?",
+      "options": [
+        "Confidentiality and Availability",
+        "Authentication, Non-repudiation, and Integrity",
+        "Encryption and Redundancy",
+        "Authorization and Access Control"
+      ],
+      "correct": 1,
+      "explanation": "Digital signatures ensure the sender is who they claim to be (Authentication), the message hasn't been altered (Integrity), and the sender cannot deny sending it (Non-repudiation)."
+    },
+    {
+      "id": 36,
+      "topic": "Object Oriented Programming",
+      "text": "When an object is passed by reference to a method, what happens if the method reassigns the reference to a entirely new object?",
+      "options": [
+        "The original object outside the method is updated with the new object's data.",
+        "The original object remains unchanged, but modifications to the *attributes* of the passed reference would have altered it.",
+        "A compilation error is triggered to protect memory.",
+        "The garbage collector immediately deletes the original object."
+      ],
+      "correct": 1,
+      "explanation": "In languages like Java (pass-by-value of the reference), reassigning the parameter to a `new` object only changes the local pointer. The original object outside remains completely unaffected."
+    },
+    {
+      "id": 37,
+      "topic": "Misc (Data Representation)",
+      "text": "What is the decimal equivalent of the IEEE 754 single-precision floating-point number represented in hexadecimal as 0xBF800000?",
+      "options": [
+        "-1.0",
+        "1.0",
+        "-0.5",
+        "-2.0"
+      ],
+      "correct": 0,
+      "explanation": "0xBF800000 = 101111111000000... Sign bit is 1 (negative). Exponent is 01111111 (127 in decimal). Mantissa is 0. Value = -1 * 1.0 * 2^(127-127) = -1.0."
+    },
+    {
+      "id": 38,
+      "topic": "Data Structures & Algorithms",
+      "text": "Evaluate the following postfix expression: 5 3 + 8 2 / *",
+      "options": [
+        "16",
+        "32",
+        "24",
+        "40"
+      ],
+      "correct": 1,
+      "explanation": "Using a stack: Push 5, Push 3. Encounter '+': pop 3, 5 -> 5+3=8. Push 8. Push 8, Push 2. Encounter '/': pop 2, 8 -> 8/2=4. Push 4. Encounter '*': pop 4, 8 -> 8*4=32."
+    },
+    {
+      "id": 39,
+      "topic": "Java Programming",
+      "text": "Which of the following exceptions is a 'Checked Exception' in Java?",
+      "options": [
+        "NullPointerException",
+        "ArrayIndexOutOfBoundsException",
+        "IOException",
+        "ArithmeticException"
+      ],
+      "correct": 2,
+      "explanation": "Checked exceptions are checked at compile-time. `IOException` must be caught or declared thrown. The others are `RuntimeException` subclasses (Unchecked)."
+    },
+    {
+      "id": 40,
+      "topic": "Computer Networks",
+      "text": "In the TCP segment header, what is the purpose of the 'Window Size' field?",
+      "options": [
+        "To indicate the maximum segment size (MSS).",
+        "To specify the number of bytes the receiver is currently willing to accept (Flow Control).",
+        "To define the TTL for the segment.",
+        "To sequence out-of-order packets."
+      ],
+      "correct": 1,
+      "explanation": "The Window Size field is used for flow control, telling the sender how much data (in bytes) the receiver's buffer can currently accommodate."
+    },
+    {
+      "id": 41,
+      "topic": "Digital Logic",
+      "text": "Which of the following circuits is used to store a single bit of data?",
+      "options": [
+        "Full Adder",
+        "Multiplexer",
+        "Flip-Flop",
+        "Decoder"
+      ],
+      "correct": 2,
+      "explanation": "A Flip-Flop (or latch) is a bistable multivibrator, meaning it has two stable states and can be used to store one bit of memory."
+    },
+    {
+      "id": 42,
+      "topic": "Compiler Design",
+      "text": "In a compiler, what does 'Lexical Error' typically refer to?",
+      "options": [
+        "Unmatched parentheses",
+        "Type mismatch in an assignment",
+        "Presence of an illegal or unrecognized character",
+        "Using an undeclared variable"
+      ],
+      "correct": 2,
+      "explanation": "Lexical errors occur during the scanning phase when the compiler encounters characters that do not form any valid token (e.g., an illegal symbol like `@` in a C identifier)."
+    },
+    {
+      "id": 43,
+      "topic": "Operating Systems",
+      "text": "A binary semaphore is initialized to 1. Three processes P1, P2, and P3 execute the `wait()` operation on this semaphore. What is the value of the semaphore after these operations?",
+      "options": [
+        "-2",
+        "0",
+        "1",
+        "-3"
+      ],
+      "correct": 0,
+      "explanation": "Initial = 1. P1 wait -> 0 (acquires). P2 wait -> -1 (blocks). P3 wait -> -2 (blocks). Semaphores track blocked processes with negative values in standard implementations."
+    },
+    {
+      "id": 44,
+      "topic": "Database Systems",
+      "text": "What is a 'View' in SQL?",
+      "options": [
+        "A physical copy of table data stored on disk.",
+        "A graphical interface for database administration.",
+        "A virtual table based on the result-set of an SQL statement.",
+        "An index created specifically for complex JOIN queries."
+      ],
+      "correct": 2,
+      "explanation": "A View is a virtual table. It contains no data of its own but dynamically displays data stored in other tables based on a saved SQL query."
+    },
+    {
+      "id": 45,
+      "topic": "Software Engineering",
+      "text": "Which software design principle states that 'Software entities should be open for extension, but closed for modification'?",
+      "options": [
+        "Single Responsibility Principle",
+        "Open/Closed Principle",
+        "Liskov Substitution Principle",
+        "Dependency Inversion Principle"
+      ],
+      "correct": 1,
+      "explanation": "This is the 'O' in the SOLID principles: The Open/Closed Principle. You should be able to add new functionality without changing existing code."
+    },
+    {
+      "id": 46,
+      "topic": "Misc (IT Act 2000)",
+      "text": "As per the IT Act 2000, tampering with computer source documents (Section 65) carries a penalty of:",
+      "options": [
+        "Up to 3 years imprisonment or a fine up to Rs. 2 Lakhs, or both.",
+        "Up to 5 years imprisonment.",
+        "A maximum fine of Rs. 10,000.",
+        "Life imprisonment."
+      ],
+      "correct": 0,
+      "explanation": "Section 65 strictly outlines the penalty for tampering with computer source code as imprisonment up to three years, or with fine which may extend up to two lakh rupees, or both."
+    },
+    {
+      "id": 47,
+      "topic": "Python Programming",
+      "text": "What is the outcome of utilizing the `yield` keyword in a Python function?",
+      "options": [
+        "It forces the function to exit and return a list.",
+        "It pauses function execution and returns a generator object, retaining local state.",
+        "It delegates the function's execution to a background thread.",
+        "It acts identically to the `return` statement but for asynchronous tasks."
+      ],
+      "correct": 1,
+      "explanation": "The `yield` keyword turns a regular function into a generator. It pauses execution, yields a value, and remembers its state for the next `next()` call."
+    },
+    {
+      "id": 48,
+      "topic": "C/C++ Programming",
+      "text": "What does the `sizeof` operator in C/C++ return?",
+      "options": [
+        "The number of elements in an array at runtime.",
+        "The length of a null-terminated string.",
+        "The amount of memory (in bytes) allocated for a data type or variable at compile time.",
+        "The memory address of a variable."
+      ],
+      "correct": 2,
+      "explanation": "`sizeof` is a compile-time operator that yields the size, in bytes, of its operand (a type or a variable)."
+    },
+    {
+      "id": 49,
+      "topic": "Cyber Security",
+      "text": "Match the malware types with their primary behaviors:<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. Trojan</td><td>1. Encrypts files and demands payment</td></tr><tr><td>Q. Ransomware</td><td>2. Disguises as legitimate software</td></tr><tr><td>R. Worm</td><td>3. Self-replicates across networks</td></tr></table>",
+      "options": [
+        "P-1, Q-2, R-3",
+        "P-2, Q-1, R-3",
+        "P-3, Q-1, R-2",
+        "P-2, Q-3, R-1"
+      ],
+      "correct": 1,
+      "explanation": "Trojans disguise themselves (2). Ransomware demands payment (1). Worms self-replicate without host files (3)."
+    },
+    {
+      "id": 50,
+      "topic": "Misc (Banking IT)",
+      "text": "What is the primary function of the SWIFT network in global banking?",
+      "options": [
+        "To clear domestic electronic funds transfers instantly.",
+        "To provide a secure network for transmitting financial messages and settlement instructions globally.",
+        "To issue virtual credit cards to international travelers.",
+        "To act as a central bank for foreign exchange rates."
+      ],
+      "correct": 1,
+      "explanation": "SWIFT (Society for Worldwide Interbank Financial Telecommunication) provides a secure network that enables financial institutions worldwide to send and receive information about financial transactions securely."
+    }
+  ]
+}

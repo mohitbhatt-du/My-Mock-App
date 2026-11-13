@@ -1,0 +1,666 @@
+{
+  "id": "day_15",
+  "day": 15,
+  "title": "IT Officer Mains: Day 15",
+  "difficulty": "Easy to Moderate",
+  "difficultyLevel": 2,
+  "tags": "DBMS and COA Focused",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Database Systems",
+      "text": "Which of the following database normal forms specifically targets and eliminates multi-valued dependencies?",
+      "options": [
+        "First Normal Form (1NF)",
+        "Third Normal Form (3NF)",
+        "Boyce-Codd Normal Form (BCNF)",
+        "Fourth Normal Form (4NF)"
+      ],
+      "correct": 3,
+      "explanation": "Fourth Normal Form (4NF) deals specifically with multi-valued dependencies. A table is in 4NF if and only if it is in BCNF and contains no non-trivial multi-valued dependencies.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• BCNF eliminates all anomalies based on functional dependencies, but cannot handle multi-valued ones.</div>"
+    },
+    {
+      "id": 2,
+      "topic": "Database Systems",
+      "text": "During the processing of a transaction, what does the 'Durability' property of the ACID principles ensure?",
+      "options": [
+        "That the database transitions from one valid state to another valid state.",
+        "That concurrent transactions execute completely isolated from each other.",
+        "That once a transaction has successfully committed, its changes are permanently stored and will survive a hardware crash.",
+        "That a transaction cannot be partially completed."
+      ],
+      "correct": 2,
+      "explanation": "Durability guarantees that the results of a committed transaction are persistent. This is typically achieved using Write-Ahead Logging (WAL) which writes data to the disk log before confirming the commit to the user.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Atomicity handles the 'all or nothing' requirement preventing partial completion.</div>"
+    },
+    {
+      "id": 3,
+      "topic": "Database Systems",
+      "text": "Which database isolation level provides the highest level of concurrency protection, actively preventing Dirty Reads, Non-Repeatable Reads, and Phantom Reads?",
+      "options": [
+        "Read Uncommitted",
+        "Read Committed",
+        "Repeatable Read",
+        "Serializable"
+      ],
+      "correct": 3,
+      "explanation": "Serializable is the strictest isolation level. It ensures that transactions execute in a way that yields the exact same results as if they were executed one after the other serially.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This level utilizes strict range locks or predicate locks, which heavily impacts database throughput and performance.</div>"
+    },
+    {
+      "id": 4,
+      "topic": "Database Systems",
+      "text": "In a B+ Tree index architecture, what is the primary structural difference that makes it superior to a standard B-Tree for range-based database queries?",
+      "options": [
+        "B+ Trees store data pointers in all internal nodes.",
+        "B+ Trees restrict all data pointers to the leaf nodes and link them sequentially.",
+        "B+ Trees have no balancing requirements.",
+        "B+ Trees use hash functions to locate leaves."
+      ],
+      "correct": 1,
+      "explanation": "In a B+ Tree, internal nodes act strictly as routing keys. All actual data records exist only at the leaf level, and the leaves form a linked list. This allows incredibly fast sequential range scanning.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Standard B-Trees store data inside internal nodes, forcing range queries to perform slow, expensive up-and-down tree traversals.</div>"
+    },
+    {
+      "id": 5,
+      "topic": "Database Systems",
+      "text": "Which of the following SQL commands is categorized as Data Definition Language (DDL)?",
+      "options": [
+        "INSERT",
+        "UPDATE",
+        "TRUNCATE",
+        "DELETE"
+      ],
+      "correct": 2,
+      "explanation": "TRUNCATE is a DDL command because it alters the database structure by instantly dropping and recreating the table to remove all rows. INSERT, UPDATE, and DELETE are Data Manipulation Language (DML) commands.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because TRUNCATE is DDL, it cannot be rolled back in most relational database management systems.</div>"
+    },
+    {
+      "id": 6,
+      "topic": "Database Systems",
+      "text": "In relational algebra, which operation is functionally equivalent to performing a Cartesian Product followed by a Selection operation using a shared attribute condition?",
+      "options": [
+        "Set Difference",
+        "Natural Join",
+        "Theta Join",
+        "Outer Join"
+      ],
+      "correct": 2,
+      "explanation": "A Theta Join (θ-join) combines a Cartesian product (cross join) with a specific selection condition (like R.id = S.id).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A Natural Join is a special case of an Equi-Join (a Theta Join using equality) where duplicate columns are automatically removed.</div>"
+    },
+    {
+      "id": 7,
+      "topic": "Database Systems",
+      "text": "What defines a 'Conflict Serializable' transaction schedule?",
+      "options": [
+        "A schedule that executes transactions completely one after the other.",
+        "A schedule that can be mathematically transformed into a serial schedule simply by swapping adjacent, non-conflicting operations.",
+        "A schedule where all transactions commit at the exact same timestamp.",
+        "A schedule that prevents all read anomalies."
+      ],
+      "correct": 1,
+      "explanation": "Conflict Serializability requires that a concurrent schedule can be rearranged into a purely serial schedule by swapping adjacent operations belonging to different transactions, provided those operations do not conflict.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If the Precedence Graph of the schedule contains a cycle, it is definitively NOT conflict serializable.</div>"
+    },
+    {
+      "id": 8,
+      "topic": "Database Systems",
+      "text": "What is the primary function of a database 'Checkpoint' during transaction logging?",
+      "options": [
+        "To delete old user account logs.",
+        "To flush all dirty data pages from volatile RAM buffers down to stable disk storage, minimizing the time needed for crash recovery.",
+        "To reorganize index fragmentation automatically.",
+        "To encrypt user password tables."
+      ],
+      "correct": 1,
+      "explanation": "Checkpoints periodically write dirty pages to disk. If a crash occurs, the database recovery manager only needs to scan the log starting from the last checkpoint, rather than replaying the log from the beginning of time.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Frequent checkpoints slow down active performance but drastically improve Recovery Time Objectives (RTO).</div>"
+    },
+    {
+      "id": 9,
+      "topic": "Computer Architecture",
+      "text": "In a Direct-Mapped Cache, what specific hardware issue causes 'Conflict Misses'?",
+      "options": [
+        "The cache relies on slow mechanical hard drives.",
+        "Multiple different main memory blocks mathematically map to the exact same cache line, constantly evicting each other.",
+        "The CPU clock speed is too fast for the cache.",
+        "The associative comparators fail to match the tags."
+      ],
+      "correct": 1,
+      "explanation": "Direct Mapping forces a specific memory block into one exact cache line. If a program rapidly alternates between two memory blocks that map to the same line, they will constantly overwrite each other, causing severe thrashing known as a Conflict Miss.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Fully Associative caches eliminate conflict misses by allowing a block to go anywhere, but require complex, expensive hardware to search the entire cache simultaneously.</div>"
+    },
+    {
+      "id": 10,
+      "topic": "Computer Architecture",
+      "text": "A non-pipelined processor executes an instruction in 30 ns. It is converted into a 6-stage pipeline where the stages take 4 ns, 5 ns, 7 ns, 6 ns, 5 ns, and 4 ns. Ignoring latch overhead, what is the theoretical maximum speedup achieved?",
+      "options": [
+        "6.0",
+        "4.28",
+        "7.5",
+        "5.0"
+      ],
+      "correct": 1,
+      "explanation": "Speedup = (Time for non-pipelined) / (Time for pipelined).<br>The cycle time for a pipeline is constrained by its slowest stage (the bottleneck). The longest stage here is 7 ns.<br>Speedup = 30 ns / 7 ns = 4.28.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If all stages were perfectly balanced (e.g., 5 ns each), the speedup would be 30 / 5 = 6.0 (the ideal max speedup equals the number of stages).</div>"
+    },
+    {
+      "id": 11,
+      "topic": "Computer Architecture",
+      "text": "According to Amdahl’s Law, if an application spends 25 percent of its execution time performing strictly sequential operations, what is the absolute maximum theoretical speedup possible, regardless of how many parallel processor cores are added?",
+      "options": [
+        "2x",
+        "3x",
+        "4x",
+        "5x"
+      ],
+      "correct": 2,
+      "explanation": "Amdahl's Law defines max speedup as `1 / (1 - P)`, where P is the parallelizable portion. If 25 percent is sequential, then 75 percent is parallel (P = 0.75). The sequential portion (1 - P) is 0.25. Therefore, Max Speedup = 1 / 0.25 = 4.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This law proves that the strictly sequential portion of any algorithm will always mathematically bottleneck its parallel computing potential.</div>"
+    },
+    {
+      "id": 12,
+      "topic": "Computer Architecture",
+      "text": "During the standard Machine Instruction Cycle, what operation immediately follows the 'Instruction Fetch' phase?",
+      "options": [
+        "Execute Phase",
+        "Write-Back Phase",
+        "Memory Access Phase",
+        "Instruction Decode Phase"
+      ],
+      "correct": 3,
+      "explanation": "The standard machine cycle proceeds as follows: 1) Fetch the instruction from memory. 2) Decode the instruction (figure out what operation to perform and what registers to use). 3) Execute the operation in the ALU. 4) Write-Back the result.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Decode phase relies heavily on the CPU's Control Unit to send the correct electrical signals to the ALU and data paths.</div>"
+    },
+    {
+      "id": 13,
+      "topic": "Computer Architecture",
+      "text": "In a virtual memory system, what is the specific role of the Translation Lookaside Buffer (TLB)?",
+      "options": [
+        "It acts as a high-speed hardware cache specifically for holding recent virtual-to-physical address translations from the Page Table.",
+        "It caches the most frequently used arithmetic logic operations.",
+        "It buffers network packets before they are processed by the OS.",
+        "It temporarily holds process execution contexts during context switches."
+      ],
+      "correct": 0,
+      "explanation": "Because the Page Table is stored in main RAM, translating a virtual address normally requires a slow RAM access. The TLB caches these translations inside the CPU. A TLB hit bypasses the RAM lookup entirely.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A TLB miss forces a 'Page Table Walk', incurring a massive performance penalty as the CPU searches RAM for the translation.</div>"
+    },
+    {
+      "id": 14,
+      "topic": "Computer Architecture",
+      "text": "Which of the following is a primary design characteristic of a RISC (Reduced Instruction Set Computer) processor compared to a CISC processor?",
+      "options": [
+        "It relies heavily on complex instructions that execute in multiple clock cycles.",
+        "It emphasizes executing simple, uniform instructions where almost every instruction completes in a single clock cycle.",
+        "It minimizes the number of hardware registers.",
+        "It does not support pipelining."
+      ],
+      "correct": 1,
+      "explanation": "RISC processors (like ARM) use a small, highly optimized set of instructions that are fixed in length and execute in one clock cycle. This simplicity makes instruction pipelining highly efficient.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• CISC processors (like Intel x86) have complex instructions where a single command might perform multiple memory loads, arithmetic, and a store, taking several cycles.</div>"
+    },
+    {
+      "id": 15,
+      "topic": "Computer Architecture",
+      "text": "In the IEEE 754 standard for single-precision (32-bit) floating-point numbers, how many bits are allocated specifically for the Exponent field?",
+      "options": [
+        "1 bit",
+        "8 bits",
+        "11 bits",
+        "23 bits"
+      ],
+      "correct": 1,
+      "explanation": "IEEE 754 single-precision (32-bit) layout:<br>• Sign: 1 bit<br>• Exponent: 8 bits<br>• Mantissa (Fraction): 23 bits.<br>Total = 32 bits.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• For <strong>Double-precision (64-bit)</strong>: Sign = 1 bit, Exponent = 11 bits, Mantissa = 52 bits.</div>"
+    },
+    {
+      "id": 16,
+      "topic": "Computer Networks",
+      "text": "An organization is granted the CIDR block 10.0.0.0/22. They want to create subnets that can support exactly 60 usable hosts each. What subnet mask should they use, and how many such subnets can they create?",
+      "options": [
+        "/26 mask, yielding 16 subnets",
+        "/27 mask, yielding 32 subnets",
+        "/26 mask, yielding 32 subnets",
+        "/25 mask, yielding 8 subnets"
+      ],
+      "correct": 0,
+      "explanation": "To support 60 usable hosts, we need 6 host bits (2^6 - 2 = 62 usable). The subnet mask leaves 32 - 6 = 26 bits for the network (/26).<br>The original block is /22. Subnetting to /26 uses 4 bits (26 - 22 = 4).<br>Number of subnets = 2^4 = 16 subnets.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Always calculate host requirements as (2^h - 2) to account for the Network ID and Broadcast address.</div>"
+    },
+    {
+      "id": 17,
+      "topic": "Computer Networks",
+      "text": "In the TCP 3-way handshake process, if a client sends a SYN packet with a sequence number of 1000, what will be the acknowledgment number (ACK) sent back by the server in the SYN-ACK packet?",
+      "options": [
+        "1000",
+        "1001",
+        "0",
+        "A random number generated by the server"
+      ],
+      "correct": 1,
+      "explanation": "In TCP, the acknowledgment number indicates the sequence number of the next byte the receiver expects to receive. Since the SYN flag consumes exactly one sequence number, the server acknowledges the SYN packet by sending `Sequence Number + 1` (1000 + 1 = 1001).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The 3-way handshake steps: 1) SYN (Client -> Server), 2) SYN-ACK (Server -> Client), 3) ACK (Client -> Server).</div>"
+    },
+    {
+      "id": 18,
+      "topic": "Computer Networks",
+      "text": "Which of the following routing protocols is classified as an Exterior Gateway Protocol (EGP) and uses Path-Vector logic to route traffic between independent Autonomous Systems?",
+      "options": [
+        "RIP",
+        "OSPF",
+        "EIGRP",
+        "BGP"
+      ],
+      "correct": 3,
+      "explanation": "The Border Gateway Protocol (BGP) is the primary Exterior Gateway Protocol of the internet. It routes traffic across different Autonomous Systems (AS) using path-vector metrics (like AS-Path) based heavily on business policies.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• OSPF and EIGRP are Interior Gateway Protocols (IGPs) used within a single enterprise network.</div>"
+    },
+    {
+      "id": 19,
+      "topic": "Computer Networks",
+      "text": "Which field exists in an IPv4 header but was completely eliminated in the IPv6 header to improve router processing efficiency?",
+      "options": [
+        "Source Address",
+        "Header Checksum",
+        "Version",
+        "Hop Limit / Time to Live"
+      ],
+      "correct": 1,
+      "explanation": "The Header Checksum was removed in IPv6. Because data link layers (like Ethernet) and transport layers (like TCP/UDP) already perform checksums, computing it again at the network layer was redundant and slowed down router processing.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• IPv4's 'Time to Live' (TTL) was renamed to 'Hop Limit' in IPv6.</div>"
+    },
+    {
+      "id": 20,
+      "topic": "Computer Networks",
+      "text": "What is the primary function of the Domain Name System (DNS) Security Extensions (DNSSEC)?",
+      "options": [
+        "To encrypt domain name queries in transit.",
+        "To provide cryptographic authentication of DNS data, protecting resolvers against cache poisoning and spoofing attacks.",
+        "To speed up IP address resolution times.",
+        "To allocate dynamic IPv6 addresses."
+      ],
+      "correct": 1,
+      "explanation": "DNSSEC signs DNS records cryptographically, ensuring that clients receive authentic, untampered DNS response records.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• DNSSEC authenticates origin integrity but does not encrypt query payloads by default (which is handled separately by DoH/DoT).</div>"
+    },
+    {
+      "id": 21,
+      "topic": "Cyber Security",
+      "text": "In Transport Layer Security (TLS), what is the primary benefit of the '0-RTT' (Zero Round Trip Time) feature?",
+      "options": [
+        "It bypasses digital certificate validation for faster processing.",
+        "It allows a client to send encrypted application data to a previously visited server on the very first packet, eliminating handshake latency.",
+        "It removes the need for symmetric encryption.",
+        "It prevents replay attacks completely."
+      ],
+      "correct": 1,
+      "explanation": "0-RTT allows clients resuming a recent session to send encrypted HTTP payload data immediately along with their first handshake message, saving a full round-trip of latency.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The trade-off is that 0-RTT data is susceptible to Replay Attacks, so it should only be used for safe, idempotent requests like HTTP GET.</div>"
+    },
+    {
+      "id": 22,
+      "topic": "Cyber Security",
+      "text": "What is the primary distinction between Symmetric and Asymmetric cryptography?",
+      "options": [
+        "Symmetric uses two keys (public and private); Asymmetric uses one shared key.",
+        "Symmetric uses a single shared secret key for both encryption and decryption; Asymmetric utilizes distinct mathematical key pairs (public and private).",
+        "Symmetric is exclusively used for digital signatures; Asymmetric for file zipping.",
+        "There is no speed or key difference."
+      ],
+      "correct": 1,
+      "explanation": "Symmetric encryption relies on a single shared secret key for fast bulk encryption, whereas asymmetric cryptography uses public-private key pairs for secure key exchanges and digital signatures.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Hybrid cryptosystems combine both: asymmetric encryption secures the exchange of symmetric session keys.</div>"
+    },
+    {
+      "id": 23,
+      "topic": "Data Structures & Algorithms",
+      "text": "In an AVL tree, an insertion occurs in the left subtree of the right child of the unbalanced node. Which rotation(s) must be performed to restore the AVL balance property?",
+      "options": [
+        "Single Right Rotation (LL)",
+        "Single Left Rotation (RR)",
+        "Right-Left Double Rotation (RL)",
+        "Left-Right Double Rotation (LR)"
+      ],
+      "correct": 2,
+      "explanation": "An insertion in the Left subtree of the Right child is an RL imbalance. To fix an RL imbalance, a Right-Left double rotation is required. First, a single Right rotation is performed on the right child, followed by a single Left rotation on the unbalanced root node.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• AVL trees strictly maintain a balance factor of -1, 0, or 1 for every node.</div>"
+    },
+    {
+      "id": 24,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which of the following sorting algorithms works by repeatedly building a max-heap (or min-heap) and swapping the root element to the end of the array?",
+      "options": [
+        "Merge Sort",
+        "Quick Sort",
+        "Heap Sort",
+        "Insertion Sort"
+      ],
+      "correct": 2,
+      "explanation": "Heap Sort operates by converting the array into a Binary Max-Heap. The largest element (at the root) is swapped with the last element of the array. The heap size is reduced by 1, and the heap property is restored (heapify). This repeats until the array is sorted.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Heap Sort has an excellent Worst-Case time complexity of O(N log N) and requires exactly O(1) auxiliary space (in-place).</div>"
+    },
+    {
+      "id": 25,
+      "topic": "Data Structures & Algorithms",
+      "text": "If you need to find a specific number in a perfectly sorted array of 1,000,000 integers, what is the worst-case time complexity if you use the Binary Search algorithm?",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(log n)",
+        "O(n^2)"
+      ],
+      "correct": 2,
+      "explanation": "Binary Search works by repeatedly dividing the search interval in half. Because the problem size halves with each step, the algorithm runs in logarithmic time, O(log n).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• It would take at most about 20 comparisons to find a number in an array of a million elements.</div>"
+    },
+    {
+      "id": 26,
+      "topic": "Data Structures & Algorithms",
+      "text": "Dijkstra’s Algorithm for finding the shortest path fundamentally fails when the graph contains:",
+      "options": [
+        "Cycles (loops)",
+        "Multiple disconnected components",
+        "Negative weight edges",
+        "Directed edges"
+      ],
+      "correct": 2,
+      "explanation": "Dijkstra's algorithm assumes that once a node is processed, its shortest path is permanently finalized. A negative weight edge violates this assumption, as taking a longer path might suddenly result in a lower total cost.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Bellman-Ford algorithm must be used instead for graphs with negative weights.</div>"
+    },
+    {
+      "id": 27,
+      "topic": "Data Structures & Algorithms",
+      "text": "When implementing a Hash Table using Double Hashing to resolve collisions, how is the probe sequence calculated?",
+      "options": [
+        "By checking the next contiguous memory slot (i + 1).",
+        "By checking slots at intervals of a secondary hash function: (H1(x) + i * H2(x)) MOD size.",
+        "By squaring the collision step count: (H1(x) + i^2) MOD size.",
+        "By building a linked list at the collision index."
+      ],
+      "correct": 1,
+      "explanation": "Double Hashing uses a secondary hash function (H2) to determine the step size if a collision occurs at the primary hash (H1). This drastically reduces both primary and secondary clustering.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• For double hashing to work correctly and visit all slots, H2(x) must be relatively prime to the table size.</div>"
+    },
+    {
+      "id": 28,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which data structure is fundamentally utilized to evaluate Postfix (Reverse Polish Notation) mathematical expressions?",
+      "options": [
+        "Queue",
+        "Binary Search Tree",
+        "Stack",
+        "Priority Queue"
+      ],
+      "correct": 2,
+      "explanation": "A Stack is used to evaluate postfix expressions. Operands (numbers) are pushed onto the stack. When an operator (+, -, *, /) is encountered, the top two operands are popped, evaluated, and the result is pushed back onto the stack.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Stacks are also the underlying structure used by compilers to check for balanced parentheses.</div>"
+    },
+    {
+      "id": 29,
+      "topic": "Data Structures & Algorithms",
+      "text": "What is a primary advantage that Linked Lists possess over standard fixed-size Arrays?",
+      "options": [
+        "Linked Lists provide O(1) random access to any element using an index.",
+        "Linked Lists do not require contiguous memory blocks, allowing them to grow dynamically without costly reallocation.",
+        "Linked Lists consume less memory because they do not store pointer data.",
+        "Linked Lists have vastly superior CPU cache locality."
+      ],
+      "correct": 1,
+      "explanation": "Arrays require a single, unbroken block of memory. If they get full, you must allocate a completely new, larger array and copy the data. Linked Lists allocate memory dynamically per node and use pointers to link them, meaning they can grow indefinitely using fragmented memory space.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The major disadvantage of a Linked List is that you cannot randomly access an element; finding the Nth item requires O(n) sequential traversal.</div>"
+    },
+    {
+      "id": 30,
+      "topic": "Operating Systems",
+      "text": "According to Coffman's conditions, which of the following MUST be true for a Deadlock to occur in a computer system?",
+      "options": [
+        "Resources must be fully shareable between all processes simultaneously.",
+        "The operating system must forcefully preempt resources from waiting processes.",
+        "Processes must be holding at least one resource while waiting to acquire additional resources held by other processes (Hold and Wait).",
+        "The system must be utilizing a Round-Robin scheduler."
+      ],
+      "correct": 2,
+      "explanation": "Hold and Wait is one of the four necessary conditions for a deadlock. It states that a process must be holding a resource and simultaneously waiting to acquire a new resource that is currently locked by another process.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The other three conditions are Mutual Exclusion, No Preemption, and Circular Wait. If any ONE of these is broken, a deadlock cannot occur.</div>"
+    },
+    {
+      "id": 31,
+      "topic": "Operating Systems",
+      "text": "Which memory management scheme eliminates external fragmentation by dividing physical memory into fixed-size blocks called frames?",
+      "options": [
+        "Segmentation",
+        "Paging",
+        "Dynamic Partitioning",
+        "Swapping"
+      ],
+      "correct": 1,
+      "explanation": "Paging divides logical memory into blocks of the same size called 'pages', and physical memory into fixed-size blocks called 'frames'. Because any page can fit into any available frame, external fragmentation is completely eliminated.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While paging solves external fragmentation, it can still suffer from <strong>internal fragmentation</strong> if a process needs less memory than a full page size.</div>"
+    },
+    {
+      "id": 32,
+      "topic": "Operating Systems",
+      "text": "What does the OS perform during a 'Context Switch'?",
+      "options": [
+        "It shuts down the graphical user interface to save power.",
+        "It switches the CPU execution from user mode to kernel mode.",
+        "It saves the state (registers, program counter) of the currently running process and loads the saved state of the next process to be executed.",
+        "It transfers data directly from the hard drive to RAM."
+      ],
+      "correct": 2,
+      "explanation": "A context switch occurs when the CPU is taken away from one process and given to another. The OS must save the current state in the Process Control Block (PCB) so the process can resume seamlessly later, and then load the PCB of the new process.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Context switching is pure overhead; the system performs no useful application work while switching contexts.</div>"
+    },
+    {
+      "id": 33,
+      "topic": "Operating Systems",
+      "text": "Which CPU scheduling algorithm assigns a fixed, small unit of time to each process in the queue, cycling through them repeatedly until they finish?",
+      "options": [
+        "First-Come, First-Served (FCFS)",
+        "Shortest Job First (SJF)",
+        "Round Robin (RR)",
+        "Priority Scheduling"
+      ],
+      "correct": 2,
+      "explanation": "Round Robin is a preemptive scheduling algorithm. Every process gets to run for a specific 'time slice' or quantum (e.g., 10 milliseconds). If it doesn't finish, it is paused and placed at the back of the queue, ensuring a highly responsive system where no process starves.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If the time quantum is set too large, Round Robin effectively degenerates into standard FCFS scheduling.</div>"
+    },
+    {
+      "id": 34,
+      "topic": "Operating Systems",
+      "text": "What is the fundamental difference between a Mutex and a Binary Semaphore?",
+      "options": [
+        "A Mutex can count up to a specified integer limit, whereas a Binary Semaphore cannot.",
+        "A Mutex includes a concept of 'ownership' (only the thread that acquired it can release it), whereas a Binary Semaphore can be signaled/released by any thread.",
+        "Binary Semaphores are implemented in hardware; Mutexes are software-only.",
+        "There is absolutely no difference."
+      ],
+      "correct": 1,
+      "explanation": "While both can be used to ensure mutual exclusion (locking), a Mutex enforces strict ownership. If Thread A locks a Mutex, only Thread A can unlock it. A Semaphore is essentially a signaling mechanism; Thread B can signal (release) a semaphore that Thread A is waiting on.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Use a Mutex for locking shared data. Use a Semaphore for synchronizing execution order between different threads.</div>"
+    },
+    {
+      "id": 35,
+      "topic": "Operating Systems",
+      "text": "What anomaly occurs when increasing the number of physical page frames allocated to a process unexpectedly causes an increase in the number of page faults?",
+      "options": [
+        "Thrashing",
+        "Belady's Anomaly",
+        "Race Condition",
+        "Deadlock"
+      ],
+      "correct": 1,
+      "explanation": "Belady's Anomaly is a counter-intuitive phenomenon specifically associated with the FIFO (First-In, First-Out) page replacement algorithm, where adding more memory actually degrades performance for certain reference strings.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Stack-based algorithms like LRU (Least Recently Used) and Optimal are mathematically immune to Belady's Anomaly.</div>"
+    },
+    {
+      "id": 36,
+      "topic": "Operating Systems",
+      "text": "In the traditional Unix File System structure, what happens when a file grows so large that the direct pointers inside its Inode are exhausted?",
+      "options": [
+        "The OS creates a completely new Inode and links them.",
+        "The OS utilizes a Single Indirect Pointer which points to a disk block containing an array of more direct pointers.",
+        "The file is fragmented across swap space.",
+        "The system throws a 'Disk Full' exception."
+      ],
+      "correct": 1,
+      "explanation": "Unix inodes contain a fixed number of direct pointers (usually 12) for small files. For larger files, it uses single indirect pointers, double indirect pointers, and triple indirect pointers, essentially building a tree of disk block addresses.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A triple indirect pointer can address massive files (terabytes in size) using just a single pointer slot in the base inode.</div>"
+    },
+    {
+      "id": 37,
+      "topic": "Software Engineering",
+      "text": "According to the Agile Manifesto, which of the following is explicitly prioritized over 'Comprehensive Documentation'?",
+      "options": [
+        "Contract Negotiation",
+        "Processes and Tools",
+        "Working Software",
+        "Following a Strict Plan"
+      ],
+      "correct": 2,
+      "explanation": "The Agile Manifesto states it values: 'Working software over comprehensive documentation.' This doesn't mean documentation is ignored, but producing functional, deliverable software is the higher priority.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The other three core Agile values are: Individuals/interactions over processes/tools, Customer collaboration over contract negotiation, and Responding to change over following a plan.</div>"
+    },
+    {
+      "id": 38,
+      "topic": "Software Engineering",
+      "text": "What defines 'White-Box Testing' in software quality assurance?",
+      "options": [
+        "Testing software based solely on its expected inputs and outputs without looking at the code.",
+        "Testing the software by examining its internal structures, logic paths, and source code directly.",
+        "Testing the graphical user interface exclusively.",
+        "Testing performance under extreme server load."
+      ],
+      "correct": 1,
+      "explanation": "White-box testing (also known as clear-box or structural testing) involves testers having full access to the source code. They design test cases specifically to exercise internal logic loops, conditional branches, and data flows.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Black-box testing relies entirely on requirement specifications, treating the code as an opaque box.</div>"
+    },
+    {
+      "id": 39,
+      "topic": "Software Engineering",
+      "text": "In software design, what is the ultimate goal regarding 'Coupling' and 'Cohesion'?",
+      "options": [
+        "High Coupling and Low Cohesion",
+        "Low Coupling and Low Cohesion",
+        "High Coupling and High Cohesion",
+        "Low Coupling and High Cohesion"
+      ],
+      "correct": 3,
+      "explanation": "Good software design strives for Low Coupling (modules are independent and don't rely heavily on each other) and High Cohesion (a single module focuses tightly on doing one specific task extremely well).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Low coupling ensures that changing a feature in Module A doesn't accidentally break Module B.</div>"
+    },
+    {
+      "id": 40,
+      "topic": "Software Engineering",
+      "text": "Which of the following software design patterns is classified as a 'Creational' pattern designed to ensure a class only ever has one instance, while providing a global point of access to it?",
+      "options": [
+        "Factory Method",
+        "Observer",
+        "Singleton",
+        "Adapter"
+      ],
+      "correct": 2,
+      "explanation": "The Singleton pattern restricts the instantiation of a class to one single object. This is useful when exactly one object is needed to coordinate actions across the system, such as a database connection pool or a configuration manager.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Observer pattern is Behavioral, while the Adapter is Structural.</div>"
+    },
+    {
+      "id": 41,
+      "topic": "Software Engineering",
+      "text": "During the Requirement Gathering phase of the SDLC, which crucial document is produced that acts as the final agreement between the client and the developers regarding what will be built?",
+      "options": [
+        "System Architecture Diagram",
+        "Software Requirement Specification (SRS)",
+        "Unit Test Plan",
+        "Deployment Manifesto"
+      ],
+      "correct": 1,
+      "explanation": "The Software Requirement Specification (SRS) is a comprehensive document detailing all functional and non-functional requirements. It serves as the formal baseline contract for the entire development project.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A good SRS is clear, measurable, and testable, leaving no room for ambiguous interpretations.</div>"
+    },
+    {
+      "id": 42,
+      "topic": "Java Programming",
+      "text": "In Java, what does the `volatile` keyword guarantee when applied to a variable in a multi-threaded environment?",
+      "options": [
+        "It prevents the variable from being modified after initialization.",
+        "It ensures the variable is never serialized to a file.",
+        "It instructs the JVM that threads should read the variable directly from main memory, bypassing local CPU caches, ensuring visibility across multiple threads.",
+        "It automatically synchronizes all methods in the class."
+      ],
+      "correct": 2,
+      "explanation": "The `volatile` keyword guarantees visibility. In multi-threaded environments, threads often cache variables locally for performance. Marking a variable `volatile` forces all threads to read from and write to the shared main memory, preventing stale data.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Unlike the `synchronized` keyword, `volatile` does NOT provide atomicity (e.g., `count++` is still not thread-safe even if volatile).</div>"
+    },
+    {
+      "id": 43,
+      "topic": "Python Programming",
+      "text": "Evaluate the output of the following Python code containing a list comprehension. What will be printed?<br><br><div class='code-block'>data = [1, 2, 3, 4, 5]\nres = [x * 2 if x % 2 != 0 else x for x in data]\nprint(sum(res))</div>",
+      "options": [
+        "15",
+        "20",
+        "24",
+        "30"
+      ],
+      "correct": 2,
+      "explanation": "The list comprehension uses an inline conditional: If `x` is odd (`x % 2 != 0`), multiply it by 2. If it is even, leave it as `x`.<br>1 -> 2<br>2 -> 2<br>3 -> 6<br>4 -> 4<br>5 -> 10<br>Resulting list: `[2, 2, 6, 4, 10]`.<br>Sum = 24.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• List comprehensions with `if/else` place the condition *before* the `for` keyword. Filtering comprehensions (just `if`) place the condition *after*.</div>"
+    },
+    {
+      "id": 44,
+      "topic": "C/C++ Programming",
+      "text": "In C++, what is a primary distinction between a Pointer and a Reference variable?",
+      "options": [
+        "Pointers can hold memory addresses, while References only hold strings.",
+        "A Reference must be initialized when it is declared and cannot be reassigned to refer to a different variable later, whereas a Pointer can be reassigned.",
+        "Pointers are inherently faster than References.",
+        "References require the `*` operator to dereference."
+      ],
+      "correct": 1,
+      "explanation": "A reference (`int &ref = var;`) acts as a permanent alias for a variable. It must be initialized immediately and cannot point to anything else afterward. A pointer (`int *ptr = &var;`) holds a memory address, can be initialized as `nullptr`, and can be repointed to different variables at will.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because references cannot be null, they are generally safer to use in function parameters than raw pointers.</div>"
+    },
+    {
+      "id": 45,
+      "topic": "Java Programming",
+      "text": "Which object-oriented concept is demonstrated when a Java class contains multiple methods with the exact same name, but with different parameter lists (different types or number of arguments)?",
+      "options": [
+        "Method Overriding",
+        "Method Overloading",
+        "Encapsulation",
+        "Data Hiding"
+      ],
+      "correct": 1,
+      "explanation": "Method Overloading is a form of compile-time polymorphism. It allows you to create multiple methods with the same name as long as the compiler can tell them apart by their arguments.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Method Overriding happens when a child class provides a new implementation for a method already defined in its parent class.</div>"
+    },
+    {
+      "id": 46,
+      "topic": "Python Programming",
+      "text": "Which of the following data structures in Python is inherently immutable (cannot be changed after creation)?",
+      "options": [
+        "List",
+        "Dictionary",
+        "Set",
+        "Tuple"
+      ],
+      "correct": 3,
+      "explanation": "Tuples in Python, defined by parentheses `()`, are immutable. Once created, you cannot append, remove, or modify elements inside them. Lists, Dictionaries, and Sets are all mutable data structures.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because they are immutable, Tuples can be used as keys in a Dictionary, whereas Lists cannot.</div>"
+    },
+    {
+      "id": 47,
+      "topic": "Java Programming",
+      "text": "Which of the following is a primary characteristic of Java's modern `Stream API` (introduced in Java 8)?",
+      "options": [
+        "Streams inherently modify the underlying data collection they are sourced from.",
+        "Streams store data permanently in memory similar to a database table.",
+        "Streams support functional-style pipeline operations (map, filter, reduce) evaluated lazily.",
+        "Streams are specifically designed exclusively for byte-level I/O operations."
+      ],
+      "correct": 2,
+      "explanation": "The Java 8 Stream API allows for functional, declarative programming on collections. They are 'lazy', meaning operations like `filter` or `map` do not execute until a terminal operation (like `collect` or `forEach`) is invoked. Streams never modify the source collection; they produce a new result.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Unlike `InputStream` or `OutputStream` (from `java.io`), the `java.util.stream` API operates on objects and data structures.</div>"
+    },
+    {
+      "id": 48,
+      "topic": "Misc (Banking IT)",
+      "text": "In Core Banking Solutions (CBS), what architectural paradigm is predominantly utilized to ensure all decentralized branch operations synchronize seamlessly with a centralized database server?",
+      "options": [
+        "Peer-to-Peer Distributed Ledger",
+        "Centralized Real-Time Online Processing (OLTP)",
+        "Batch Processing File Transfer",
+        "Local Area Ring Network Topology"
+      ],
+      "correct": 1,
+      "explanation": "CBS operates on centralized online real-time processing (OLTP), ensuring branch updates reflect instantly across the entire enterprise database.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Enables 'Anywhere Banking' across multi-channel customer touchpoints (ATM, Internet Banking, Mobile Apps).</div>"
+    },
+    {
+      "id": 49,
+      "topic": "Misc (Emerging Tech)",
+      "text": "In public blockchain networks like Bitcoin, which specific consensus mechanism ensures distributed Byzantine fault tolerance by requiring nodes to expend significant computational energy to validate transactions?",
+      "options": [
+        "Proof of Stake (PoS)",
+        "Delegated Byzantine Fault Tolerance (dBFT)",
+        "Proof of Work (PoW)",
+        "Practical Byzantine Fault Tolerance (pBFT)"
+      ],
+      "correct": 2,
+      "explanation": "Proof of Work (PoW) relies on miners solving complex cryptographic puzzles. This expenditure of hardware energy and time prevents malicious actors from easily rewriting the blockchain's history.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Proof of Stake (PoS), used by Ethereum, replaces energy-intensive mining with validators who lock up cryptocurrency collateral.</div>"
+    },
+    {
+      "id": 50,
+      "topic": "Misc (IT Act 2000)",
+      "text": "Under the provisions of the Information Technology Act 2000, Section 43A specifically mandates corporations to pay damages by way of compensation for negligence in implementing reasonable security practices to protect which class of data?",
+      "options": [
+        "Financial Stock Market Data",
+        "Sensitive Personal Data or Information (SPDI)",
+        "Government Defense Intranets",
+        "Public Domain Copyrighted Material"
+      ],
+      "correct": 1,
+      "explanation": "Section 43A holds body corporates liable if they are negligent in handling 'Sensitive Personal Data or Information' (SPDI), resulting in wrongful loss or gain. SPDI includes passwords, financial information, biometric data, and medical records.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The subsequent IT Rules 2011 explicitly defined what constitutes SPDI and the required consent protocols for gathering it.</div>"
+    }
+  ]
+}

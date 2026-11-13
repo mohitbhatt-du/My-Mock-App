@@ -1,0 +1,666 @@
+{
+  "id": "day_4",
+  "day": 4,
+  "title": "IT Officer Mains: Day 4",
+  "difficulty": "Easy to Moderate",
+  "difficultyLevel": 2,
+  "tags": "Balanced",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Database Systems",
+      "text": "DIAGRAM: Based on the ER diagram provided below, which of the following is true about the relationship between 'Student' and 'Course'?<br><br><div class='diagram-container'><svg viewBox='0 0 450 150' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='50' width='100' height='50' fill='white' stroke='black' stroke-width='2'/><text x='70' y='80' text-anchor='middle' fill='black' font-weight='bold'>STUDENT</text><path d='M 170 75 L 220 50 L 270 75 L 220 100 Z' fill='white' stroke='black' stroke-width='2'/><text x='220' y='80' text-anchor='middle' fill='black'>ENROLLS</text><rect x='320' y='50' width='100' height='50' fill='white' stroke='black' stroke-width='2'/><text x='370' y='80' text-anchor='middle' fill='black' font-weight='bold'>COURSE</text><line x1='120' y1='75' x2='170' y2='75' stroke='black' stroke-width='2'/><text x='145' y='70' fill='black'>M</text><line x1='270' y1='75' x2='320' y2='75' stroke='black' stroke-width='2'/><text x='295' y='70' fill='black'>N</text></svg></div>",
+      "options": [
+        "One student can enroll in only one course.",
+        "A course can have only one student enrolled.",
+        "Many students can enroll in many courses.",
+        "The relationship requires a weak entity."
+      ],
+      "correct": 2,
+      "explanation": "The 'M' and 'N' on the lines connecting the entities to the relationship diamond indicate a Many-to-Many (M:N) relationship."
+    },
+    {
+      "id": 2,
+      "topic": "Python Programming",
+      "text": "What will be the output of the following Python snippet?<br><br><div class='code-block'>def calc(x, y=[]):\n    y.append(x)\n    return y\n\nprint(calc(1))\nprint(calc(2, []))\nprint(calc(3))</div>",
+      "options": [
+        "[1], [2], [3]",
+        "[1], [2], [1, 3]",
+        "[1], [2], [1, 2, 3]",
+        "Syntax Error"
+      ],
+      "correct": 1,
+      "explanation": "Default mutable arguments (like lists) are evaluated once. The first call modifies the default list to [1]. The second call passes a new empty list. The third call appends to the modified default list, resulting in [1, 3]."
+    },
+    {
+      "id": 3,
+      "topic": "Computer Networks",
+      "text": "Which routing protocol uses Dijkstra's algorithm to find the shortest path?",
+      "options": [
+        "RIP",
+        "BGP",
+        "OSPF",
+        "EIGRP"
+      ],
+      "correct": 2,
+      "explanation": "OSPF (Open Shortest Path First) is a link-state routing protocol that uses Dijkstra's algorithm to compute the shortest path tree."
+    },
+    {
+      "id": 4,
+      "topic": "Java Programming",
+      "text": "What happens when this Java code is compiled and run?<br><br><div class='code-block'>try {\n    int x = 5 / 0;\n} catch (Exception e) {\n    System.out.print(\"Exception \");\n} catch (ArithmeticException a) {\n    System.out.print(\"Arithmetic \");\n}</div>",
+      "options": [
+        "Prints: Exception",
+        "Prints: Arithmetic",
+        "Compile-time Error",
+        "Runtime Error"
+      ],
+      "correct": 2,
+      "explanation": "Compile-time Error: Subclasses must be caught BEFORE their superclasses. `ArithmeticException` is a subclass of `Exception`, making the second catch block unreachable."
+    },
+    {
+      "id": 5,
+      "topic": "Operating Systems",
+      "text": "NUMERICAL: A system uses 32-bit logical addresses and 4KB pages. How many entries are in the page table of a process?",
+      "options": [
+        "2<sup>12</sup>",
+        "2<sup>20</sup>",
+        "2<sup>24</sup>",
+        "2<sup>32</sup>"
+      ],
+      "correct": 1,
+      "explanation": "Page size = 4KB = 2<sup>12</sup> bytes, requiring 12 bits for the offset. Logical address = 32 bits. Page number bits = 32 - 12 = 20 bits. Total entries = 2<sup>20</sup>."
+    },
+    {
+      "id": 6,
+      "topic": "Data Structures & Algorithms",
+      "text": "NUMERICAL: What is the worst-case time complexity of the QuickSort algorithm?",
+      "options": [
+        "O(n)",
+        "O(n log n)",
+        "O(n<sup>2</sup>)",
+        "O(log n)"
+      ],
+      "correct": 2,
+      "explanation": "The worst-case occurs when the pivot chosen is always the extreme element (e.g., already sorted array), resulting in O(n<sup>2</sup>) complexity."
+    },
+    {
+      "id": 7,
+      "topic": "Digital Logic",
+      "text": "Which flip-flop toggles its output when both inputs are HIGH (1)?",
+      "options": [
+        "D Flip-Flop",
+        "T Flip-Flop",
+        "SR Flip-Flop",
+        "JK Flip-Flop"
+      ],
+      "correct": 3,
+      "explanation": "In a JK flip-flop, when J=1 and K=1, the next state is the complement (toggle) of the current state."
+    },
+    {
+      "id": 8,
+      "topic": "Compiler Design",
+      "text": "Which phase of the compiler is responsible for checking syntax errors?",
+      "options": [
+        "Lexical Analysis",
+        "Syntax Analysis (Parsing)",
+        "Semantic Analysis",
+        "Code Generation"
+      ],
+      "correct": 1,
+      "explanation": "Syntax Analysis (Parsing) checks if the stream of tokens conforms to the grammar rules of the language."
+    },
+    {
+      "id": 9,
+      "topic": "Software Engineering",
+      "text": "Which SDLC model is characterized by risk analysis at each iteration?",
+      "options": [
+        "Waterfall",
+        "Agile",
+        "Spiral",
+        "V-Model"
+      ],
+      "correct": 2,
+      "explanation": "The Spiral model explicitly includes a risk analysis phase in every cycle/iteration before proceeding."
+    },
+    {
+      "id": 10,
+      "topic": "Cyber Security",
+      "text": "Which of the following is an example of an Asymmetric Encryption algorithm?",
+      "options": [
+        "AES",
+        "DES",
+        "RSA",
+        "RC4"
+      ],
+      "correct": 2,
+      "explanation": "RSA uses a public/private key pair, making it an asymmetric encryption algorithm. AES and DES are symmetric."
+    },
+    {
+      "id": 11,
+      "topic": "Misc (IT Act 2000)",
+      "text": "Under the IT Act 2000, which section deals with the punishment for hacking?",
+      "options": [
+        "Section 43",
+        "Section 65",
+        "Section 66",
+        "Section 67"
+      ],
+      "correct": 2,
+      "explanation": "Section 66 of the IT Act prescribes punishment for computer-related offenses, effectively covering hacking."
+    },
+    {
+      "id": 12,
+      "topic": "Database Systems",
+      "text": "Which property of a database transaction ensures that once a transaction has been committed, it will remain so, even in the event of power loss?",
+      "options": [
+        "Atomicity",
+        "Consistency",
+        "Isolation",
+        "Durability"
+      ],
+      "correct": 3,
+      "explanation": "Durability guarantees that completed (committed) transactions survive permanently in the database even in the event of system failure."
+    },
+    {
+      "id": 13,
+      "topic": "C/C++ Programming",
+      "text": "What does `*(ptr + 2)` do if `ptr` points to the start of an integer array?",
+      "options": [
+        "Adds 2 to the value of the first element",
+        "Accesses the memory address 2 bytes ahead",
+        "Accesses the 3rd element in the array",
+        "Throws a segmentation fault"
+      ],
+      "correct": 2,
+      "explanation": "Pointer arithmetic accounts for data type size. `ptr + 2` moves the pointer forward by 2 integer sizes, pointing to the 3rd element in the array."
+    },
+    {
+      "id": 14,
+      "topic": "Networking (Numericals)",
+      "text": "NUMERICAL: An organization is granted the block 130.34.12.64/26. How many usable host IP addresses are available in this subnet?",
+      "options": [
+        "64",
+        "62",
+        "32",
+        "30"
+      ],
+      "correct": 1,
+      "explanation": "A /26 subnet masks leaves 32 - 26 = 6 bits for hosts. Total addresses = 2<sup>6</sup> = 64. Usable hosts = 64 - 2 (Network & Broadcast address) = 62."
+    },
+    {
+      "id": 15,
+      "topic": "Object Oriented Programming",
+      "text": "Which design pattern restricts the instantiation of a class to one single instance?",
+      "options": [
+        "Factory",
+        "Observer",
+        "Singleton",
+        "Decorator"
+      ],
+      "correct": 2,
+      "explanation": "The Singleton pattern ensures a class has only one instance and provides a global point of access to it."
+    },
+    {
+      "id": 16,
+      "topic": "Operating Systems",
+      "text": "In CPU scheduling, which algorithm can lead to starvation?",
+      "options": [
+        "Round Robin",
+        "Shortest Job First (SJF)",
+        "First Come First Serve (FCFS)",
+        "Both B and C"
+      ],
+      "correct": 1,
+      "explanation": "SJF can lead to starvation if short processes continually arrive, preventing longer processes from ever getting CPU time."
+    },
+    {
+      "id": 17,
+      "topic": "Data Structures & Algorithms",
+      "text": "In a binary search tree (BST), which traversal outputs the elements in sorted (ascending) order?",
+      "options": [
+        "Pre-order",
+        "In-order",
+        "Post-order",
+        "Level-order"
+      ],
+      "correct": 1,
+      "explanation": "In-order traversal (Left, Root, Right) of a BST strictly processes nodes in ascending sorted order."
+    },
+    {
+      "id": 18,
+      "topic": "Misc (Banking IT)",
+      "text": "In modern banking, what does CBS stand for?",
+      "options": [
+        "Centralized Banking Security",
+        "Core Banking Solution",
+        "Common Business Server",
+        "Commercial Bank System"
+      ],
+      "correct": 1,
+      "explanation": "Core Banking Solutions (CBS) enable banks to centralize operations, allowing customers to access their accounts from any branch."
+    },
+    {
+      "id": 19,
+      "topic": "Python Programming",
+      "text": "Which of the following is NOT a valid built-in mutable data type in Python?",
+      "options": [
+        "List",
+        "Dictionary",
+        "Set",
+        "Tuple"
+      ],
+      "correct": 3,
+      "explanation": "Tuples in Python are immutable data types, meaning their elements cannot be changed after assignment."
+    },
+    {
+      "id": 20,
+      "topic": "Database Systems",
+      "text": "MATCHING: Match the Database Normal Forms (List I) with their corresponding rules (List II).<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. 1NF</td><td>1. Removes transitive dependency</td></tr><tr><td>Q. 2NF</td><td>2. Every determinant is a candidate key</td></tr><tr><td>R. 3NF</td><td>3. Atomic values only</td></tr><tr><td>S. BCNF</td><td>4. Removes partial dependency</td></tr></table>",
+      "options": [
+        "P-3, Q-4, R-1, S-2",
+        "P-4, Q-3, R-2, S-1",
+        "P-3, Q-1, R-4, S-2",
+        "P-1, Q-2, R-3, S-4"
+      ],
+      "correct": 0,
+      "explanation": "1NF requires atomic values. 2NF eliminates partial dependencies. 3NF eliminates transitive dependencies. BCNF requires every determinant to be a candidate key."
+    },
+    {
+      "id": 21,
+      "topic": "Java Programming",
+      "text": "Which keyword is used in Java to prevent a class from being inherited?",
+      "options": [
+        "static",
+        "const",
+        "final",
+        "volatile"
+      ],
+      "correct": 2,
+      "explanation": "The `final` keyword applied to a class prevents any other class from extending (inheriting from) it."
+    },
+    {
+      "id": 22,
+      "topic": "Digital Logic",
+      "text": "Identify the logic gate represented by the boolean expression Y = (A + B)'",
+      "options": [
+        "AND Gate",
+        "NAND Gate",
+        "NOR Gate",
+        "XOR Gate"
+      ],
+      "correct": 2,
+      "explanation": "Y = (A + B)' is the inverse of an OR gate, which is the definition of a NOR gate."
+    },
+    {
+      "id": 23,
+      "topic": "Compiler Design",
+      "text": "A grammar that produces more than one parse tree for some sentence is called:",
+      "options": [
+        "Ambiguous",
+        "Context-Free",
+        "Regular",
+        "Recursive"
+      ],
+      "correct": 0,
+      "explanation": "An ambiguous grammar can generate the same string using different leftmost/rightmost derivations, leading to multiple parse trees."
+    },
+    {
+      "id": 24,
+      "topic": "Software Engineering",
+      "text": "Testing individual modules in isolation is known as:",
+      "options": [
+        "Integration Testing",
+        "System Testing",
+        "Unit Testing",
+        "Acceptance Testing"
+      ],
+      "correct": 2,
+      "explanation": "Unit testing focuses on verifying the smallest testable parts of an application (modules/functions) in isolation."
+    },
+    {
+      "id": 25,
+      "topic": "Cyber Security",
+      "text": "NUMERICAL: In RSA, if prime p=3 and prime q=11, what is the value of the modulus (n)?",
+      "options": [
+        "14",
+        "33",
+        "8",
+        "20"
+      ],
+      "correct": 1,
+      "explanation": "In RSA cryptography, the modulus n is calculated as the product of the two primes: n = p * q = 3 * 11 = 33."
+    },
+    {
+      "id": 26,
+      "topic": "Numerical (Architecture)",
+      "text": "NUMERICAL: A pipeline has 4 stages with delays: 10ns, 15ns, 12ns, 11ns. What is the clock cycle time of the pipeline?",
+      "options": [
+        "10ns",
+        "12ns",
+        "15ns",
+        "48ns"
+      ],
+      "correct": 2,
+      "explanation": "The clock cycle time of a pipeline is determined by its slowest (longest delay) stage. Max(10, 15, 12, 11) = 15ns."
+    },
+    {
+      "id": 27,
+      "topic": "Database Systems",
+      "text": "In SQL, which command is used to revoke privileges granted to a user?",
+      "options": [
+        "DROP",
+        "ROLLBACK",
+        "REVOKE",
+        "DELETE"
+      ],
+      "correct": 2,
+      "explanation": "REVOKE is a Data Control Language (DCL) command used to remove user access privileges previously granted with the GRANT command."
+    },
+    {
+      "id": 28,
+      "topic": "C/C++ Programming",
+      "text": "In C++, which function is used to deallocate memory created by the `new` keyword?",
+      "options": [
+        "free()",
+        "remove()",
+        "delete",
+        "clear()"
+      ],
+      "correct": 2,
+      "explanation": "In C++, `new` is used for dynamic memory allocation, and `delete` (or `delete[]` for arrays) is used to deallocate it."
+    },
+    {
+      "id": 29,
+      "topic": "Computer Networks",
+      "text": "Which protocol operates at the Transport layer and provides connectionless, unacknowledged service?",
+      "options": [
+        "TCP",
+        "IP",
+        "UDP",
+        "ICMP"
+      ],
+      "correct": 2,
+      "explanation": "UDP (User Datagram Protocol) is connectionless and does not guarantee delivery, operating at the transport layer."
+    },
+    {
+      "id": 30,
+      "topic": "Operating Systems",
+      "text": "Which condition is NOT one of the Coffman conditions required for Deadlock?",
+      "options": [
+        "Mutual Exclusion",
+        "Hold and Wait",
+        "Circular Wait",
+        "Preemption"
+      ],
+      "correct": 3,
+      "explanation": "The four conditions are Mutual Exclusion, Hold and Wait, No Preemption, and Circular Wait. Preemption breaks deadlocks."
+    },
+    {
+      "id": 31,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which data structure is best suited for evaluating postfix expressions?",
+      "options": [
+        "Queue",
+        "Stack",
+        "Linked List",
+        "Binary Tree"
+      ],
+      "correct": 1,
+      "explanation": "A Stack is used to evaluate postfix expressions by pushing operands and popping them when an operator is encountered."
+    },
+    {
+      "id": 32,
+      "topic": "Misc (Cloud Computing)",
+      "text": "Which cloud service model provides hardware, OS, and network infrastructure over the internet?",
+      "options": [
+        "SaaS",
+        "PaaS",
+        "IaaS",
+        "FaaS"
+      ],
+      "correct": 2,
+      "explanation": "Infrastructure as a Service (IaaS) provides virtualized computing resources (servers, networking, storage) over the internet."
+    },
+    {
+      "id": 33,
+      "topic": "Python Programming",
+      "text": "What is the output of this Python code?<br><br><div class='code-block'>x = [1, 2, 3]\ny = x\ny[0] = 4\nprint(x[0])</div>",
+      "options": [
+        "1",
+        "4",
+        "TypeError",
+        "[1, 2, 3]"
+      ],
+      "correct": 1,
+      "explanation": "Lists in Python are mutable, and assigning `y = x` copies the reference, not the object. Changing `y[0]` also changes `x[0]`."
+    },
+    {
+      "id": 34,
+      "topic": "Java Programming",
+      "text": "In Java multithreading, which method is called internally when the start() method is invoked?",
+      "options": [
+        "init()",
+        "execute()",
+        "run()",
+        "thread()"
+      ],
+      "correct": 2,
+      "explanation": "Invoking `start()` on a Thread creates a new call stack and internally executes the `run()` method in that new thread."
+    },
+    {
+      "id": 35,
+      "topic": "Digital Logic",
+      "text": "A Karnaugh Map (K-Map) is used primarily for:",
+      "options": [
+        "Binary to Decimal conversion",
+        "Simplifying Boolean expressions",
+        "Designing multiplexers",
+        "Error detection"
+      ],
+      "correct": 1,
+      "explanation": "K-Maps provide a systematic, visual method for simplifying boolean algebra expressions without using complex theorems."
+    },
+    {
+      "id": 36,
+      "topic": "Compiler Design",
+      "text": "Which tool is typically used to generate a lexical analyzer?",
+      "options": [
+        "YACC",
+        "LEX",
+        "Bison",
+        "Make"
+      ],
+      "correct": 1,
+      "explanation": "LEX is a widely used tool that generates a lexical analyzer from a set of regular expressions."
+    },
+    {
+      "id": 37,
+      "topic": "Software Engineering",
+      "text": "Good software design dictates that modules should have:",
+      "options": [
+        "High coupling, Low cohesion",
+        "Low coupling, High cohesion",
+        "High coupling, High cohesion",
+        "Low coupling, Low cohesion"
+      ],
+      "correct": 1,
+      "explanation": "Modules should be highly cohesive (focused on a single task) and loosely coupled (independent from other modules)."
+    },
+    {
+      "id": 38,
+      "topic": "Cyber Security",
+      "text": "An attack that manipulates a web application's database by inserting malicious code into input fields is known as:",
+      "options": [
+        "XSS",
+        "SQL Injection",
+        "CSRF",
+        "Phishing"
+      ],
+      "correct": 1,
+      "explanation": "SQL Injection occurs when malicious SQL statements are inserted into entry fields for execution by the database."
+    },
+    {
+      "id": 39,
+      "topic": "Numerical (OS Disk)",
+      "text": "NUMERICAL: In FCFS disk scheduling, if the queue is [98, 183, 37] and head starts at 53, what is the total head movement?",
+      "options": [
+        "45",
+        "130",
+        "276",
+        "310"
+      ],
+      "correct": 2,
+      "explanation": "|53-98| = 45. |98-183| = 85. |183-37| = 146. Total = 45 + 85 + 146 = 276."
+    },
+    {
+      "id": 40,
+      "topic": "Database Systems",
+      "text": "Which indexing structure is most commonly used in RDBMS to support both equality and range queries efficiently?",
+      "options": [
+        "Hash Table",
+        "B+ Tree",
+        "Binary Search Tree",
+        "R-Tree"
+      ],
+      "correct": 1,
+      "explanation": "B+ Trees are the standard for relational databases because they keep data sorted and allow for extremely fast sequential (range) access as well as exact matches."
+    },
+    {
+      "id": 41,
+      "topic": "C/C++ Programming",
+      "text": "What is a virtual function in C++ primarily used to achieve?",
+      "options": [
+        "Compile-time polymorphism",
+        "Runtime polymorphism",
+        "Data hiding",
+        "Operator overloading"
+      ],
+      "correct": 1,
+      "explanation": "Virtual functions allow for late binding (runtime polymorphism), ensuring that the correct overridden function in a derived class is called."
+    },
+    {
+      "id": 42,
+      "topic": "Computer Networks",
+      "text": "MATCHING: Match the OSI Layers with their Data Units.<br><br><table class='matching-table'><tr><th>Layer</th><th>Data Unit</th></tr><tr><td>P. Physical</td><td>1. Packets</td></tr><tr><td>Q. Data Link</td><td>2. Segments</td></tr><tr><td>R. Network</td><td>3. Bits</td></tr><tr><td>S. Transport</td><td>4. Frames</td></tr></table>",
+      "options": [
+        "P-3, Q-4, R-1, S-2",
+        "P-4, Q-3, R-1, S-2",
+        "P-3, Q-4, R-2, S-1",
+        "P-1, Q-2, R-3, S-4"
+      ],
+      "correct": 0,
+      "explanation": "Physical handles Bits. Data Link handles Frames. Network handles Packets. Transport handles Segments."
+    },
+    {
+      "id": 43,
+      "topic": "Object Oriented Programming",
+      "text": "Hiding the internal state and requiring all interaction to be performed through an object's methods is known as:",
+      "options": [
+        "Polymorphism",
+        "Inheritance",
+        "Encapsulation",
+        "Abstraction"
+      ],
+      "correct": 2,
+      "explanation": "Encapsulation is the bundling of data and the methods that operate on that data into a single unit, restricting direct access to some of the object's components."
+    },
+    {
+      "id": 44,
+      "topic": "Operating Systems",
+      "text": "Which component is shared across multiple threads belonging to the same process?",
+      "options": [
+        "Stack",
+        "Registers",
+        "Heap (Data Section)",
+        "Program Counter"
+      ],
+      "correct": 2,
+      "explanation": "Threads share the process's data section (Heap), code section, and OS resources, but have their own Stack, Registers, and Program Counter."
+    },
+    {
+      "id": 45,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which graph traversal algorithm uses a Queue data structure?",
+      "options": [
+        "Depth First Search (DFS)",
+        "Breadth First Search (BFS)",
+        "Dijkstra's",
+        "Prim's"
+      ],
+      "correct": 1,
+      "explanation": "BFS explores nodes level by level, utilizing a FIFO Queue to keep track of adjacent nodes to visit."
+    },
+    {
+      "id": 46,
+      "topic": "Misc (Emerging Tech)",
+      "text": "In Blockchain technology, a 'Hash' primarily ensures:",
+      "options": [
+        "Scalability",
+        "Data Immutability",
+        "Faster Transactions",
+        "User Anonymity"
+      ],
+      "correct": 1,
+      "explanation": "Cryptographic hashes link blocks together. Any change to data alters the hash, immediately exposing the tampering, thereby ensuring immutability."
+    },
+    {
+      "id": 47,
+      "topic": "Python Programming",
+      "text": "Identify the correct way to handle exceptions in Python:",
+      "options": [
+        "try...catch",
+        "try...except",
+        "try...finally...catch",
+        "do...except"
+      ],
+      "correct": 1,
+      "explanation": "Python uses the `try` block to test a block of code for errors, and the `except` block to handle the error."
+    },
+    {
+      "id": 48,
+      "topic": "Java Programming",
+      "text": "Which interface does the java.util.Hashtable class implement?",
+      "options": [
+        "List",
+        "Set",
+        "Map",
+        "Queue"
+      ],
+      "correct": 2,
+      "explanation": "Hashtable implements the Map interface (storing key/value pairs) and is synchronized."
+    },
+    {
+      "id": 49,
+      "topic": "Networking (Numericals)",
+      "text": "NUMERICAL: Given IP 192.168.1.50 and subnet mask 255.255.255.224, what is the network address?",
+      "options": [
+        "192.168.1.0",
+        "192.168.1.32",
+        "192.168.1.48",
+        "192.168.1.64"
+      ],
+      "correct": 1,
+      "explanation": "Mask 224 means block size is 32 (256-224=32). Subnets are .0, .32, .64. The IP .50 falls in the .32 network block."
+    },
+    {
+      "id": 50,
+      "topic": "Misc (IT Standards)",
+      "text": "Which ISO standard specifies the requirements for an Information Security Management System (ISMS)?",
+      "options": [
+        "ISO 9001",
+        "ISO 27001",
+        "ISO 14001",
+        "ISO 31000"
+      ],
+      "correct": 1,
+      "explanation": "ISO/IEC 27001 is the international standard for information security management systems (ISMS)."
+    }
+  ]
+}

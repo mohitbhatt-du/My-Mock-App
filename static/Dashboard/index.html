@@ -474,46 +474,6 @@ function renderQuizHub(quizzes, results) {
       topicChart = new Chart(ctx, { type: 'bar', data: { labels: dataArr.map(d => d.name), datasets: [{ data: dataArr.map(d => d.acc), backgroundColor: dataArr.map(d => d.acc >= 75 ? '#34d399' : (d.acc >= 50 ? '#fbbf24' : '#fb7185')), borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } } });
     }
 
-
-    async function loadDataFromBackend() {
-      try {
-        // Fetch Quizzes and Visitor Count from your Flask backend
-        const [quizRes, visitorRes] = await Promise.all([
-          fetch('/api/quizzes'),
-          fetch('/api/visitors')
-        ]);
-        
-        globalQuizzes = await quizRes.json();
-        const visitorData = await visitorRes.json();
-        document.getElementById('visitor-counter').innerText = visitorData.count;
-
-        // Fetch GitHub Stars separately so it won't break the page if it fails
-        try {
-          const githubRes = await fetch('https://api.github.com/repos/mohitbhatt-du/My-Mock-App');
-          if (githubRes.ok) {
-            const repoData = await githubRes.json();
-            document.getElementById('star-counter').innerText = repoData.stargazers_count ?? 0;
-          } else {
-            document.getElementById('star-counter').innerText = '0';
-          }
-        } catch (gitErr) {
-          console.warn("Could not fetch GitHub stars:", gitErr);
-          document.getElementById('star-counter').innerText = '0';
-        }
-        
-        // Load private results from the user's browser memory
-        const results = loadResultsFromLocalStorage();
-        
-        processDataAndRenderAnalytics(results);
-        renderQuizHub(globalQuizzes, results);
-      } catch (err) {
-        console.error("Backend connection failed.", err);
-        document.getElementById('history-rows').innerHTML = `<tr><td colspan="7"><div class="empty-state"><i data-lucide="wifi-off"></i><h3>Server Connection Issue</h3></div></td></tr>`;
-        lucide.createIcons();
-      }
-    }
-
-
     async function resetAllProgress() {
           const confirmed = confirm("⚠️ WARNING: This will delete all your local mock test results on this device.");
           if (confirmed) {
@@ -620,7 +580,7 @@ function renderQuizHub(quizzes, results) {
 
         // 6. Launch the special player
         document.getElementById('player-title').innerText = "Dynamic Revision Mock";
-        document.getElementById('quiz-iframe').src = "/Mock_Pages/Revision/revision-quiz.html"; 
+        document.getElementById('quiz-iframe').src = "/player?quiz=revision"; 
         
         const overlay = document.getElementById('quiz-player-overlay');
         overlay.style.display = 'flex'; overlay.style.opacity = '0';

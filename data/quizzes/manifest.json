@@ -1,0 +1,189 @@
+[
+  {
+    "id": "day_1",
+    "day": 1,
+    "title": "IT Officer Mains: Day 1",
+    "difficulty": "Moderate to Hard",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_1.json",
+    "legacyHtml": "Day_1.html"
+  },
+  {
+    "id": "day_2",
+    "day": 2,
+    "title": "IT Officer Mains: Day 2",
+    "difficulty": "Moderate to Hard",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_2.json",
+    "legacyHtml": "Day_2.html"
+  },
+  {
+    "id": "day_3",
+    "day": 3,
+    "title": "IT Officer Mains: Day 3",
+    "difficulty": "Moderate to Hard",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_3.json",
+    "legacyHtml": "Day_3.html"
+  },
+  {
+    "id": "day_4",
+    "day": 4,
+    "title": "IT Officer Mains: Day 4",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_4.json",
+    "legacyHtml": "Day_4.html"
+  },
+  {
+    "id": "day_5",
+    "day": 5,
+    "title": "IT Officer Mains: Day 5",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_5.json",
+    "legacyHtml": "Day_5.html"
+  },
+  {
+    "id": "day_6",
+    "day": 6,
+    "title": "IT Officer Mains: Day 6",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_6.json",
+    "legacyHtml": "Day_6.html"
+  },
+  {
+    "id": "day_7",
+    "day": 7,
+    "title": "IT Officer Mains: Day 7",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_7.json",
+    "legacyHtml": "Day_7.html"
+  },
+  {
+    "id": "day_8",
+    "day": 8,
+    "title": "IT Officer Mains: Day 8",
+    "difficulty": "Moderate",
+    "difficultyLevel": 2,
+    "tags": "Linux Special",
+    "totalQuestions": 50,
+    "file": "day_8.json",
+    "legacyHtml": "Day_8.html"
+  },
+  {
+    "id": "day_9",
+    "day": 9,
+    "title": "IT Officer Mains: Day 9",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_9.json",
+    "legacyHtml": "Day_9.html"
+  },
+  {
+    "id": "day_10",
+    "day": 10,
+    "title": "IT Officer Mains: Day 10",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "Numericals Special",
+    "totalQuestions": 50,
+    "file": "day_10.json",
+    "legacyHtml": "Day_10.html"
+  },
+  {
+    "id": "day_11",
+    "day": 11,
+    "title": "IT Officer Mains: Day 11",
+    "difficulty": "Moderate to Hard",
+    "difficultyLevel": 3,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_11.json",
+    "legacyHtml": "Day_11.html"
+  },
+  {
+    "id": "day_12",
+    "day": 12,
+    "title": "IT Officer Mains: Day 12",
+    "difficulty": "Moderate to Hard",
+    "difficultyLevel": 3,
+    "tags": "Balanced Core & Misc",
+    "totalQuestions": 50,
+    "file": "day_12.json",
+    "legacyHtml": "Day_12.html"
+  },
+  {
+    "id": "day_13",
+    "day": 13,
+    "title": "IT Officer Mains: Day 13",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_13.json",
+    "legacyHtml": "Day_13.html"
+  },
+  {
+    "id": "day_14",
+    "day": 14,
+    "title": "IT Officer Mains: Day 14",
+    "difficulty": "Moderate to Hard",
+    "difficultyLevel": 3,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_14.json",
+    "legacyHtml": "Day_14.html"
+  },
+  {
+    "id": "day_15",
+    "day": 15,
+    "title": "IT Officer Mains: Day 15",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "DBMS and COA Focused",
+    "totalQuestions": 50,
+    "file": "day_15.json",
+    "legacyHtml": "Day_15.html"
+  },
+  {
+    "id": "day_16",
+    "day": 16,
+    "title": "IT Officer Mains: Day 16",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 3,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_16.json",
+    "legacyHtml": "Day_16.html"
+  },
+  {
+    "id": "day_17",
+    "day": 17,
+    "title": "IT Officer Mains: Day 17",
+    "difficulty": "Easy to Moderate",
+    "difficultyLevel": 2,
+    "tags": "Balanced",
+    "totalQuestions": 50,
+    "file": "day_17.json",
+    "legacyHtml": "Day_17.html"
+  }
+]

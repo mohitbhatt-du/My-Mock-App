@@ -1,0 +1,666 @@
+{
+  "id": "day_1",
+  "day": 1,
+  "title": "IT Officer Mains: Day 1",
+  "difficulty": "Moderate to Hard",
+  "difficultyLevel": 2,
+  "tags": "Balanced",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Database Systems",
+      "text": "In a relational database, which of the following anomalies is primarily resolved by Boyce-Codd Normal Form (BCNF) but not always by 3NF?",
+      "options": [
+        "Partial dependency",
+        "Transitive dependency",
+        "Overlapping candidate keys dependency",
+        "Multi-valued dependency"
+      ],
+      "correct": 2,
+      "explanation": "BCNF is a stricter version of 3NF. It resolves anomalies caused when a database has multiple overlapping candidate keys where a prime attribute depends on a non-prime attribute."
+    },
+    {
+      "id": 2,
+      "topic": "Operating Systems",
+      "text": "Which page replacement algorithm suffers from Belady's Anomaly (where increasing the number of page frames can unexpectedly increase the number of page faults)?",
+      "options": [
+        "LRU (Least Recently Used)",
+        "Optimal Page Replacement",
+        "FIFO (First In First Out)",
+        "LFU (Least Frequently Used)"
+      ],
+      "correct": 2,
+      "explanation": "FIFO is a non-stack algorithm and suffers from Belady's Anomaly because it simply removes the oldest page regardless of its future utility."
+    },
+    {
+      "id": 3,
+      "topic": "Java Programming",
+      "text": "In Java, what is the primary memory area used by the Garbage Collector to allocate class structures and method data starting from Java 8?",
+      "options": [
+        "PermGen (Permanent Generation)",
+        "Metaspace",
+        "Eden Space",
+        "Survivor Space"
+      ],
+      "correct": 1,
+      "explanation": "In Java 8, PermGen was removed and replaced by Metaspace, which is allocated out of native memory rather than the JVM heap."
+    },
+    {
+      "id": 4,
+      "topic": "Computer Networks",
+      "text": "During the TCP congestion control process, what triggers the transition from the 'Slow Start' phase to the 'Congestion Avoidance' phase?",
+      "options": [
+        "A three duplicate ACK event",
+        "A timeout event",
+        "The congestion window (cwnd) exceeding the slow start threshold (ssthresh)",
+        "The receiver window (rwnd) becoming zero"
+      ],
+      "correct": 2,
+      "explanation": "In TCP, when the congestion window size (cwnd) reaches or exceeds the slow start threshold (ssthresh), the algorithm shifts from exponential growth (Slow Start) to linear growth (Congestion Avoidance)."
+    },
+    {
+      "id": 5,
+      "topic": "Miscellaneous (IT Acts)",
+      "text": "Under the Information Technology Act, 2000, Section 70 pertains to the declaration of which of the following?",
+      "options": [
+        "Electronic Governance",
+        "Protected Systems",
+        "Certifying Authorities",
+        "Cyber Appellate Tribunal"
+      ],
+      "correct": 1,
+      "explanation": "Section 70 of the IT Act allows the government to declare any computer, network, or resource as a 'Protected System' (e.g., critical information infrastructure)."
+    },
+    {
+      "id": 6,
+      "topic": "Data Structures",
+      "text": "When resolving collisions in a Hash Table using Double Hashing, which of the following conditions must be met by the secondary hash function h2(k)?",
+      "options": [
+        "h2(k) must always return a prime number.",
+        "h2(k) must evaluate to an odd index.",
+        "h2(k) must never evaluate to zero.",
+        "h2(k) must be identical to the primary hash function."
+      ],
+      "correct": 2,
+      "explanation": "If the secondary hash function evaluates to zero, the probe sequence will not advance (it will get stuck in an infinite loop checking the same index)."
+    },
+    {
+      "id": 7,
+      "topic": "Algorithms",
+      "text": "According to the Master Theorem, what is the time complexity of the recurrence relation T(n) = 3T(n/2) + O(n)?",
+      "options": [
+        "O(n)",
+        "O(n log n)",
+        "O(n^log2(3))",
+        "O(n^2)"
+      ],
+      "correct": 2,
+      "explanation": "Here a=3, b=2. f(n) = O(n). We compare n^(log_b(a)) = n^(log_2(3)) ≈ n^1.58 with f(n) = n. Since n^1.58 is polynomially larger, it falls in Case 1, making the complexity O(n^log2(3))."
+    },
+    {
+      "id": 8,
+      "topic": "Software Engineering",
+      "text": "In software design, which type of coupling occurs when two modules share the same global data structure or global variables?",
+      "options": [
+        "Data Coupling",
+        "Stamp Coupling",
+        "Common Coupling",
+        "Content Coupling"
+      ],
+      "correct": 2,
+      "explanation": "Common (or Global) coupling occurs when multiple modules read or write to the same global data space, making them highly interdependent and harder to maintain."
+    },
+    {
+      "id": 9,
+      "topic": "Information Security",
+      "text": "In the RSA public-key cryptographic algorithm, the security relies on the mathematical difficulty of which problem?",
+      "options": [
+        "Discrete Logarithm Problem",
+        "Integer Factorization Problem",
+        "Elliptic Curve Problem",
+        "Knapsack Problem"
+      ],
+      "correct": 1,
+      "explanation": "RSA's security is based on the practical difficulty of factoring the product of two large prime numbers (Integer Factorization)."
+    },
+    {
+      "id": 10,
+      "topic": "Python Programming",
+      "text": "What is the practical effect of the Global Interpreter Lock (GIL) in standard CPython?",
+      "options": [
+        "It prevents Python from running on multi-core processors entirely.",
+        "It prevents multiple native threads from executing Python bytecodes simultaneously.",
+        "It automatically locks variables to prevent race conditions during I/O operations.",
+        "It enforces strict type-checking at runtime."
+      ],
+      "correct": 1,
+      "explanation": "The GIL is a mutex in CPython that protects access to Python objects, preventing multiple threads from executing Python bytecodes at once, which limits true parallelism in CPU-bound multithreaded programs."
+    },
+    {
+      "id": 11,
+      "topic": "Computer Architecture",
+      "text": "In a pipelined processor, a 'Data Hazard' can often be resolved without stalling the pipeline by using a technique called:",
+      "options": [
+        "Branch Prediction",
+        "Loop Unrolling",
+        "Operand Forwarding (Bypassing)",
+        "Instruction Fetching"
+      ],
+      "correct": 2,
+      "explanation": "Operand forwarding (or bypassing) routes the output of an ALU directly back to the input for the next instruction, avoiding a stall while waiting for the result to be written to a register."
+    },
+    {
+      "id": 12,
+      "topic": "Web Technologies",
+      "text": "In the context of CORS (Cross-Origin Resource Sharing), what HTTP method is typically used for a 'preflight' request?",
+      "options": [
+        "HEAD",
+        "OPTIONS",
+        "TRACE",
+        "CONNECT"
+      ],
+      "correct": 1,
+      "explanation": "A preflight request uses the HTTP OPTIONS method to check with the server if the actual request (e.g., POST with custom headers) is safe to send."
+    },
+    {
+      "id": 13,
+      "topic": "Digital Logic",
+      "text": "Which of the following combinational logic circuits is known as a 'Universal Logic Gate' because it can be used to implement any Boolean function?",
+      "options": [
+        "Decoder",
+        "Encoder",
+        "Multiplexer (MUX)",
+        "Half Adder"
+      ],
+      "correct": 2,
+      "explanation": "A Multiplexer (MUX) can be wired to implement any Boolean function, acting similarly to a Look-Up Table (LUT), hence it is considered a universal combinational component."
+    },
+    {
+      "id": 14,
+      "topic": "Compiler Design",
+      "text": "Which phase of a compiler is primarily responsible for generating 'Three-Address Code'?",
+      "options": [
+        "Lexical Analysis",
+        "Syntax Analysis",
+        "Intermediate Code Generation",
+        "Code Optimization"
+      ],
+      "correct": 2,
+      "explanation": "The Intermediate Code Generation phase translates the parse tree/AST into a machine-independent intermediate representation, commonly Three-Address Code (TAC)."
+    },
+    {
+      "id": 15,
+      "topic": "Object Oriented Programming",
+      "text": "The Liskov Substitution Principle (LSP) in SOLID design states that:",
+      "options": [
+        "Classes should only have one reason to change.",
+        "High-level modules should not depend on low-level modules.",
+        "Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.",
+        "Many client-specific interfaces are better than one general-purpose interface."
+      ],
+      "correct": 2,
+      "explanation": "LSP dictates that a derived class must be perfectly substitutable for its base class without altering the correctness of the program."
+    },
+    {
+      "id": 16,
+      "topic": "Miscellaneous (Banking GK)",
+      "text": "Under the BASEL III framework, which ratio was introduced specifically to ensure that banks maintain a stable funding profile in relation to their off-balance sheet activities over a one-year horizon?",
+      "options": [
+        "Liquidity Coverage Ratio (LCR)",
+        "Net Stable Funding Ratio (NSFR)",
+        "Capital Adequacy Ratio (CAR)",
+        "Leverage Ratio"
+      ],
+      "correct": 1,
+      "explanation": "The Net Stable Funding Ratio (NSFR) requires banks to maintain a stable funding profile in relation to their assets and off-balance sheet activities over a one-year horizon."
+    },
+    {
+      "id": 17,
+      "topic": "Database Systems",
+      "text": "In database transaction processing, a 'Phantom Read' anomaly occurs when:",
+      "options": [
+        "A transaction reads data that was modified by an uncommitted transaction.",
+        "A transaction reads the same row twice and gets different values because another transaction updated it.",
+        "A transaction executes a range query twice and gets a different set of rows because another transaction inserted/deleted rows in that range.",
+        "A transaction overwrites uncommitted data from another transaction."
+      ],
+      "correct": 2,
+      "explanation": "A phantom read happens when a transaction queries a set of rows matching a condition, and another transaction inserts or deletes rows matching that condition before the first transaction completes."
+    },
+    {
+      "id": 18,
+      "topic": "Operating Systems",
+      "text": "The Banker's Algorithm is traditionally used in Operating Systems for:",
+      "options": [
+        "Deadlock Prevention",
+        "Deadlock Avoidance",
+        "Deadlock Detection",
+        "Deadlock Recovery"
+      ],
+      "correct": 1,
+      "explanation": "The Banker's Algorithm is a resource allocation and deadlock avoidance algorithm that tests for safety by simulating the allocation of predetermined maximum possible amounts of all resources."
+    },
+    {
+      "id": 19,
+      "topic": "Data Structures",
+      "text": "What is the time complexity to build a Binary Max-Heap from an unsorted array of n elements using the optimal bottom-up heapify approach?",
+      "options": [
+        "O(log n)",
+        "O(n)",
+        "O(n log n)",
+        "O(n^2)"
+      ],
+      "correct": 1,
+      "explanation": "While inserting elements one by one takes O(n log n), the optimal bottom-up approach (calling heapify from the last non-leaf node up to the root) builds a heap in O(n) time."
+    },
+    {
+      "id": 20,
+      "topic": "Algorithms",
+      "text": "The Fractional Knapsack problem is optimally solved using which algorithmic paradigm?",
+      "options": [
+        "Dynamic Programming",
+        "Backtracking",
+        "Divide and Conquer",
+        "Greedy Algorithm"
+      ],
+      "correct": 3,
+      "explanation": "Unlike the 0/1 Knapsack problem (which requires DP), the Fractional Knapsack problem allows taking fractions of items and is optimally solved using a Greedy approach (sorting by value/weight ratio)."
+    },
+    {
+      "id": 21,
+      "topic": "Java Programming",
+      "text": "In Java, what is the primary effect of declaring a variable with the 'volatile' keyword?",
+      "options": [
+        "It prevents the variable from being modified after initialization.",
+        "It ensures that the variable is stored in the CPU cache for faster access.",
+        "It guarantees visibility of changes to variables across multiple threads.",
+        "It prevents multiple threads from accessing the variable simultaneously (mutual exclusion)."
+      ],
+      "correct": 2,
+      "explanation": "The 'volatile' keyword in Java prevents threads from caching the variable locally; all reads and writes go straight to main memory, ensuring visibility. It does NOT provide mutual exclusion (atomicity)."
+    },
+    {
+      "id": 22,
+      "topic": "Computer Networks",
+      "text": "In the OSPF routing protocol, what type of packet is used by routers to advertise their link states to their neighbors?",
+      "options": [
+        "Hello Packet",
+        "LSA (Link State Advertisement)",
+        "Distance Vector",
+        "BGP Update"
+      ],
+      "correct": 1,
+      "explanation": "OSPF routers generate Link State Advertisements (LSAs) to share information about their local routing topology to all other local routers in the same OSPF area."
+    },
+    {
+      "id": 23,
+      "topic": "Information Security",
+      "text": "Which sub-protocol of IPsec provides confidentiality (encryption) as well as data origin authentication and integrity?",
+      "options": [
+        "AH (Authentication Header)",
+        "ESP (Encapsulating Security Payload)",
+        "IKE (Internet Key Exchange)",
+        "TLS (Transport Layer Security)"
+      ],
+      "correct": 1,
+      "explanation": "ESP provides both encryption (confidentiality) and authentication/integrity, whereas AH only provides authentication and integrity (no encryption)."
+    },
+    {
+      "id": 24,
+      "topic": "Software Engineering",
+      "text": "Cyclomatic Complexity is calculated using the formula V(G) = E - N + 2P. What does 'E' represent in this formula?",
+      "options": [
+        "Errors",
+        "Edges",
+        "Entities",
+        "Execution paths"
+      ],
+      "correct": 1,
+      "explanation": "In the control flow graph, E represents the number of Edges (transitions between nodes), N is the number of Nodes (statements), and P is the number of connected components."
+    },
+    {
+      "id": 25,
+      "topic": "Python Programming",
+      "text": "In Python, a function that takes another function as an argument, extends its behavior, and returns a new function without explicitly modifying the original function is called a:",
+      "options": [
+        "Generator",
+        "Iterator",
+        "Decorator",
+        "Lambda"
+      ],
+      "correct": 2,
+      "explanation": "A decorator is a design pattern in Python that allows a user to add new functionality to an existing object/function without modifying its structure."
+    },
+    {
+      "id": 26,
+      "topic": "Miscellaneous (Latest Tech)",
+      "text": "Which cybersecurity concept operates on the strict principle of 'Never trust, always verify', assuming that threats exist both outside and inside the network perimeter?",
+      "options": [
+        "Defense in Depth",
+        "Zero Trust Architecture",
+        "Perimeter Security",
+        "Intrusion Detection"
+      ],
+      "correct": 1,
+      "explanation": "Zero Trust Architecture (ZTA) abandons the idea of a trusted internal network and requires strict identity verification for every person and device trying to access resources."
+    },
+    {
+      "id": 27,
+      "topic": "Database Systems",
+      "text": "In a B+ Tree used for database indexing, where are the actual data records (or pointers to them) strictly located?",
+      "options": [
+        "At the root node",
+        "At the internal nodes",
+        "At the leaf nodes",
+        "Distributed across all nodes"
+      ],
+      "correct": 2,
+      "explanation": "In a B+ Tree, all data pointers are stored exclusively at the leaf nodes, which are linked together to allow fast sequential access. Internal nodes only hold keys for routing."
+    },
+    {
+      "id": 28,
+      "topic": "Operating Systems",
+      "text": "A process transitions from the 'Blocked' (or Waiting) state to which state when the I/O event it was waiting for finally occurs?",
+      "options": [
+        "Running",
+        "Ready",
+        "Terminated",
+        "Suspended"
+      ],
+      "correct": 1,
+      "explanation": "When a blocked process receives its required I/O, it transitions to the 'Ready' state and goes into the ready queue to wait for the CPU scheduler to allocate the processor."
+    },
+    {
+      "id": 29,
+      "topic": "Data Structures",
+      "text": "In graph representation, what is the space complexity of an Adjacency List for a graph with V vertices and E edges?",
+      "options": [
+        "O(V)",
+        "O(E)",
+        "O(V + E)",
+        "O(V^2)"
+      ],
+      "correct": 2,
+      "explanation": "An adjacency list requires an array of size V (for the vertices), and the total number of nodes in the linked lists across the array will equal E (or 2E in an undirected graph), resulting in O(V + E) space."
+    },
+    {
+      "id": 30,
+      "topic": "Algorithms",
+      "text": "The Matrix Chain Multiplication problem is a classic example of finding an optimal parenthesization to minimize scalar multiplications. It is solved using:",
+      "options": [
+        "Greedy Algorithm",
+        "Dynamic Programming",
+        "Divide and Conquer (without memoization)",
+        "Branch and Bound"
+      ],
+      "correct": 1,
+      "explanation": "Matrix Chain Multiplication exhibits overlapping subproblems and optimal substructure, making it a classic Dynamic Programming problem."
+    },
+    {
+      "id": 31,
+      "topic": "Java Programming",
+      "text": "In Java Garbage Collection, which of the following is NOT considered a valid 'GC Root'?",
+      "options": [
+        "Local variables in the main method",
+        "Static variables of a loaded class",
+        "An object waiting in the Eden space without any references",
+        "Active threads"
+      ],
+      "correct": 2,
+      "explanation": "GC Roots are objects that are strictly reachable from outside the heap (like active threads, static variables, and local variables in the stack). An unreferenced object in Eden space is exactly what the GC aims to collect."
+    },
+    {
+      "id": 32,
+      "topic": "Computer Networks",
+      "text": "Which IPv6 header field serves a similar purpose to the 'Time to Live' (TTL) field in IPv4?",
+      "options": [
+        "Flow Label",
+        "Hop Limit",
+        "Traffic Class",
+        "Next Header"
+      ],
+      "correct": 1,
+      "explanation": "The 'Hop Limit' field in IPv6 replaces the IPv4 'TTL' field. It is decremented by each router that forwards the packet, and the packet is discarded if it reaches zero."
+    },
+    {
+      "id": 33,
+      "topic": "Information Security",
+      "text": "In the context of database security, an SQL Injection attack where the attacker uses database commands to trigger DNS or HTTP requests to a server they control is known as:",
+      "options": [
+        "Error-based SQLi",
+        "Boolean-based blind SQLi",
+        "Out-of-band SQLi",
+        "Time-based blind SQLi"
+      ],
+      "correct": 2,
+      "explanation": "Out-of-band SQL injection occurs when the attacker cannot receive a direct response from the application, so they force the database server to make an outbound request (like a DNS lookup) to their own server."
+    },
+    {
+      "id": 34,
+      "topic": "Software Engineering",
+      "text": "In Agile Scrum methodology, which artifact represents the single source of work to be undertaken by the Scrum Team, ordered by priority?",
+      "options": [
+        "Sprint Backlog",
+        "Product Backlog",
+        "Increment",
+        "Burn-down Chart"
+      ],
+      "correct": 1,
+      "explanation": "The Product Backlog is an ordered list of everything that is known to be needed in the product. It is the single source of requirements for any changes to be made."
+    },
+    {
+      "id": 35,
+      "topic": "Object Oriented Programming",
+      "text": "How does C++ achieve dynamic polymorphism (late binding) for method overriding?",
+      "options": [
+        "Using the 'super' keyword",
+        "Using function overloading",
+        "Using Virtual Functions and V-Tables",
+        "Using abstract interfaces only"
+      ],
+      "correct": 2,
+      "explanation": "C++ uses virtual functions to implement dynamic polymorphism. The compiler creates a Virtual Table (V-Table) for classes containing virtual functions to resolve method calls at runtime."
+    },
+    {
+      "id": 36,
+      "topic": "Miscellaneous (ISO Standards)",
+      "text": "ISO 22301 is the international standard specifically designed to provide a framework for:",
+      "options": [
+        "Quality Management Systems",
+        "Business Continuity Management Systems",
+        "Information Security Management Systems",
+        "IT Service Management"
+      ],
+      "correct": 1,
+      "explanation": "ISO 22301 specifies requirements to plan, establish, implement, operate, monitor, review, maintain and continually improve a documented management system to protect against disruptive incidents (Business Continuity)."
+    },
+    {
+      "id": 37,
+      "topic": "Web Technologies",
+      "text": "Which feature of the HTTP/2 protocol completely eliminates the 'head-of-line blocking' problem found in HTTP/1.1 at the application layer?",
+      "options": [
+        "Server Push",
+        "Header Compression (HPACK)",
+        "Binary Framing",
+        "Multiplexing"
+      ],
+      "correct": 3,
+      "explanation": "HTTP/2 allows full multiplexing of requests and responses over a single TCP connection, meaning multiple requests can be sent simultaneously without waiting for previous ones to complete."
+    },
+    {
+      "id": 38,
+      "topic": "Digital Logic",
+      "text": "In sequential circuits, the minimum amount of time that a data input must be held steady *before* the clock edge arrives is called the:",
+      "options": [
+        "Hold Time",
+        "Propagation Delay",
+        "Setup Time",
+        "Clock Skew"
+      ],
+      "correct": 2,
+      "explanation": "Setup time is the minimum time the data input must remain stable before the active clock edge to ensure it is reliably latched by the flip-flop."
+    },
+    {
+      "id": 39,
+      "topic": "Compiler Design",
+      "text": "Which of the following parsing techniques is the most powerful (i.e., can parse the largest class of context-free grammars)?",
+      "options": [
+        "LL(1)",
+        "SLR(1)",
+        "LALR(1)",
+        "LR(1)"
+      ],
+      "correct": 3,
+      "explanation": "LR(1) (Canonical LR) is the most powerful among the common shift-reduce parsers, encompassing a strictly larger set of grammars than LL(1), SLR(1), and LALR(1)."
+    },
+    {
+      "id": 40,
+      "topic": "Database Systems",
+      "text": "What is the primary difference between the TRUNCATE and DELETE commands in SQL?",
+      "options": [
+        "DELETE is DDL, TRUNCATE is DML",
+        "TRUNCATE can be rolled back natively, DELETE cannot",
+        "DELETE removes rows one by one and logs each row, TRUNCATE deallocates the data pages and logs page deallocations",
+        "TRUNCATE allows a WHERE clause, DELETE does not"
+      ],
+      "correct": 2,
+      "explanation": "TRUNCATE is a DDL operation that is much faster because it deallocates the data pages rather than logging the deletion of each individual row (like the DML DELETE command)."
+    },
+    {
+      "id": 41,
+      "topic": "Computer Architecture",
+      "text": "In the context of multi-core processor cache coherence, what does the 'M' stand for in the MESI protocol?",
+      "options": [
+        "Memory",
+        "Modified",
+        "Mapped",
+        "Multiplexed"
+      ],
+      "correct": 1,
+      "explanation": "MESI stands for Modified, Exclusive, Shared, Invalid. 'Modified' means the cache line has been altered locally and is different from the main memory."
+    },
+    {
+      "id": 42,
+      "topic": "Operating Systems",
+      "text": "Which OS synchronization construct is a high-level abstraction that encapsulates shared data structures, procedures, and synchronization between concurrent threads automatically?",
+      "options": [
+        "Semaphore",
+        "Mutex Lock",
+        "Monitor",
+        "Condition Variable"
+      ],
+      "correct": 2,
+      "explanation": "A Monitor is a high-level synchronization construct provided by some programming languages (like Java) that strictly allows only one thread to be active within the monitor at a time, encapsulating mutual exclusion."
+    },
+    {
+      "id": 43,
+      "topic": "Data Structures",
+      "text": "In an AVL Tree, if an insertion occurs in the Left subtree of the Right child of a heavily unbalanced node, which rotation is required to balance the tree?",
+      "options": [
+        "Single Right Rotation (LL)",
+        "Single Left Rotation (RR)",
+        "Left-Right Rotation (LR)",
+        "Right-Left Rotation (RL)"
+      ],
+      "correct": 3,
+      "explanation": "An insertion in the Left subtree of a Right child creates an 'RL' (Right-Left) imbalance, which is fixed using a Double Rotation (Right-Left rotation)."
+    },
+    {
+      "id": 44,
+      "topic": "Algorithms",
+      "text": "In theoretical computer science, if a problem is NP-Complete, it means:",
+      "options": [
+        "It can be solved in polynomial time.",
+        "It is in NP, and every problem in NP can be reduced to it in polynomial time.",
+        "It cannot be verified in polynomial time.",
+        "No algorithm can ever solve it, even given infinite time."
+      ],
+      "correct": 1,
+      "explanation": "An NP-Complete problem is both in NP (solutions can be verified in polynomial time) and NP-Hard (all other NP problems can be polynomially reduced to it)."
+    },
+    {
+      "id": 45,
+      "topic": "Computer Networks",
+      "text": "You are given the CIDR block 192.168.1.0/26. How many valid subnets and usable hosts per subnet are created if derived from a standard Class C network?",
+      "options": [
+        "2 subnets, 126 hosts",
+        "4 subnets, 62 hosts",
+        "8 subnets, 30 hosts",
+        "4 subnets, 64 hosts"
+      ],
+      "correct": 1,
+      "explanation": "A /26 mask borrows 2 bits from the host portion of a default /24 Class C (2^2 = 4 subnets). It leaves 6 bits for hosts (2^6 = 64 total IPs). Subtracting network and broadcast gives 62 usable hosts per subnet."
+    },
+    {
+      "id": 46,
+      "topic": "Information Security",
+      "text": "Which Access Control Model assigns permissions to subjects based strictly on their job function or duties within the organization?",
+      "options": [
+        "DAC (Discretionary Access Control)",
+        "MAC (Mandatory Access Control)",
+        "RBAC (Role-Based Access Control)",
+        "ABAC (Attribute-Based Access Control)"
+      ],
+      "correct": 2,
+      "explanation": "Role-Based Access Control (RBAC) grants access based on the roles (job functions) of individual users within an enterprise."
+    },
+    {
+      "id": 47,
+      "topic": "Python Programming",
+      "text": "In Python, how is memory management for objects primarily handled?",
+      "options": [
+        "Manual memory allocation using malloc/free",
+        "Strictly via Mark and Sweep Garbage Collection",
+        "Reference counting supplemented by a generational garbage collector to detect cycles",
+        "Automatic stack allocation exclusively"
+      ],
+      "correct": 2,
+      "explanation": "Python primarily uses Reference Counting to manage memory. Because reference counting cannot detect circular references, CPython also runs a background Generational Garbage Collector."
+    },
+    {
+      "id": 48,
+      "topic": "Object Oriented Programming",
+      "text": "The 'Diamond Problem' is an ambiguity that arises in OOP when:",
+      "options": [
+        "A class inherits from two interfaces that share the same method signature.",
+        "A class inherits from two classes that have a common base class.",
+        "A generic class uses wildcard types inappropriately.",
+        "An abstract class instantiates itself."
+      ],
+      "correct": 1,
+      "explanation": "The Diamond Problem occurs in Multiple Inheritance when class D inherits from B and C, and both B and C inherit from A. If D calls a method defined in A, it's ambiguous which path (through B or C) to resolve it."
+    },
+    {
+      "id": 49,
+      "topic": "Java Programming",
+      "text": "Which of the following statements about the 'String' class in Java is true?",
+      "options": [
+        "Strings are mutable and can be changed in-place.",
+        "String is primitive data type in Java.",
+        "Strings are immutable, and modifying one creates a new String object.",
+        "The == operator compares the value of Strings, not their memory references."
+      ],
+      "correct": 2,
+      "explanation": "In Java, String objects are immutable. Any operation that alters a String actually creates and returns a brand new String object, leaving the original unchanged. '==' compares memory addresses, not values."
+    },
+    {
+      "id": 50,
+      "topic": "Web Technologies",
+      "text": "In modern Single Page Applications (SPAs) built with React, what technique is used to optimize DOM updates?",
+      "options": [
+        "Direct DOM Manipulation",
+        "Virtual DOM and diffing algorithm",
+        "Server-Side Rendering (SSR) exclusively",
+        "Shadow DOM"
+      ],
+      "correct": 1,
+      "explanation": "React uses a Virtual DOM (an in-memory representation of the real DOM). It compares (diffs) the Virtual DOM with a pre-update version and only updates the changed nodes in the real DOM, optimizing performance."
+    }
+  ]
+}

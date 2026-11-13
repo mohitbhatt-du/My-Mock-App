@@ -1,0 +1,666 @@
+{
+  "id": "day_16",
+  "day": 16,
+  "title": "IT Officer Mains: Day 16",
+  "difficulty": "Easy to Moderate",
+  "difficultyLevel": 3,
+  "tags": "Balanced",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Database Systems",
+      "text": "Examine the following Entity-Relationship (ER) diagram structure. What specific type of relationship is represented by the double diamond connecting the two entities?<br><br><div class='diagram-container'><svg viewBox=\"0 0 250 100\"><rect x=\"20\" y=\"30\" width=\"60\" height=\"40\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"50\" y=\"55\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\" fill=\"#0f172a\">Entity A</text><polygon points=\"125,25 155,50 125,75 95,50\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><polygon points=\"125,31 149,50 125,69 101,50\" fill=\"none\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"125\" y=\"54\" font-family=\"Arial\" font-size=\"10\" text-anchor=\"middle\" fill=\"#0f172a\">Has</text><rect x=\"170\" y=\"30\" width=\"60\" height=\"40\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><rect x=\"174\" y=\"34\" width=\"52\" height=\"32\" fill=\"none\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"200\" y=\"55\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\" fill=\"#0f172a\">Entity B</text><line x1=\"80\" y1=\"50\" x2=\"95\" y2=\"50\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"155\" y1=\"50\" x2=\"170\" y2=\"50\" stroke=\"#334155\" stroke-width=\"2\"/></svg></div>",
+      "options": [
+        "A recursive relationship",
+        "An identifying relationship connecting a weak entity to a strong entity",
+        "A many-to-many relationship",
+        "A derived attribute dependency"
+      ],
+      "correct": 1,
+      "explanation": "In standard Chen ER notation, a double diamond represents an 'identifying relationship'. It connects a Strong Entity (Entity A, single rectangle) to a Weak Entity (Entity B, double rectangle), indicating that the weak entity cannot exist without the strong entity.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A weak entity typically only has a partial key (discriminator) and relies on the strong entity's primary key to form a complete primary key.</div>"
+    },
+    {
+      "id": 2,
+      "topic": "Software Engineering",
+      "text": "A software module has a control flow graph with 12 edges, 9 nodes, and 1 connected component. What is the calculated Cyclomatic Complexity of this module?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "10"
+      ],
+      "correct": 1,
+      "explanation": "Cyclomatic Complexity V(G) is mathematically defined as: V(G) = Edges - Nodes + 2*(Connected Components). Therefore: 12 - 9 + 2(1) = 3 + 2 = 5.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Cyclomatic complexity determines the minimum number of independent paths through the code, which dictates the minimum number of test cases required for 100% branch coverage.</div>"
+    },
+    {
+      "id": 3,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which of the following data structures is structurally optimal for implementing the Breadth-First Search (BFS) algorithm on a graph?",
+      "options": [
+        "Stack",
+        "Queue",
+        "Priority Queue",
+        "Hash Table"
+      ],
+      "correct": 1,
+      "explanation": "Breadth-First Search (BFS) explores a graph layer-by-layer. A Queue (FIFO) is used to track which nodes to visit next, ensuring that nodes closer to the starting point are always processed before nodes deeper in the graph.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Conversely, Depth-First Search (DFS) plunges deep into a graph before backtracking, which requires a Stack (LIFO) or recursive function calls.</div>"
+    },
+    {
+      "id": 4,
+      "topic": "Computer Networks",
+      "text": "A company network is assigned the IP block 192.168.1.0/24. To create separate broadcast domains for different departments, the administrator subnets the network using a /27 mask. How many usable subnets are created?",
+      "options": [
+        "4 subnets",
+        "8 subnets",
+        "16 subnets",
+        "32 subnets"
+      ],
+      "correct": 1,
+      "explanation": "The original network mask is /24. The new subnet mask is /27. By borrowing bits from the host portion, the administrator has borrowed (27 - 24) = 3 bits. The number of created subnets is 2^3 = 8 subnets.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Each of these 8 subnets will contain (2^5 - 2) = 30 usable host IP addresses.</div>"
+    },
+    {
+      "id": 5,
+      "topic": "Cyber Security",
+      "text": "What defines a 'Phishing' attack in the context of information security?",
+      "options": [
+        "Injecting malicious SQL commands into an unprotected database search field.",
+        "Overwhelming a target server with synchronized network packets to cause a denial of service.",
+        "A social engineering technique where an attacker sends fraudulent communications disguised as a trusted entity to trick victims into revealing sensitive information.",
+        "Intercepting unencrypted data packets transmitted over a public Wi-Fi network."
+      ],
+      "correct": 2,
+      "explanation": "Phishing relies on psychological manipulation rather than technical hacking. Attackers impersonate banks, IT departments, or executives via email or text to steal credentials like passwords or credit card numbers.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• 'Spear Phishing' is a highly targeted variant of this attack aimed at specific individuals, often using gathered intelligence to appear highly credible.</div>"
+    },
+    {
+      "id": 6,
+      "topic": "Python Programming",
+      "text": "Evaluate the execution of the following Python list comprehension. What will be the final printed output?<br><br><div class='code-block'>res = [x for x in range(4)]\nprint(sum(res))</div>",
+      "options": [
+        "4",
+        "6",
+        "10",
+        "Error"
+      ],
+      "correct": 1,
+      "explanation": "The `range(4)` function generates numbers from 0 up to, but not including, 4. The list comprehension evaluates to `[0, 1, 2, 3]`. The `sum()` function adds these values together: 0 + 1 + 2 + 3 = 6.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In Python, `range(start, stop)` is always inclusive of the `start` parameter and strictly exclusive of the `stop` parameter.</div>"
+    },
+    {
+      "id": 7,
+      "topic": "Digital Logic",
+      "text": "Analyze the digital logic circuit displayed below. What is the correct Boolean logic function performed by this combination of an AND gate feeding directly into a NOT gate?<br><br><div class='diagram-container'><svg viewBox=\"0 0 200 100\"><path d=\"M 50 30 L 80 30 Q 110 30 110 50 Q 110 70 80 70 L 50 70 Z\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"115\" cy=\"50\" r=\"5\" fill=\"#fff\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"20\" y1=\"40\" x2=\"50\" y2=\"40\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"10\" y=\"44\" font-family=\"Arial\" font-size=\"14\" fill=\"#0f172a\">A</text><line x1=\"20\" y1=\"60\" x2=\"50\" y2=\"60\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"10\" y=\"64\" font-family=\"Arial\" font-size=\"14\" fill=\"#0f172a\">B</text><line x1=\"120\" y1=\"50\" x2=\"150\" y2=\"50\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"160\" y=\"54\" font-family=\"Arial\" font-size=\"14\" fill=\"#0f172a\">Y</text></svg></div>",
+      "options": [
+        "OR Gate",
+        "XOR Gate",
+        "NAND Gate",
+        "NOR Gate"
+      ],
+      "correct": 2,
+      "explanation": "The D-shaped gate represents an AND function. The small circle (inversion bubble) at the output represents a NOT function. Together, an AND gate followed by an inversion forms a NAND (NOT-AND) gate.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The NAND gate is considered a 'Universal Gate', meaning any other logic gate (AND, OR, NOT, XOR) can be constructed using entirely NAND gates.</div>"
+    },
+    {
+      "id": 8,
+      "topic": "Operating Systems",
+      "text": "Three processes arrive in the ready queue at time 0 in the following order: P1 (burst time 10), P2 (burst time 5), and P3 (burst time 5). If the CPU uses the First-Come, First-Served (FCFS) scheduling algorithm, what is the average waiting time for these three processes?",
+      "options": [
+        "5.0",
+        "6.66",
+        "8.33",
+        "10.0"
+      ],
+      "correct": 2,
+      "explanation": "In FCFS, processes run to completion in order of arrival. <br>P1 waits 0. Runs for 10.<br>P2 waits 10 (while P1 runs). Runs for 5.<br>P3 waits 15 (while P1 and P2 run).<br>Total waiting time = 0 + 10 + 15 = 25.<br>Average waiting time = 25 / 3 = 8.33.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• FCFS is non-preemptive and often suffers from the 'Convoy Effect', where short processes get stuck waiting behind a massive, long-running process.</div>"
+    },
+    {
+      "id": 9,
+      "topic": "Computer Architecture",
+      "text": "What is the primary function of the Program Counter (PC) register within a central processing unit?",
+      "options": [
+        "It counts the total number of clock cycles elapsed since boot.",
+        "It stores the result of the most recent arithmetic operation.",
+        "It holds the exact memory address of the next instruction to be fetched for execution.",
+        "It monitors the temperature of the CPU cores."
+      ],
+      "correct": 2,
+      "explanation": "The Program Counter (PC) keeps track of execution flow. It stores the address of the next instruction in memory. After an instruction is fetched, the PC automatically increments to point to the following instruction address.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• During a branch or jump instruction (like an `if` statement or a function call), the PC is forcibly updated to a new target address, breaking the sequential flow.</div>"
+    },
+    {
+      "id": 10,
+      "topic": "Misc (Cloud Computing)",
+      "text": "A developer accesses a cloud provider to deploy their application. The provider handles the underlying servers, operating system, and runtime environment completely invisibly. The developer only uploads their compiled application code. Which cloud service model does this scenario represent?",
+      "options": [
+        "IaaS (Infrastructure as a Service)",
+        "SaaS (Software as a Service)",
+        "PaaS (Platform as a Service)",
+        "SECaaS (Security as a Service)"
+      ],
+      "correct": 2,
+      "explanation": "PaaS provides a complete, managed platform or runtime environment (like Heroku or Google App Engine). Developers are abstracted away from managing underlying virtual machines or OS patches, allowing them to focus entirely on writing and deploying application code.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• IaaS gives you raw virtual machines (like AWS EC2) where you must configure the operating system yourself.</div>"
+    },
+    {
+      "id": 11,
+      "topic": "Java Programming",
+      "text": "What specific scenario triggers a `NullPointerException` during the execution of a Java application?",
+      "options": [
+        "Attempting to divide an integer by zero.",
+        "Attempting to access an array index that is out of bounds.",
+        "Attempting to invoke a method or access a field on an object reference variable that currently points to `null` rather than a valid instantiated object.",
+        "Attempting to cast a String into an Integer."
+      ],
+      "correct": 2,
+      "explanation": "In Java, object variables hold memory references (pointers). If a variable has not been initialized with an actual object using the `new` keyword, it holds the value `null`. Attempting to use the dot operator (e.g., `myObject.calculate()`) on a null reference crashes the program.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Accessing an invalid array slot throws an `ArrayIndexOutOfBoundsException`.</div>"
+    },
+    {
+      "id": 12,
+      "topic": "Data Structures & Algorithms",
+      "text": "Analyze the binary tree depicted below. If you perform a standard Pre-Order traversal on this specific tree, what sequence of nodes will be visited?<br><br><div class='diagram-container'><svg viewBox=\"0 0 200 150\"><circle cx=\"100\" cy=\"40\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"100\" y=\"45\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\">A</text><line x1=\"90\" y1=\"50\" x2=\"60\" y2=\"80\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"90\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"50\" y=\"95\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\">B</text><line x1=\"110\" y1=\"50\" x2=\"140\" y2=\"80\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"150\" cy=\"90\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"150\" y=\"95\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\">C</text></svg></div>",
+      "options": [
+        "B, A, C",
+        "A, B, C",
+        "B, C, A",
+        "C, B, A"
+      ],
+      "correct": 1,
+      "explanation": "A Pre-Order traversal dictates that the nodes are visited in the following order: Root, then Left Subtree, then Right Subtree. Starting at the root (A), we visit A, then move to its left child (B), and finally to its right child (C). The sequence is A, B, C.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In-Order (Left, Root, Right) would yield B, A, C.<br>• Post-Order (Left, Right, Root) would yield B, C, A.</div>"
+    },
+    {
+      "id": 13,
+      "topic": "Linux Commands",
+      "text": "Which of the following Linux commands is specifically executed to create a brand new, empty directory in the filesystem?",
+      "options": [
+        "`touch`",
+        "`rmdir`",
+        "`mkdir`",
+        "`cd`"
+      ],
+      "correct": 2,
+      "explanation": "The `mkdir` (make directory) command is used to create new directories. For example, `mkdir new_folder` creates a folder in the current working path.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The `touch` command is used to create a brand new, empty standard file, or to update the access timestamps on an existing file.</div>"
+    },
+    {
+      "id": 14,
+      "topic": "Misc (IT Act 2000)",
+      "text": "Under the provisions of the Information Technology Act 2000 in India, Section 43A specifically holds corporations liable to pay damages if they are negligent in securing which particular classification of data?",
+      "options": [
+        "Public Domain Source Code",
+        "Encrypted Proprietary Trade Secrets",
+        "Sensitive Personal Data or Information (SPDI)",
+        "Classified Defense Documents"
+      ],
+      "correct": 2,
+      "explanation": "Section 43A mandates that any body corporate handling Sensitive Personal Data or Information (SPDI)—such as passwords, financial data, and biometric records—must implement reasonable security practices. Failure to do so resulting in wrongful loss makes them liable for compensation.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The exact definitions and requirements for protecting this data were later formalized in the IT Rules, 2011.</div>"
+    },
+    {
+      "id": 15,
+      "topic": "Computer Networks",
+      "text": "In the OSI Reference Model, which specific layer is primarily responsible for logical addressing (IP addresses) and routing data packets across different networks?",
+      "options": [
+        "Data Link Layer",
+        "Network Layer",
+        "Transport Layer",
+        "Session Layer"
+      ],
+      "correct": 1,
+      "explanation": "The Network Layer (Layer 3) handles the logical routing of packets from a source network to a destination network using IP addresses. Routers operate almost exclusively at this layer.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Data Link Layer (Layer 2) handles local delivery on the same physical segment using hardware MAC addresses.</div>"
+    },
+    {
+      "id": 16,
+      "topic": "Database Systems",
+      "text": "In the context of database transaction management (ACID properties), what does 'Atomicity' guarantee?",
+      "options": [
+        "That a transaction brings the database from one valid state to another.",
+        "That concurrent transactions execute completely isolated from each other.",
+        "That a transaction is treated as a single, indivisible logical unit of work; either all its operations succeed, or none are applied.",
+        "That once a transaction commits, its changes survive hardware crashes."
+      ],
+      "correct": 2,
+      "explanation": "Atomicity is the 'all or nothing' rule. If a transaction consists of withdrawing money from Account A and depositing it into Account B, atomicity guarantees that if the deposit fails, the withdrawal is instantly rolled back, preventing lost funds.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• 'Durability' guarantees survival against hardware crashes.</div>"
+    },
+    {
+      "id": 17,
+      "topic": "C/C++ Programming",
+      "text": "Evaluate this C++ pointer arithmetic scenario. Assuming an `int` strictly occupies 4 bytes of memory, what is the output printed to the console?<br><br><div class='code-block'>int arr[5] = {10, 20, 30, 40, 50};\nint *p = arr;\n*(p + 2) += 5;\ncout << arr[2];</div>",
+      "options": [
+        "20",
+        "25",
+        "30",
+        "35"
+      ],
+      "correct": 3,
+      "explanation": "`p` natively points to the memory address of `arr[0]`. The pointer arithmetic `(p + 2)` shifts the pointer 2 integer slots forward, pointing it at `arr[2]` (value 30). Dereferencing it and adding 5 (`+= 5`) mutates that specific memory location. Thus, `arr[2]` becomes 35.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The C++ compiler automatically calculates the byte offset by multiplying the shift (2) by the data type size (4 bytes), shifting physical memory by 8 bytes.</div>"
+    },
+    {
+      "id": 18,
+      "topic": "Operating Systems",
+      "text": "During multitasking, what is the primary computational consequence of an operating system performing a 'Context Switch'?",
+      "options": [
+        "The computer instantly restarts.",
+        "The OS temporarily suspends user code execution to save the state of the old process and load the new process's state, acting as pure overhead time.",
+        "The operating system permanently terminates the idle process to save RAM.",
+        "The RAM is completely flushed to the swap file on disk."
+      ],
+      "correct": 1,
+      "explanation": "A context switch occurs when the CPU is taken from Process A and given to Process B. The OS must save Process A's registers and program counter into its PCB (Process Control Block), and load Process B's state. During this operation, the CPU performs zero useful application work, making it pure overhead.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Hardware support, such as having multiple register sets, can drastically reduce context switching latency.</div>"
+    },
+    {
+      "id": 19,
+      "topic": "Misc (Emerging Tech)",
+      "text": "In the context of Machine Learning model training, what specifically describes the phenomenon of 'Overfitting'?",
+      "options": [
+        "The model requires too much processing power to compile.",
+        "The model fails to learn the underlying patterns and performs terribly on the training data.",
+        "The model memorizes the training data too well, including its noise and outliers, resulting in excellent training accuracy but poor generalization to new, unseen data.",
+        "The model autonomously deletes training data to save memory footprint."
+      ],
+      "correct": 2,
+      "explanation": "Overfitting occurs when a complex algorithm learns the specific details and anomalies of the training dataset as if they were universal rules. Consequently, the model becomes extremely rigid and fails to predict accurately when exposed to fresh testing data.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Techniques like Dropout, Data Augmentation, and Cross-Validation are actively used to combat overfitting.</div>"
+    },
+    {
+      "id": 20,
+      "topic": "Software Engineering",
+      "text": "Which Software Development Life Cycle (SDLC) model is strictly sequential, demanding that each phase (such as Requirements, Design, and Implementation) be completely finished and signed off before the next phase can begin?",
+      "options": [
+        "Agile Model",
+        "Spiral Model",
+        "Waterfall Model",
+        "Iterative Model"
+      ],
+      "correct": 2,
+      "explanation": "The Waterfall model is a linear, sequential design approach. It heavily assumes that requirements will not change during development. You finish all design before coding, and finish all coding before testing. It is highly structured but dangerously inflexible to changing client needs.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Agile methodologies were explicitly created as a reaction against the rigidity of the Waterfall model.</div>"
+    },
+    {
+      "id": 21,
+      "topic": "Computer Architecture",
+      "text": "When evaluating cache memory architecture, what is 'Temporal Locality'?",
+      "options": [
+        "The tendency for a program to access memory addresses that are clustered physically close together.",
+        "The tendency for a program to access the exact same memory location repeatedly within a short period of time.",
+        "The hardware delay involved in spinning up a magnetic hard disk.",
+        "The maximum data transfer speed limit of the front-side bus."
+      ],
+      "correct": 1,
+      "explanation": "Temporal locality refers to time. If a variable is accessed (like a loop counter `i`), there is an extremely high probability it will be accessed again very soon. CPU caches exploit this by keeping recently used data physically close to the core.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Spatial Locality</strong> refers to space; if you access an array element, you will likely access the next contiguous element soon.</div>"
+    },
+    {
+      "id": 22,
+      "topic": "Database Systems",
+      "text": "In SQL, what is the core functional difference between the `DROP` and `TRUNCATE` commands?",
+      "options": [
+        "`DROP` removes data row by row, while `TRUNCATE` deletes the entire table instantly.",
+        "`TRUNCATE` removes all data rows but leaves the empty table structure intact, whereas `DROP` deletes both the data and the table structure entirely.",
+        "`DROP` can be easily rolled back, while `TRUNCATE` cannot.",
+        "`TRUNCATE` is a DML command, while `DROP` is a DDL command."
+      ],
+      "correct": 1,
+      "explanation": "`TRUNCATE` wipes all records from a table quickly by deallocating the data pages, leaving the table schema ready for new inserts. `DROP` entirely removes the table definition from the database catalog, meaning the table ceases to exist.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Both `DROP` and `TRUNCATE` are Data Definition Language (DDL) commands, and generally neither can be rolled back without a full database backup restoration.</div>"
+    },
+    {
+      "id": 23,
+      "topic": "Digital Logic",
+      "text": "A standard Flip-Flop is a fundamental digital circuit capable of storing exactly how much state data?",
+      "options": [
+        "1 bit",
+        "1 byte",
+        "4 bits (a nibble)",
+        "8 bits"
+      ],
+      "correct": 0,
+      "explanation": "A flip-flop is a bistable multivibrator circuit that can maintain one of two stable states (0 or 1). Therefore, a single flip-flop stores exactly 1 bit of binary data indefinitely as long as power is supplied.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• To store an 8-bit byte, engineers combine 8 individual flip-flops together to form a 'Register' on a shared clock signal.</div>"
+    },
+    {
+      "id": 24,
+      "topic": "Python Programming",
+      "text": "Which of the following built-in data structures in Python is inherently immutable (meaning its contents cannot be altered, appended, or removed after creation)?",
+      "options": [
+        "List (`[]`)",
+        "Dictionary (`{}`)",
+        "Tuple (`()`)",
+        "Set (`set()`)"
+      ],
+      "correct": 2,
+      "explanation": "Tuples in Python, defined by parentheses, are strictly immutable. Once created, their size and contents are locked. Lists, Dictionaries, and Sets are all mutable data structures.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because they are immutable and have a fixed state, Tuples can be used as unique keys in a Dictionary, whereas Lists cannot.</div>"
+    },
+    {
+      "id": 25,
+      "topic": "Computer Networks",
+      "text": "Which underlying protocol does the standard `ping` command rely on to test network reachability between two host machines?",
+      "options": [
+        "TCP (Transmission Control Protocol)",
+        "UDP (User Datagram Protocol)",
+        "ICMP (Internet Control Message Protocol)",
+        "ARP (Address Resolution Protocol)"
+      ],
+      "correct": 2,
+      "explanation": "The `ping` utility sends ICMP 'Echo Request' packets to a target IP address and waits for ICMP 'Echo Reply' packets to return, verifying basic Layer 3 connectivity and measuring network latency.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• ICMP operates at the Network Layer (Layer 3) alongside IP, and is also heavily used by routers for sending network error messages like 'Destination Unreachable'.</div>"
+    },
+    {
+      "id": 26,
+      "topic": "Cyber Security",
+      "text": "In the context of the CIA Triad for information security, what does the 'Availability' pillar ensure?",
+      "options": [
+        "That sensitive data is not altered or corrupted by unauthorized users.",
+        "That data is securely encrypted and hidden from unauthorized viewing.",
+        "That authorized users have reliable, timely, and uninterrupted access to systems and data when they require it.",
+        "That physical access to server rooms is restricted."
+      ],
+      "correct": 2,
+      "explanation": "Availability guarantees that systems remain online and operational. Denial of Service (DoS) attacks specifically target the Availability pillar by overwhelming servers with junk traffic to take them offline.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Confidentiality</strong> handles data privacy (Encryption).<br>• <strong>Integrity</strong> handles data accuracy and tamper-proofing (Hashing).</div>"
+    },
+    {
+      "id": 27,
+      "topic": "Software Engineering",
+      "text": "When evaluating software architecture quality, what is the ideal, textbook relationship between 'Coupling' and 'Cohesion'?",
+      "options": [
+        "High Coupling and Low Cohesion",
+        "High Coupling and High Cohesion",
+        "Low Coupling and Low Cohesion",
+        "Low Coupling and High Cohesion"
+      ],
+      "correct": 3,
+      "explanation": "Cohesion measures how focused a module is on a single, specific task (we want High Cohesion). Coupling measures how heavily different modules depend on one another (we want Low Coupling). Low coupling ensures that an error in Module A doesn't cascade and break Module B.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• 'Data Coupling' is the lowest and most desirable form of coupling. 'Content Coupling' is the highest and worst.</div>"
+    },
+    {
+      "id": 28,
+      "topic": "Linux Permissions",
+      "text": "An administrator inputs the command `chmod 777 report.pdf`. What specific permissions are applied to this file?",
+      "options": [
+        "Only the owner can read, write, and execute the file.",
+        "The file is granted Read, Write, and Execute permissions for the Owner, the Group, and all other users on the system.",
+        "The file is permanently locked and hidden.",
+        "The file is encrypted with a 777-bit key."
+      ],
+      "correct": 1,
+      "explanation": "In Linux octal permissions, 4=Read, 2=Write, 1=Execute. Therefore, 7 means (4+2+1) Full Permissions. `chmod 777` grants these full permissions to the User (owner), the Group, and Others (everyone else).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Setting `777` is generally considered a massive security risk on production servers, as it allows any arbitrary user to maliciously modify or run the file.</div>"
+    },
+    {
+      "id": 29,
+      "topic": "Misc (Banking IT)",
+      "text": "In the modern banking industry, what is the primary operational benefit of implementing a centralized Core Banking Solution (CBS)?",
+      "options": [
+        "It completely removes the need for physical ATM machines.",
+        "It allows customers to seamlessly perform transactions from any branch of the bank globally, rather than just the specific home branch where the account was opened.",
+        "It automatically issues physical currency notes via smartphones.",
+        "It prevents customers from opening multiple bank accounts."
+      ],
+      "correct": 1,
+      "explanation": "Before CBS, accounts were rigidly tied to the localized ledger of a specific physical branch. Core Banking Solutions centralize the database, enabling 'Anywhere Banking' across all branches, ATMs, and digital internet banking channels instantly.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This centralized architecture relies heavily on highly available, ACID-compliant OLTP (Online Transaction Processing) databases.</div>"
+    },
+    {
+      "id": 30,
+      "topic": "Java Programming",
+      "text": "In the standard Java method signature `public static void main(String[] args)`, what does the `static` keyword mathematically dictate to the Java Virtual Machine (JVM)?",
+      "options": [
+        "It prevents the main method from returning any output value.",
+        "It restricts the method from being accessed outside the compiled package.",
+        "It mandates that the method belongs to the class itself, allowing the JVM to invoke the method directly without needing to instantiate an object of the class first.",
+        "It ensures the arguments passed into the array are immutable constants."
+      ],
+      "correct": 2,
+      "explanation": "The `static` keyword means the method is a class-level method, not an instance-level method. When a Java program boots up, absolutely no objects exist in memory yet. Because `main` is static, the JVM can call it directly on the class name to start the program.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• `void` signifies no return value, and `public` makes it fully visible to the external JVM execution engine.</div>"
+    },
+    {
+      "id": 31,
+      "topic": "Data Structures & Algorithms",
+      "text": "What is the exact, worst-case time complexity required to access an element at a specific, known index in a standard Array?",
+      "options": [
+        "O(log n)",
+        "O(n)",
+        "O(n^2)",
+        "O(1)"
+      ],
+      "correct": 3,
+      "explanation": "Arrays are stored in contiguous, sequential memory blocks. To locate `arr[5]`, the computer performs a simple, instant mathematical calculation: `Base_Address + (5 * Element_Size)`. This takes constant time, O(1), regardless of how massive the array is.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This O(1) random access is the single biggest advantage arrays hold over Linked Lists, which require O(n) sequential traversal to locate an index.</div>"
+    },
+    {
+      "id": 32,
+      "topic": "Operating Systems",
+      "text": "Which memory management scheme systematically eliminates 'External Fragmentation' by dividing logical memory into blocks of the same size, mapping them directly to physical memory frames?",
+      "options": [
+        "Segmentation",
+        "Paging",
+        "Dynamic Partitioning",
+        "Swapping"
+      ],
+      "correct": 1,
+      "explanation": "Paging divides logical memory into equal-sized 'pages', and physical memory into equal-sized 'frames'. Because any logical page can fit flawlessly into any available physical frame anywhere in RAM, external fragmentation is completely eradicated.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While paging solves external fragmentation, it can still suffer from <strong>internal fragmentation</strong> if a process needs slightly less memory than a full page size.</div>"
+    },
+    {
+      "id": 33,
+      "topic": "C/C++ Programming",
+      "text": "When writing C++ code, what is the primary advantage of utilizing a Reference variable (e.g., `int &ref = var;`) instead of a raw Pointer?",
+      "options": [
+        "References can be easily reassigned to point to different variables later in the program.",
+        "References can safely hold a `nullptr` value.",
+        "References guarantee that they must be initialized upon declaration and cannot be null, making them inherently safer and easier to use than pointers for function parameters.",
+        "References consume zero bytes of memory during compilation."
+      ],
+      "correct": 2,
+      "explanation": "A reference acts as a permanent, syntax-friendly alias for a variable. Unlike pointers, references must be initialized immediately, cannot be reassigned to another variable, and cannot be null. This prevents an entire class of runtime segmentation fault errors caused by dereferencing null pointers.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Pointers require manual dereferencing using the `*` operator, whereas references are used exactly like standard variables.</div>"
+    },
+    {
+      "id": 34,
+      "topic": "Database Systems",
+      "text": "In a relational database, what specific constraint ensures that a value entered into a column corresponds directly to an existing Primary Key in another related table, thereby maintaining referential integrity?",
+      "options": [
+        "Unique Key",
+        "Foreign Key",
+        "Check Constraint",
+        "Super Key"
+      ],
+      "correct": 1,
+      "explanation": "A Foreign Key establishes a strict relationship between two tables. It ensures you cannot insert a 'Department ID' for an employee if that department doesn't actually exist in the master Departments table.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Attempting to delete a record in the primary table when active foreign keys still point to it will usually trigger a constraint violation error.</div>"
+    },
+    {
+      "id": 35,
+      "topic": "Computer Architecture",
+      "text": "Which internal computer bus is explicitly responsible for specifying exactly where data should be sent to or fetched from within the system memory matrix?",
+      "options": [
+        "Data Bus",
+        "Control Bus",
+        "Address Bus",
+        "Peripheral Bus"
+      ],
+      "correct": 2,
+      "explanation": "The Address Bus carries the physical memory address from the CPU directly to the RAM controller, dictating exactly which block is to be accessed. Its width (e.g., 32-bit or 64-bit) determines the maximum possible RAM capacity the CPU can address.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Data Bus carries the actual payload information, and the Control Bus carries command signals like Read or Write.</div>"
+    },
+    {
+      "id": 36,
+      "topic": "Software Engineering",
+      "text": "During the Agile Scrum software development process, what is the primary objective of the 'Sprint Retrospective' meeting?",
+      "options": [
+        "To present the newly completed software increment to the clients and stakeholders.",
+        "To allow the internal development team to safely analyze their own workflow processes, discuss what failed, and identify actionable improvements for the next sprint.",
+        "To estimate the story points for the upcoming backlog.",
+        "To negotiate contract terms with the product owner."
+      ],
+      "correct": 1,
+      "explanation": "The Sprint Retrospective is oriented entirely toward the *Process*. It is a private, internal meeting for the Scrum team to honestly discuss workflow bottlenecks and team dynamics without outside pressure.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The Sprint Review, which happens just prior to the Retrospective, is oriented toward the *Product* and involves external stakeholders.</div>"
+    },
+    {
+      "id": 37,
+      "topic": "Misc (Emerging Tech)",
+      "text": "Which of the following descriptions accurately defines the core mechanism of 'Blockchain' technology?",
+      "options": [
+        "A centralized relational database optimized for massive, high-speed single-server transactions.",
+        "A decentralized, distributed, and public digital ledger that records transactions across many computers so that the record cannot be altered retroactively without the alteration of all subsequent blocks.",
+        "A cloud-based container orchestration tool similar to Kubernetes.",
+        "A machine learning algorithm used to predict stock market trends."
+      ],
+      "correct": 1,
+      "explanation": "A blockchain is a decentralized ledger. Transactions are grouped into 'blocks' which are cryptographically hashed and linked to the previous block. Changing data in one block changes its hash, which breaks the link to the next block, making the chain tamper-evident and highly secure.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because the ledger is distributed, a network consensus mechanism (like Proof of Work or Proof of Stake) is required to validate new blocks.</div>"
+    },
+    {
+      "id": 38,
+      "topic": "Python Programming",
+      "text": "Unlike languages such as C++ or Java that rely heavily on curly braces `{}`, how does Python strictly define a block of code (such as the body of an `if` statement or a `for` loop)?",
+      "options": [
+        "By wrapping the block in parentheses `()`.",
+        "By using the `begin` and `end` keywords.",
+        "By relying entirely on uniform, syntactically significant whitespace indentation.",
+        "By ending every logical line with a semicolon `;`."
+      ],
+      "correct": 2,
+      "explanation": "Python enforces readability by making whitespace syntactically significant. Code blocks are defined purely by their indentation level. If the indentation is inconsistent or missing, Python will immediately throw an `IndentationError` and refuse to compile.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The widely accepted community standard (PEP 8) is to use exactly 4 spaces per indentation level.</div>"
+    },
+    {
+      "id": 39,
+      "topic": "Computer Networks",
+      "text": "Which of the following physical network topologies provides the absolute highest level of reliability and fault tolerance, but incurs the highest cabling cost?",
+      "options": [
+        "Star Topology",
+        "Ring Topology",
+        "Bus Topology",
+        "Mesh Topology"
+      ],
+      "correct": 3,
+      "explanation": "In a fully connected Mesh topology, every device has a dedicated point-to-point link to every other device. This provides massive redundancy (if one link fails, traffic simply routes through an alternate path), but requires a huge amount of cabling, scaling at $n(n-1)/2$ cables.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The modern Internet essentially operates as a massive, partial mesh network.</div>"
+    },
+    {
+      "id": 40,
+      "topic": "Digital Logic",
+      "text": "What is the primary function of a 'Multiplexer' (MUX) in digital combinational circuits?",
+      "options": [
+        "To convert binary data directly into decimal data for LED displays.",
+        "To intelligently route one of many input data lines to a single shared output line based on the state of specialized select signals.",
+        "To store multiple bits of data sequentially over time.",
+        "To split a single input signal into multiple discrete output lines."
+      ],
+      "correct": 1,
+      "explanation": "A Multiplexer (MUX) acts as a digital switch. It takes multiple data inputs (e.g., 4 inputs) and routes exactly one of them to a single output line, controlled by 'Select' lines (e.g., 2 select lines).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A Demultiplexer (DEMUX) performs the exact opposite function: routing a single input source to one of multiple outputs.</div>"
+    },
+    {
+      "id": 41,
+      "topic": "Operating Systems",
+      "text": "According to Coffman's conditions, four rules must be simultaneously true for a deadlock to occur. Which condition states that a resource currently held by a process cannot be forcibly taken away by the OS until the process voluntarily releases it?",
+      "options": [
+        "Mutual Exclusion",
+        "Hold and Wait",
+        "No Preemption",
+        "Circular Wait"
+      ],
+      "correct": 2,
+      "explanation": "No Preemption explicitly means the operating system cannot forcibly strip a locked resource away from a process. The process must finish its task and release the resource voluntarily. If the OS *could* preempt resources, deadlocks could be easily broken.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The other three conditions are Mutual Exclusion, Hold and Wait, and Circular Wait. Breaking any ONE of these prevents deadlocks entirely.</div>"
+    },
+    {
+      "id": 42,
+      "topic": "Cyber Security",
+      "text": "Why is it considered a catastrophic security failure to store user passwords in plain text within a database, and what is the standard cryptographic practice to resolve this?",
+      "options": [
+        "Plain text consumes excessive disk space; passwords should be compressed into ZIP formats.",
+        "Plain text allows any database breach to compromise all accounts instantly; passwords must be salted and processed through a one-way Cryptographic Hash function before storage.",
+        "Plain text breaks database indexing; passwords should be stored as floating-point decimals.",
+        "There is no security risk if the database server is kept in a physically locked room."
+      ],
+      "correct": 1,
+      "explanation": "If a database is breached, plain text passwords give hackers immediate access to every user account. Hashing (e.g., using bcrypt or SHA-256) transforms the password into a scrambled string that mathematically cannot be reversed. A 'salt' ensures identical passwords yield different hashes.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• When a user logs in, the system simply hashes their typed attempt and compares the resulting hash against the stored hash.</div>"
+    },
+    {
+      "id": 43,
+      "topic": "Linux Commands",
+      "text": "What is the specific output generated by executing the `pwd` command inside a Linux terminal environment?",
+      "options": [
+        "It prints the system's current hardware root password.",
+        "It securely changes the current user's login password.",
+        "It prints the absolute path of the Current Working Directory the user is navigated into.",
+        "It lists all active processes currently running in the background."
+      ],
+      "correct": 2,
+      "explanation": "The `pwd` acronym stands for 'Print Working Directory'. It outputs the full, absolute path of the directory your terminal session is currently residing in (e.g., `/home/admin/documents`), ensuring you know exactly where file operations will occur.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• To actually change your user login password, you would use the `passwd` command.</div>"
+    },
+    {
+      "id": 44,
+      "topic": "C/C++ Programming",
+      "text": "When allocating dynamic memory in C++, why is the `new` operator vastly preferred over the legacy C-style `malloc()` function for object-oriented programming?",
+      "options": [
+        "`new` allocates memory significantly faster on the CPU.",
+        "`new` not only allocates raw memory but also automatically invokes the object's constructor to initialize its state, whereas `malloc()` leaves the memory uninitialized.",
+        "`malloc()` cannot be used to allocate memory for arrays.",
+        "`new` automatically triggers garbage collection when the object is no longer used."
+      ],
+      "correct": 1,
+      "explanation": "While both grab memory from the heap, `new` is object-aware. If you call `new Car()`, C++ allocates the required memory AND calls the `Car` constructor to set up the object properly. `malloc()` simply grabs raw bytes, requiring manual type casting and leaving object attributes as garbage data.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Correspondingly, you must use `delete` to free memory created by `new` (which automatically calls the destructor), rather than `free()`.</div>"
+    },
+    {
+      "id": 45,
+      "topic": "Misc (Banking IT)",
+      "text": "What does the abbreviation 'UPI' stand for in the context of modern Indian digital banking?",
+      "options": [
+        "Universal Payment Integration",
+        "Unified Payments Interface",
+        "Uniform Protocol for India",
+        "Universal Public Infrastructure"
+      ],
+      "correct": 1,
+      "explanation": "UPI stands for Unified Payments Interface. Developed by the NPCI (National Payments Corporation of India), it is an instant real-time payment system facilitating inter-bank peer-to-peer (P2P) and person-to-merchant (P2M) transactions entirely through mobile platforms.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• UPI utilizes Virtual Payment Addresses (VPAs) to completely mask underlying sensitive bank account numbers during transfers.</div>"
+    },
+    {
+      "id": 46,
+      "topic": "Database Systems",
+      "text": "What does the Cartesian Product operation generate in relational algebra when applied to two distinct tables?",
+      "options": [
+        "It perfectly joins the tables based strictly on foreign key relationships.",
+        "It automatically deletes any duplicate rows found between the two tables.",
+        "It systematically combines every single row from the first table with every single row from the second table, resulting in a massive cross-multiplied dataset.",
+        "It calculates the sum of all numeric columns across both tables."
+      ],
+      "correct": 2,
+      "explanation": "The Cartesian Product (or Cross Join) takes table A (with 'm' rows) and table B (with 'n' rows) and returns every possible combination, resulting in a table with 'm * n' rows. It is rarely used practically without a subsequent filtering condition.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A standard INNER JOIN is mathematically derived by performing a Cartesian Product followed immediately by a Selection filter.</div>"
+    },
+    {
+      "id": 47,
+      "topic": "Computer Networks",
+      "text": "Which field in the standard IPv4 header is responsible for preventing routing loops by ensuring a misconfigured packet doesn't travel the internet forever?",
+      "options": [
+        "Header Checksum",
+        "Fragment Offset",
+        "Time to Live (TTL)",
+        "Protocol Identifier"
+      ],
+      "correct": 2,
+      "explanation": "The Time to Live (TTL) field is an 8-bit counter set by the sender. Every time the packet passes through a router, the router decreases the TTL by 1. If the TTL reaches zero, the router discards the packet and sends an ICMP 'Time Exceeded' message back to the sender.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The `traceroute` utility cleverly leverages the TTL field by sending packets with incrementing TTLs to map the exact path of routers.</div>"
+    },
+    {
+      "id": 48,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which fundamental operating principle defines the Stack data structure?",
+      "options": [
+        "First-In, First-Out (FIFO)",
+        "Last-In, First-Out (LIFO)",
+        "Random Access Retrieval",
+        "Highest Priority First"
+      ],
+      "correct": 1,
+      "explanation": "A Stack operates on the Last-In, First-Out (LIFO) principle. The last element added (pushed) onto the stack is the very first one to be removed (popped), exactly like a stack of physical plates.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A Queue operates on the First-In, First-Out (FIFO) principle, much like a line of customers at a checkout register.</div>"
+    },
+    {
+      "id": 49,
+      "topic": "Java Programming",
+      "text": "Is it structurally possible to define a functional constructor inside a Java `interface`?",
+      "options": [
+        "Yes, to initialize static final variables.",
+        "Yes, but only in Java 8 and newer versions utilizing default methods.",
+        "No, interfaces cannot be instantiated, hence they absolutely cannot possess constructors.",
+        "Yes, provided the constructor is marked strictly as private."
+      ],
+      "correct": 2,
+      "explanation": "An interface in Java serves as an abstract behavioral contract. Because you cannot create an instance of an interface using the `new` keyword, constructors are strictly forbidden inside interface definitions.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Abstract classes, however, CAN have constructors. They are called when a concrete subclass is instantiated using `super()`.</div>"
+    },
+    {
+      "id": 50,
+      "topic": "Misc (Cloud Computing)",
+      "text": "Using a fully hosted application like Google Workspace (Docs, Sheets, Gmail) through a web browser is a prime example of which Cloud Service Model?",
+      "options": [
+        "IaaS (Infrastructure as a Service)",
+        "PaaS (Platform as a Service)",
+        "SaaS (Software as a Service)",
+        "FaaS (Function as a Service)"
+      ],
+      "correct": 2,
+      "explanation": "SaaS provides a complete, finished software application over the internet. The consumer does not manage the underlying cloud infrastructure, network, servers, operating systems, or even the application capabilities.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• IaaS provides raw virtual machines (like AWS EC2), requiring the user to install the OS and software themselves.</div>"
+    }
+  ]
+}

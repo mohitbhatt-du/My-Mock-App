@@ -1,0 +1,666 @@
+{
+  "id": "day_3",
+  "day": 3,
+  "title": "IT Officer Mains: Day 3",
+  "difficulty": "Moderate to Hard",
+  "difficultyLevel": 2,
+  "tags": "Balanced",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Database Systems",
+      "text": "MATCHING: Match the following SQL commands (List I) with their corresponding SQL sub-language categories (List II).<br><br><table class='matching-table'><tr><th>List I (Command)</th><th>List II (Category)</th></tr><tr><td>A. DROP</td><td>1. DCL</td></tr><tr><td>B. UPDATE</td><td>2. TCL</td></tr><tr><td>C. GRANT</td><td>3. DDL</td></tr><tr><td>D. COMMIT</td><td>4. DML</td></tr></table><br>Select the correct matching:",
+      "options": [
+        "A-3, B-4, C-1, D-2",
+        "A-4, B-3, C-2, D-1",
+        "A-3, B-1, C-4, D-2",
+        "A-2, B-4, C-1, D-3"
+      ],
+      "correct": 0,
+      "explanation": "DROP alters schema (DDL). UPDATE modifies data (DML). GRANT changes permissions (DCL). COMMIT saves transactions (TCL)."
+    },
+    {
+      "id": 2,
+      "topic": "Computer Networks",
+      "text": "NUMERICAL: An ISP is granted a block of addresses starting with 192.168.1.0/24. The ISP wants to divide this block into 4 equal subnets. What is the subnet mask and the maximum number of usable hosts per subnet?",
+      "options": [
+        "255.255.255.192, 62 hosts",
+        "255.255.255.224, 30 hosts",
+        "255.255.255.128, 126 hosts",
+        "255.255.255.240, 14 hosts"
+      ],
+      "correct": 0,
+      "explanation": "To get 4 subnets, borrow 2 bits (2^2 = 4). New mask is /26 (255.255.255.192). Host bits left = 6. Usable hosts = 2^6 - 2 = 62."
+    },
+    {
+      "id": 3,
+      "topic": "Digital Logic",
+      "text": "DIAGRAM: Observe the digital logic circuit diagram below.<br><br>\n        <svg height=\"140\" width=\"300\" xmlns=\"http://www.w3.org/2000/svg\" style=\"background:#1e293b; border-radius:8px; margin: 10px 0;\">\n  \n[            <!-- AND Gate 1 -->\n            <path d=\"M 50,20 L 70,20 A 20,20 0 0,1 70,60 L 50,60 Z\" fill=\"transparent\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"15\" y=\"35\" fill=\"#f8fafc\" font-size=\"14\">A</text>\n            <line x1=\"30\" y1=\"30\" x2=\"50\" y2=\"30\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"15\" y=\"55\" fill=\"#f8fafc\" font-size=\"14\">B</text>\n            <line x1=\"30\" y1=\"50\" x2=\"50\" y2=\"50\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            \n            <!-- AND Gate 2 -->\n            <path d=\"M 50,80 L 70,80 A 20,20 0 0,1 70,120 L 50,120 Z\" fill=\"transparent\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"15\" y=\"95\" fill=\"#f8fafc\" font-size=\"14\">C</text>\n            <line x1=\"30\" y1=\"90\" x2=\"50\" y2=\"90\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"15\" y=\"115\" fill=\"#f8fafc\" font-size=\"14\">D</text>\n            <line x1=\"30\" y1=\"110\" x2=\"50\" y2=\"110\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n\n            <!-- OR Gate -->\n            <path d=\"M 150,20 Q 190,20 230,70 Q 190,120 150,120 Q 170,70 150,20 Z\" fill=\"transparent\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            \n            <!-- Connections to OR Gate -->\n            <line x1=\"90\" y1=\"40\" x2=\"155\" y2=\"40\" stroke=\"#94a3b8\" stroke-width=\"2\"/>\n            <line x1=\"90\" y1=\"100\" x2=\"155\" y2=\"100\" stroke=\"#94a3b8\" stroke-width=\"2\"/>\n\n            <!-- Output -->\n            <line x1=\"230\" y1=\"70\" x2=\"260\" y2=\"70\" stroke=\"#facc15\" stroke-width=\"2\"/>\n            <text x=\"270\" y=\"75\" fill=\"#facc15\" font-weight=\"bold\" font-size=\"16\">F</text>\n\n            </svg>\n        <br>What is the Boolean expression for the output F?",
+      "options": [
+        "F = (A + B)(C + D)",
+        "F = AB + CD",
+        "F = (AB)' + (CD)'",
+        "F = A + B + C + D"
+      ],
+      "correct": 1,
+      "explanation": "The top gate is an AND gate (AB). The bottom gate is an AND gate (CD). Both feed into an OR gate. Thus, F = AB + CD. This is a classic Sum of Products (SOP) realization."
+    },
+    {
+      "id": 4,
+      "topic": "Operating Systems",
+      "text": "In a Linux environment, what is a 'Zombie Process'?",
+      "options": [
+        "A process that is executing malicious code in the background.",
+        "A process that has completed execution but still has an entry in the process table.",
+        "A process that is waiting indefinitely for an I/O resource (Deadlock).",
+        "A daemon process that restarts itself when killed."
+      ],
+      "correct": 1,
+      "explanation": "A zombie process has finished execution, but its parent hasn't read its exit status via the `wait()` system call, so its PID and entry remain in the OS process table."
+    },
+    {
+      "id": 5,
+      "topic": "Miscellaneous (IT Acts)",
+      "text": "Under the Information Technology Act, 2000, which section specifically defines the punishment for 'Cyber Terrorism'?",
+      "options": [
+        "Section 66C",
+        "Section 66D",
+        "Section 66F",
+        "Section 67"
+      ],
+      "correct": 2,
+      "explanation": "Section 66F of the IT Act explicitly deals with Cyber Terrorism and prescribes punishment which may extend to imprisonment for life."
+    },
+    {
+      "id": 6,
+      "topic": "Algorithms",
+      "text": "NUMERICAL: According to the Master Theorem, what is the time complexity of the recurrence relation T(n) = 8T(n/2) + O(n^2)?",
+      "options": [
+        "O(n^2)",
+        "O(n^2 log n)",
+        "O(n^3)",
+        "O(n log n)"
+      ],
+      "correct": 2,
+      "explanation": "Here a=8, b=2. f(n) = n^2. Calculate n^(log_b(a)) = n^(log_2(8)) = n^3. Since n^3 is polynomially larger than f(n) = n^2, it falls in Case 1. The complexity is O(n^3)."
+    },
+    {
+      "id": 7,
+      "topic": "Java Programming",
+      "text": "In Java, what occurs when a method in a subclass has the same name and parameters as a method in its superclass, but a different return type?",
+      "options": [
+        "The compiler allows it if the return type is a primitive.",
+        "Method Overloading occurs.",
+        "Method Overriding occurs successfully.",
+        "A compilation error occurs (unless the return type is a covariant return type)."
+      ],
+      "correct": 3,
+      "explanation": "In Java, you cannot override a method by changing just the return type. It will cause a compile-time error unless the new return type is a subclass of the original return type (Covariant Return Type)."
+    },
+    {
+      "id": 8,
+      "topic": "Software Engineering",
+      "text": "In the COCOMO model used for software cost estimation, what does 'Organic' mode imply?",
+      "options": [
+        "A complex project with strict constraints and hardware interfaces.",
+        "A project developed by a small team with good experience in a familiar in-house environment.",
+        "A project that requires bleeding-edge technology.",
+        "A project that is a mix of strict and relaxed constraints."
+      ],
+      "correct": 1,
+      "explanation": "Organic projects are relatively small, simple software projects where a small team with good application experience works to a set of less rigid requirements."
+    },
+    {
+      "id": 9,
+      "topic": "Computer Architecture",
+      "text": "NUMERICAL: A non-pipelined system takes 50ns to process a task. The same task can be processed in a 6-segment pipeline with a clock cycle of 10ns. What is the theoretical maximum speedup of this pipeline for a very large number of tasks?",
+      "options": [
+        "5.0",
+        "6.0",
+        "1.2",
+        "10.0"
+      ],
+      "correct": 0,
+      "explanation": "For a very large number of instructions (n -> infinity), the time taken per instruction in a pipeline approaches the clock cycle time (10ns). Speedup = Time(non-pipelined) / Time(pipelined) = 50ns / 10ns = 5."
+    },
+    {
+      "id": 10,
+      "topic": "Python Programming",
+      "text": "In Python, which built-in data structure is implemented using a Hash Table under the hood, ensuring O(1) average time complexity for lookups?",
+      "options": [
+        "List",
+        "Tuple",
+        "Dictionary",
+        "Deque"
+      ],
+      "correct": 2,
+      "explanation": "Python Dictionaries (and Sets) are implemented as Hash Tables, which allows them to provide O(1) average time complexity for insertions, deletions, and lookups."
+    },
+    {
+      "id": 11,
+      "topic": "Data Structures",
+      "text": "DIAGRAM: Look at the Binary Tree below.<br><br>\n        <svg height=\"150\" width=\"200\" xmlns=\"http://www.w3.org/2000/svg\" style=\"background:#1e293b; border-radius:8px; margin: 10px 0;\">\n          <circle cx=\"100\" cy=\"30\" r=\"15\" fill=\"#38bdf8\" />\n          <text x=\"95\" y=\"35\" fill=\"#fff\" font-weight=\"bold\">A</text>\n          \n          <line x1=\"90\" y1=\"42\" x2=\"60\" y2=\"70\" stroke=\"#94a3b8\" stroke-width=\"2\"/>\n          <line x1=\"110\" y1=\"42\" x2=\"140\" y2=\"70\" stroke=\"#94a3b8\" stroke-width=\"2\"/>\n          \n          <circle cx=\"55\" cy=\"80\" r=\"15\" fill=\"#38bdf8\" />\n          <text x=\"50\" y=\"85\" fill=\"#fff\" font-weight=\"bold\">B</text>\n          \n          <circle cx=\"145\" cy=\"80\" r=\"15\" fill=\"#38bdf8\" />\n          <text x=\"140\" y=\"85\" fill=\"#fff\" font-weight=\"bold\">C</text>\n\n          <line x1=\"45\" y1=\"92\" x2=\"30\" y2=\"120\" stroke=\"#94a3b8\" stroke-width=\"2\"/>\n          \n          <circle cx=\"25\" cy=\"130\" r=\"15\" fill=\"#38bdf8\" />\n          <text x=\"20\" y=\"135\" fill=\"#fff\" font-weight=\"bold\">D</text>\n        </svg><br>What is the Post-Order traversal of this tree?",
+      "options": [
+        "D, B, A, C",
+        "A, B, D, C",
+        "D, B, C, A",
+        "B, D, C, A"
+      ],
+      "correct": 2,
+      "explanation": "Post-order traversal is Left, Right, Root. From A, go left to B. From B, go left to D. D has no children, so output D. Go back to B (no right child), output B. Go back to A, go right to C. C has no children, output C. Finally output root A. Result: D, B, C, A."
+    },
+    {
+      "id": 12,
+      "topic": "Information Security",
+      "text": "Which cybersecurity attack involves intercepting a communication between two parties, altering the traffic, and relaying it so both parties believe they are talking directly to each other?",
+      "options": [
+        "Phishing",
+        "Man-in-the-Middle (MitM)",
+        "DDoS",
+        "Cross-Site Scripting (XSS)"
+      ],
+      "correct": 1,
+      "explanation": "MitM attacks occur when an attacker secretly relays and possibly alters the communications between two parties who believe they are directly communicating with each other."
+    },
+    {
+      "id": 13,
+      "topic": "Computer Networks",
+      "text": "MATCHING: Match the OSI Layers (List I) with their corresponding Data Units (List II).<br><br><table class='matching-table'><tr><th>List I (Layer)</th><th>List II (PDU)</th></tr><tr><td>A. Network</td><td>1. Frames</td></tr><tr><td>B. Transport</td><td>2. Packets</td></tr><tr><td>C. Data Link</td><td>3. Segments</td></tr><tr><td>D. Physical</td><td>4. Bits</td></tr></table><br>Select the correct matching:",
+      "options": [
+        "A-2, B-3, C-1, D-4",
+        "A-3, B-2, C-4, D-1",
+        "A-2, B-1, C-3, D-4",
+        "A-1, B-3, C-2, D-4"
+      ],
+      "correct": 0,
+      "explanation": "Network Layer handles Packets (2). Transport Layer handles Segments (3). Data Link Layer handles Frames (1). Physical Layer handles Bits (4)."
+    },
+    {
+      "id": 14,
+      "topic": "Web Technologies",
+      "text": "In CSS, what is the 'Box Model' composed of, starting from the content and moving outward?",
+      "options": [
+        "Content, Border, Margin, Padding",
+        "Content, Padding, Border, Margin",
+        "Margin, Border, Padding, Content",
+        "Content, Margin, Padding, Border"
+      ],
+      "correct": 1,
+      "explanation": "The standard CSS Box Model wraps around HTML elements in this order: Content (center) -> Padding -> Border -> Margin (outermost)."
+    },
+    {
+      "id": 15,
+      "topic": "Database Systems",
+      "text": "Which property of a transaction guarantees that concurrent execution of transactions leaves the database in the same state as if they were executed sequentially?",
+      "options": [
+        "Atomicity",
+        "Consistency",
+        "Isolation",
+        "Durability"
+      ],
+      "correct": 2,
+      "explanation": "Isolation (the 'I' in ACID) ensures that concurrent transactions do not interfere with each other, mimicking sequential execution."
+    },
+    {
+      "id": 16,
+      "topic": "Miscellaneous (Banking GK)",
+      "text": "In the RTGS system (Real Time Gross Settlement), each transaction is uniquely identified by a UTR number. How many characters long is an RTGS UTR number?",
+      "options": [
+        "16 characters",
+        "22 characters",
+        "12 characters",
+        "11 characters"
+      ],
+      "correct": 1,
+      "explanation": "An RTGS UTR (Unique Transaction Reference) is exactly 22 characters long (e.g., XXXXR52023090812345678). NEFT UTRs are 16 characters long."
+    },
+    {
+      "id": 17,
+      "topic": "Operating Systems",
+      "text": "NUMERICAL: In a paging system, logical memory consists of 64 pages of 1024 bytes each, mapped into a physical memory of 32 frames. How many bits are required for the Logical Address and Physical Address respectively?",
+      "options": [
+        "16 bits and 15 bits",
+        "16 bits and 16 bits",
+        "15 bits and 16 bits",
+        "14 bits and 14 bits"
+      ],
+      "correct": 0,
+      "explanation": "Logical memory = 64 pages * 1KB = 64KB (2^16 bytes) -> Logical Address = 16 bits. Physical memory = 32 frames * 1KB = 32KB (2^15 bytes) -> Physical Address = 15 bits."
+    },
+    {
+      "id": 18,
+      "topic": "Algorithms",
+      "text": "Which path-finding algorithm uses a heuristic function f(n) = g(n) + h(n) to estimate the cheapest path to the goal?",
+      "options": [
+        "Dijkstra's Algorithm",
+        "A* (A-Star) Search",
+        "Breadth-First Search",
+        "Bellman-Ford"
+      ],
+      "correct": 1,
+      "explanation": "The A* algorithm uses heuristics. It calculates f(n) which is the sum of the exact cost to reach the node g(n) and the estimated heuristic cost to the goal h(n)."
+    },
+    {
+      "id": 19,
+      "topic": "Compiler Design",
+      "text": "In the context of compilation, what is 'Peephole Optimization'?",
+      "options": [
+        "A technique used during lexical analysis to remove whitespace.",
+        "A local optimization technique that examines a short sequence of target instructions (a peephole) and replaces them with a faster or shorter sequence.",
+        "An optimization to reduce the size of the abstract syntax tree.",
+        "A method to optimize global data flow."
+      ],
+      "correct": 1,
+      "explanation": "Peephole optimization is a final pass over generated machine code that looks at small windows (peepholes) of instructions to find redundant operations (like a push followed immediately by a pop)."
+    },
+    {
+      "id": 20,
+      "topic": "Java Programming",
+      "text": "Which design pattern is implemented by making the constructor private and providing a static method that returns the sole instance of the class?",
+      "options": [
+        "Factory Pattern",
+        "Observer Pattern",
+        "Singleton Pattern",
+        "Decorator Pattern"
+      ],
+      "correct": 2,
+      "explanation": "The Singleton Pattern restricts the instantiation of a class to one single object, achieved by a private constructor and a public static instance getter."
+    },
+    {
+      "id": 21,
+      "topic": "Digital Logic",
+      "text": "NUMERICAL: Using Boolean Algebra, simplify the expression: Y = AB + A(B + C) + B(B + C).",
+      "options": [
+        "A + B",
+        "B + C",
+        "AB + AC",
+        "B + AC"
+      ],
+      "correct": 3,
+      "explanation": "Y = AB + AB + AC + BB + BC. (AB + AB = AB, BB = B). Y = AB + AC + B + BC. Group B: B(A + 1 + C) = B(1) = B. Result: B + AC."
+    },
+    {
+      "id": 22,
+      "topic": "Computer Networks",
+      "text": "In the IEEE 802.11 (Wi-Fi) standard, which mechanism is used to avoid collisions in a wireless medium?",
+      "options": [
+        "CSMA/CD",
+        "CSMA/CA",
+        "Token Passing",
+        "TDMA"
+      ],
+      "correct": 1,
+      "explanation": "Wi-Fi uses Carrier Sense Multiple Access with Collision Avoidance (CSMA/CA). Collision Detection (CSMA/CD) is used in wired Ethernet because detecting collisions over wireless is highly difficult."
+    },
+    {
+      "id": 23,
+      "topic": "Object Oriented Programming",
+      "text": "What is 'Duck Typing' in dynamically typed languages like Python?",
+      "options": [
+        "A strict typing system that enforces data types at compile time.",
+        "A concept where an object's suitability is determined by the presence of certain methods and properties, rather than its actual class type.",
+        "A method of encrypting object data.",
+        "The process of casting a subclass object to a superclass reference."
+      ],
+      "correct": 1,
+      "explanation": "'If it walks like a duck and quacks like a duck, it must be a duck.' Duck typing focuses on what an object can DO (its methods), not what it IS (its inheritance chain)."
+    },
+    {
+      "id": 24,
+      "topic": "Data Structures",
+      "text": "Which data structure is primarily used to implement a Priority Queue optimally?",
+      "options": [
+        "Array",
+        "Linked List",
+        "Binary Heap",
+        "Stack"
+      ],
+      "correct": 2,
+      "explanation": "A Binary Heap (Min-Heap or Max-Heap) is the optimal structure for a Priority Queue, allowing insertions and highest-priority extractions in O(log n) time."
+    },
+    {
+      "id": 25,
+      "topic": "Miscellaneous (Latest Tech)",
+      "text": "In cloud computing, what is 'Docker' primarily used for?",
+      "options": [
+        "Virtualizing physical hardware components like RAM and CPUs.",
+        "Creating isolated, lightweight software containers that package code with its dependencies.",
+        "Managing relational databases efficiently.",
+        "Encrypting network traffic between the cloud and on-premise servers."
+      ],
+      "correct": 1,
+      "explanation": "Docker is an OS-level virtualization platform used to deliver software in standardized packages called 'containers', ensuring the app runs uniformly regardless of the environment."
+    },
+    {
+      "id": 26,
+      "topic": "Operating Systems",
+      "text": "Which of the following conditions implies that a system is in a Deadlock state?",
+      "options": [
+        "CPU utilization is 100%.",
+        "All processes are running indefinitely.",
+        "A set of blocked processes each holding a resource and waiting to acquire a resource held by another process in the set.",
+        "A process is unable to access a resource because a high-priority process keeps acquiring it (Starvation)."
+      ],
+      "correct": 2,
+      "explanation": "Deadlock occurs when processes in a set are circularly waiting for resources held by each other, preventing any of them from making progress."
+    },
+    {
+      "id": 27,
+      "topic": "Software Engineering",
+      "text": "What is the primary difference between Alpha Testing and Beta Testing?",
+      "options": [
+        "Alpha is done by developers; Beta is automated testing.",
+        "Alpha is performed internally by the organization; Beta is performed by a limited number of external end-users in a real environment.",
+        "Alpha testing checks security; Beta testing checks performance.",
+        "There is no difference; they are just sequential steps of unit testing."
+      ],
+      "correct": 1,
+      "explanation": "Alpha testing takes place at the developer's site (internal). Beta testing takes place at the customer's site (external real-world exposure) before a general release."
+    },
+    {
+      "id": 28,
+      "topic": "Computer Architecture",
+      "text": "Which of the following addressing modes directly embeds the operand value within the instruction itself?",
+      "options": [
+        "Direct Addressing",
+        "Indirect Addressing",
+        "Immediate Addressing",
+        "Indexed Addressing"
+      ],
+      "correct": 2,
+      "explanation": "In Immediate Addressing mode, the actual data to be operated on is part of the instruction (e.g., ADD R1, #5), meaning no memory fetch is needed for the operand."
+    },
+    {
+      "id": 29,
+      "topic": "Information Security",
+      "text": "NUMERICAL: In the Diffie-Hellman Key Exchange, Alice and Bob agree on prime p=23 and base g=5. Alice chooses secret a=6. Bob chooses secret b=15. What is the public value Alice sends to Bob?",
+      "options": [
+        "8",
+        "16",
+        "2",
+        "12"
+      ],
+      "correct": 0,
+      "explanation": "Alice computes A = (g^a) mod p. A = (5^6) mod 23. 5^2 = 25 = 2 mod 23. 5^6 = (5^2)^3 = 2^3 = 8 mod 23. Alice sends 8."
+    },
+    {
+      "id": 30,
+      "topic": "Python Programming",
+      "text": "In Python, how do you correctly handle an exception while ensuring that a specific block of cleanup code (like closing a file) runs regardless of whether the exception occurred or not?",
+      "options": [
+        "Using the 'catch' block",
+        "Using the 'else' block",
+        "Using the 'finally' block",
+        "Using the 'except' block"
+      ],
+      "correct": 2,
+      "explanation": "The `finally` block in a `try-except-finally` statement is guaranteed to execute, making it the standard place for cleanup code like closing files or network connections."
+    },
+    {
+      "id": 31,
+      "topic": "Database Systems",
+      "text": "What is a 'Clustered Index' in a SQL database?",
+      "options": [
+        "An index that creates a separate lookup table of pointers.",
+        "An index that physically sorts the data rows in the table based on their key values.",
+        "An index used only for foreign keys.",
+        "An index that allows duplicate entries to be ignored."
+      ],
+      "correct": 1,
+      "explanation": "A Clustered Index dictates the physical storage order of the data in a table. Therefore, a table can only have one clustered index."
+    },
+    {
+      "id": 32,
+      "topic": "Web Technologies",
+      "text": "Which JavaScript array method creates a completely new array populated with the results of calling a provided function on every element in the calling array?",
+      "options": [
+        "filter()",
+        "reduce()",
+        "forEach()",
+        "map()"
+      ],
+      "correct": 3,
+      "explanation": "The `map()` method creates a new array by transforming every element according to the callback function. `forEach()` iterates but does not return a new array."
+    },
+    {
+      "id": 33,
+      "topic": "Compiler Design",
+      "text": "What is the primary function of the 'Lexical Analyzer' (Scanner)?",
+      "options": [
+        "To check the grammar and syntax of the code.",
+        "To optimize the machine code.",
+        "To group characters into meaningful sequences called Tokens.",
+        "To generate intermediate three-address code."
+      ],
+      "correct": 2,
+      "explanation": "The Lexical Analyzer reads the source code character stream and converts it into a stream of meaningful Tokens (identifiers, keywords, operators) for the syntax analyzer."
+    },
+    {
+      "id": 34,
+      "topic": "Data Structures",
+      "text": "NUMERICAL: What is the maximum number of nodes possible in a strictly binary tree (where every node has exactly 0 or 2 children) of height h? (Assume root is at height 0)",
+      "options": [
+        "2^(h) - 1",
+        "2^(h+1) - 1",
+        "2^h",
+        "2^(h+1)"
+      ],
+      "correct": 1,
+      "explanation": "A strictly binary tree that is perfectly full has 2^(h+1) - 1 nodes. (e.g., if height is 2, levels are 0,1,2. Nodes = 1 + 2 + 4 = 7. Formula gives 2^3 - 1 = 7)."
+    },
+    {
+      "id": 35,
+      "topic": "Algorithms",
+      "text": "Which algorithmic strategy is used by the standard implementation of QuickSort?",
+      "options": [
+        "Dynamic Programming",
+        "Greedy Method",
+        "Divide and Conquer",
+        "Branch and Bound"
+      ],
+      "correct": 2,
+      "explanation": "QuickSort uses Divide and Conquer: it selects a pivot, partitions the array into two sub-arrays (less than and greater than the pivot), and recursively sorts them."
+    },
+    {
+      "id": 36,
+      "topic": "Computer Networks",
+      "text": "What is the default port number used by the SSH (Secure Shell) protocol?",
+      "options": [
+        "21",
+        "22",
+        "23",
+        "443"
+      ],
+      "correct": 1,
+      "explanation": "SSH operates securely over TCP port 22. FTP uses 21, Telnet uses 23, and HTTPS uses 443."
+    },
+    {
+      "id": 37,
+      "topic": "Miscellaneous (ISO Standards)",
+      "text": "Which ISO standard provides guidelines specifically for Risk Management across an organization?",
+      "options": [
+        "ISO 9001",
+        "ISO 31000",
+        "ISO 27001",
+        "ISO 22301"
+      ],
+      "correct": 1,
+      "explanation": "ISO 31000 is the international standard that provides principles and generic guidelines on risk management."
+    },
+    {
+      "id": 38,
+      "topic": "Operating Systems",
+      "text": "In Disk Scheduling, which algorithm services all requests in one direction, goes to the end of the disk, and then reverses direction, servicing requests in the opposite direction?",
+      "options": [
+        "SSTF",
+        "SCAN (Elevator Algorithm)",
+        "C-SCAN",
+        "FCFS"
+      ],
+      "correct": 1,
+      "explanation": "SCAN is also known as the Elevator algorithm because the disk arm moves back and forth across the disk surface, servicing requests in its path, just like an elevator."
+    },
+    {
+      "id": 39,
+      "topic": "Object Oriented Programming",
+      "text": "Which concept allows a child class to inherit properties from multiple parent classes (where permitted by the language)?",
+      "options": [
+        "Hierarchical Inheritance",
+        "Multilevel Inheritance",
+        "Multiple Inheritance",
+        "Hybrid Inheritance"
+      ],
+      "correct": 2,
+      "explanation": "Multiple Inheritance allows a single derived class to inherit from more than one base class (supported in C++ and Python, but not directly in Java for classes)."
+    },
+    {
+      "id": 40,
+      "topic": "Information Security",
+      "text": "What does 'Steganography' refer to in cybersecurity?",
+      "options": [
+        "Encrypting a message using a public key.",
+        "Hiding the very existence of a secret message inside an ordinary, non-secret file or image.",
+        "Breaking a cipher without knowing the key.",
+        "A type of firewall packet filtering."
+      ],
+      "correct": 1,
+      "explanation": "Unlike encryption which obfuscates the message content, steganography hides the fact that a message even exists (e.g., embedding text within the pixels of an image)."
+    },
+    {
+      "id": 41,
+      "topic": "Java Programming",
+      "text": "What is a 'Memory Leak' in the context of Java, despite having an automatic Garbage Collector?",
+      "options": [
+        "When the JVM runs out of native OS memory.",
+        "When objects are no longer needed by the application but are still referenced, preventing the GC from collecting them.",
+        "When primitive variables exceed their maximum value.",
+        "When threads are blocked indefinitely."
+      ],
+      "correct": 1,
+      "explanation": "A memory leak in Java occurs when a program maintains references to objects that are no longer needed. Because the references exist, the Garbage Collector cannot free the memory."
+    },
+    {
+      "id": 42,
+      "topic": "Database Systems",
+      "text": "What is the role of a 'Foreign Key' in a relational database?",
+      "options": [
+        "To uniquely identify a record in its own table.",
+        "To encrypt the data within a specific column.",
+        "To establish and enforce a link (referential integrity) between the data in two tables.",
+        "To automatically generate sequential IDs."
+      ],
+      "correct": 2,
+      "explanation": "A foreign key in one table points to a primary key in another table, ensuring referential integrity and linking the tables together."
+    },
+    {
+      "id": 43,
+      "topic": "Digital Logic",
+      "text": "In a JK Flip-Flop, what happens when both J and K inputs are set to 1 (HIGH) and a clock pulse is applied?",
+      "options": [
+        "The output sets to 1.",
+        "The output resets to 0.",
+        "The output toggles (complements its current state).",
+        "An invalid/race condition occurs."
+      ],
+      "correct": 2,
+      "explanation": "Unlike an SR flip-flop (where 1,1 is invalid), the JK flip-flop is designed so that J=1, K=1 causes the output state to toggle (Q becomes Q')."
+    },
+    {
+      "id": 44,
+      "topic": "Software Engineering",
+      "text": "Which UML (Unified Modeling Language) diagram is used to represent the dynamic behavior of a system by showing the sequence of messages passed between objects over time?",
+      "options": [
+        "Class Diagram",
+        "Use Case Diagram",
+        "Sequence Diagram",
+        "Deployment Diagram"
+      ],
+      "correct": 2,
+      "explanation": "Sequence diagrams show how objects interact with each other in a specific sequential order over time."
+    },
+    {
+      "id": 45,
+      "topic": "Web Technologies",
+      "text": "In REST API design, which HTTP method is considered 'Idempotent' and is used to completely replace an existing resource?",
+      "options": [
+        "POST",
+        "PUT",
+        "PATCH",
+        "CONNECT"
+      ],
+      "correct": 1,
+      "explanation": "PUT is idempotent (making the same request multiple times produces the same result) and is used to replace an entire resource. POST is for creating new resources and is not idempotent."
+    },
+    {
+      "id": 46,
+      "topic": "Computer Architecture",
+      "text": "What is the function of the Program Counter (PC) register in a CPU?",
+      "options": [
+        "To count the total number of instructions executed.",
+        "To store the result of the latest ALU operation.",
+        "To hold the memory address of the next instruction to be fetched and executed.",
+        "To point to the top of the runtime stack."
+      ],
+      "correct": 2,
+      "explanation": "The Program Counter holds the memory address of the next instruction. After fetching, it automatically increments to point to the subsequent instruction."
+    },
+    {
+      "id": 47,
+      "topic": "Data Structures",
+      "text": "What is a 'Circular Queue' designed to prevent?",
+      "options": [
+        "Memory leaks caused by dangling pointers.",
+        "The 'false full' condition in an array-based queue where space is available at the front but the rear pointer is at the end.",
+        "Infinite loops during queue traversal.",
+        "Priority inversions in operating systems."
+      ],
+      "correct": 1,
+      "explanation": "In a standard array queue, once the rear pointer reaches the end, you cannot insert more elements even if dequeues have freed space at the front. A circular queue wraps the rear pointer back to index 0 to use that space."
+    },
+    {
+      "id": 48,
+      "topic": "Algorithms",
+      "text": "NUMERICAL: In a graph with V vertices, what is the maximum number of edges in a simple undirected graph (no self-loops or multiple edges)?",
+      "options": [
+        "V(V-1)",
+        "V(V-1)/2",
+        "V^2",
+        "V(V+1)/2"
+      ],
+      "correct": 1,
+      "explanation": "Every vertex can connect to (V-1) other vertices. This gives V(V-1) connections. Since the graph is undirected, every edge is counted twice, so we divide by 2: V(V-1)/2."
+    },
+    {
+      "id": 49,
+      "topic": "Computer Networks",
+      "text": "Which protocol is responsible for translating a human-readable domain name (like www.google.com) into an IP address?",
+      "options": [
+        "ARP",
+        "DHCP",
+        "DNS",
+        "ICMP"
+      ],
+      "correct": 2,
+      "explanation": "DNS (Domain Name System) acts as the phonebook of the internet, resolving domain names into the IP addresses required for routing."
+    },
+    {
+      "id": 50,
+      "topic": "Miscellaneous (IT Acts)",
+      "text": "Under the IT Act 2000, Certifying Authorities (CAs) are regulated by which entity?",
+      "options": [
+        "Reserve Bank of India (RBI)",
+        "Controller of Certifying Authorities (CCA)",
+        "Ministry of Home Affairs",
+        "CERT-In"
+      ],
+      "correct": 1,
+      "explanation": "The CCA (Controller of Certifying Authorities) is appointed under Section 17 of the IT Act to license and regulate the working of Certifying Authorities."
+    }
+  ]
+}

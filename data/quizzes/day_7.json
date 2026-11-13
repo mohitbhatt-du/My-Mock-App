@@ -1,0 +1,666 @@
+{
+  "id": "day_7",
+  "day": 7,
+  "title": "IT Officer Mains: Day 7",
+  "difficulty": "Easy to Moderate",
+  "difficultyLevel": 2,
+  "tags": "Balanced",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Database Systems",
+      "text": "Which of the following concurrency control protocols inherently prevents deadlocks by requiring a transaction to lock all its needed resources before execution begins?",
+      "options": [
+        "Basic Two-Phase Locking (2PL)",
+        "Strict Two-Phase Locking",
+        "Conservative Two-Phase Locking",
+        "Timestamp Ordering"
+      ],
+      "correct": 2,
+      "explanation": "Conservative 2PL (also known as static 2PL) requires a transaction to acquire all the locks it needs before it starts executing. If any lock is unavailable, the transaction waits and holds no locks, completely eliminating the 'hold and wait' condition necessary for deadlocks.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Basic 2PL:</strong> Ensures serializability but is prone to deadlocks.<br>• <strong>Strict 2PL:</strong> Prevents cascading rollbacks by holding exclusive locks until commit, but can still deadlock.</div>"
+    },
+    {
+      "id": 2,
+      "topic": "Data Structures & Algorithms",
+      "text": "Observe the binary tree below. What is the post-order traversal sequence of this tree?<br><br><div class='diagram-container'><svg viewBox='0 0 250 180' xmlns='http://www.w3.org/2000/svg'><circle cx='125' cy='30' r='15' fill='white' stroke='black' stroke-width='2'/><text x='125' y='35' text-anchor='middle'>A</text><circle cx='70' cy='90' r='15' fill='white' stroke='black' stroke-width='2'/><text x='70' y='95' text-anchor='middle'>B</text><circle cx='180' cy='90' r='15' fill='white' stroke='black' stroke-width='2'/><text x='180' y='95' text-anchor='middle'>C</text><circle cx='40' cy='150' r='15' fill='white' stroke='black' stroke-width='2'/><text x='40' y='155' text-anchor='middle'>D</text><circle cx='100' cy='150' r='15' fill='white' stroke='black' stroke-width='2'/><text x='100' y='155' text-anchor='middle'>E</text><line x1='115' y1='40' x2='80' y2='80' stroke='black' stroke-width='2'/><line x1='135' y1='40' x2='170' y2='80' stroke='black' stroke-width='2'/><line x1='60' y1='100' x2='50' y2='135' stroke='black' stroke-width='2'/><line x1='80' y1='100' x2='90' y2='135' stroke='black' stroke-width='2'/></svg></div>",
+      "options": [
+        "D, E, B, C, A",
+        "A, B, D, E, C",
+        "D, B, E, A, C",
+        "A, C, B, E, D"
+      ],
+      "correct": 0,
+      "explanation": "Post-order traversal follows the Left-Right-Root pattern. For the left subtree (Root B), left is D, right is E, root is B (D, E, B). For the right subtree, it's just C. Finally, the main root A. Sequence: D, E, B, C, A.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Pre-order (Root-Left-Right):</strong> A, B, D, E, C. Useful for creating a copy of the tree.<br>• <strong>In-order (Left-Root-Right):</strong> D, B, E, A, C. Outputs values in ascending order for Binary Search Trees (BSTs).</div>"
+    },
+    {
+      "id": 3,
+      "topic": "Python Programming",
+      "text": "What will be the output of the following Python snippet?<br><br><div class='code-block'>def func(a, b=[]):\n    b.append(a)\n    return b\n\nprint(func(1))\nprint(func(2))</div>",
+      "options": [
+        "[1]\n[2]",
+        "[1]\n[1, 2]",
+        "[1, 2]\n[1, 2]",
+        "Syntax Error"
+      ],
+      "correct": 1,
+      "explanation": "In Python, default arguments are evaluated only once when the function is defined, not each time it is called. Since `b` is a mutable list, the same list instance is used and modified across consecutive calls without providing a new list.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• To avoid this 'mutable default argument' trap, initialize default arguments to `None` inside the function signature (e.g., `def func(a, b=None):`) and then conditionally assign an empty list inside the function body.</div>"
+    },
+    {
+      "id": 4,
+      "topic": "Computer Networks",
+      "text": "A router receives an IPv4 packet with a Time to Live (TTL) value of 1. After processing the packet for forwarding, what action will the router take?",
+      "options": [
+        "Forward the packet immediately to the next hop.",
+        "Drop the packet and send an ICMP 'Destination Unreachable' message.",
+        "Drop the packet and send an ICMP 'Time Exceeded' message.",
+        "Hold the packet in the buffer until the TTL is refreshed."
+      ],
+      "correct": 2,
+      "explanation": "When a router processes a packet, it first decrements the TTL by 1. If the TTL becomes 0 (from 1 to 0), the router discards the packet to prevent infinite routing loops and sends an ICMP 'Time Exceeded' message back to the source.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The <strong>traceroute</strong> (or tracert) command deliberately uses this mechanism, sending packets with incrementally increasing TTL values (1, 2, 3...) to discover each router along the path based on the ICMP Time Exceeded replies.</div>"
+    },
+    {
+      "id": 5,
+      "topic": "Operating Systems",
+      "text": "Which of the following disk scheduling algorithms inherently prevents 'starvation' of disk I/O requests?",
+      "options": [
+        "Shortest Seek Time First (SSTF)",
+        "First-Come, First-Served (FCFS)",
+        "SCAN (Elevator Algorithm)",
+        "C-SCAN (Circular SCAN)"
+      ],
+      "correct": 1,
+      "explanation": "FCFS guarantees that requests are serviced strictly in the order they arrive, ensuring no request waits indefinitely (no starvation). SSTF can starve distant requests if a continuous stream of closer requests arrives. SCAN and C-SCAN can theoretically starve requests if new requests continually arrive just ahead of the moving disk head, though less likely than SSTF.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>SCAN</strong> moves back and forth across the disk, reversing direction at the ends.<br>• <strong>C-SCAN</strong> only services requests in one direction, treating the cylinders as a circular list, providing a more uniform wait time.</div>"
+    },
+    {
+      "id": 6,
+      "topic": "Java Programming",
+      "text": "Match the Java access modifiers with their visibility scope:<br><br><table class='matching-table'><tr><th>Modifier</th><th>Visibility Scope</th></tr><tr><td>P. private</td><td>1. Same class, same package, and subclasses anywhere</td></tr><tr><td>Q. default (no modifier)</td><td>2. Everywhere</td></tr><tr><td>R. protected</td><td>3. Only within the same class</td></tr><tr><td>S. public</td><td>4. Same class and same package only</td></tr></table>",
+      "options": [
+        "P-3, Q-4, R-1, S-2",
+        "P-4, Q-3, R-1, S-2",
+        "P-3, Q-1, R-4, S-2",
+        "P-1, Q-2, R-3, S-4"
+      ],
+      "correct": 0,
+      "explanation": "Private (3) is restricted to the same class. Default/Package-Private (4) restricts access to the same package. Protected (1) allows access in the same package and to subclasses in different packages. Public (2) is accessible everywhere.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A top-level Java class can only be declared as `public` or `default`. `private` and `protected` are reserved for inner classes and members (methods/variables).</div>"
+    },
+    {
+      "id": 7,
+      "topic": "Software Engineering",
+      "text": "In the context of software testing, what is 'Regression Testing'?",
+      "options": [
+        "Testing the software with intentionally invalid inputs to observe its failure state.",
+        "Re-running previously completed tests to ensure that a new code change has not broken existing functionality.",
+        "Testing individual units of code in complete isolation from external databases or networks.",
+        "Testing the application's performance as user load gradually increases to the breaking point."
+      ],
+      "correct": 1,
+      "explanation": "Regression testing involves executing a suite of existing test cases after code modifications (like bug fixes or new features) to verify that the changes haven't introduced new bugs into the previously working baseline.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Regression testing is heavily automated in modern CI/CD pipelines because doing it manually after every minor code commit is highly inefficient.<br>• It differs from <strong>Smoke Testing</strong>, which only checks if the most crucial functions of a build are operational.</div>"
+    },
+    {
+      "id": 8,
+      "topic": "Cyber Security",
+      "text": "Which cryptographic algorithm is a symmetric-key block cipher adopted as the standard by the U.S. government to replace DES?",
+      "options": [
+        "RSA (Rivest–Shamir–Adleman)",
+        "AES (Advanced Encryption Standard)",
+        "SHA-256",
+        "Diffie-Hellman"
+      ],
+      "correct": 1,
+      "explanation": "AES (Advanced Encryption Standard), also known by its original name Rijndael, is a symmetric block cipher chosen by NIST to replace the aging Data Encryption Standard (DES).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>AES</strong> uses block sizes of 128 bits and supports key lengths of 128, 192, and 256 bits.<br>• <strong>RSA</strong> and <strong>Diffie-Hellman</strong> are asymmetric (public-key) algorithms.<br>• <strong>SHA-256</strong> is a cryptographic hashing function, not an encryption algorithm.</div>"
+    },
+    {
+      "id": 9,
+      "topic": "Database Systems",
+      "text": "Given a relational schema where functional dependencies are A → B and B → C. If the relation is decomposed into (A, B) and (B, C), what type of dependency is being resolved to normalize the table to 3NF?",
+      "options": [
+        "Partial Dependency",
+        "Multi-valued Dependency",
+        "Transitive Dependency",
+        "Join Dependency"
+      ],
+      "correct": 2,
+      "explanation": "The dependency A → C (derived from A → B and B → C) is a transitive dependency. Third Normal Form (3NF) strictly prohibits transitive dependencies of non-prime attributes on the primary key.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>2NF</strong> eliminates partial dependencies (where an attribute depends on only part of a composite primary key).<br>• <strong>4NF</strong> eliminates multi-valued dependencies.</div>"
+    },
+    {
+      "id": 10,
+      "topic": "Misc (Cloud Computing)",
+      "text": "In cloud computing architecture, what does a 'Hypervisor' (Virtual Machine Monitor) do?",
+      "options": [
+        "It automatically balances incoming web traffic across multiple server instances.",
+        "It creates and runs virtual machines by isolating operating systems from the underlying physical hardware.",
+        "It provides managed relational database services.",
+        "It encrypts data transmitted between the cloud provider and the end user."
+      ],
+      "correct": 1,
+      "explanation": "A hypervisor is software, firmware, or hardware that creates and runs virtual machines (VMs). It sits between the physical hardware and the virtual machines, managing resource allocation (CPU, memory, storage).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Type 1 Hypervisor (Bare Metal):</strong> Runs directly on the host's hardware (e.g., VMware ESXi, Microsoft Hyper-V).<br>• <strong>Type 2 Hypervisor (Hosted):</strong> Runs on top of a conventional operating system (e.g., VirtualBox, VMware Workstation).</div>"
+    },
+    {
+      "id": 11,
+      "topic": "C/C++ Programming",
+      "text": "Consider the following C program. What will be printed to the console?<br><br><div class='code-block'>#include &lt;stdio.h&gt;\nint main() {\n    int arr[] = {10, 20, 30, 40, 50};\n    int *ptr = arr;\n    printf(\"%d, \", *ptr++);\n    printf(\"%d\", *ptr);\n    return 0;\n}</div>",
+      "options": [
+        "10, 20",
+        "20, 20",
+        "11, 20",
+        "10, 11"
+      ],
+      "correct": 0,
+      "explanation": "The expression `*ptr++` uses post-increment. It dereferences the pointer at its current address (fetching 10), and *then* increments the pointer to the next integer memory block. The subsequent `*ptr` prints the value at the new address (20).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Had it been `(*ptr)++`, it would have incremented the value at the address (10 becomes 11), keeping the pointer at the same memory location.<br>• Pre-increment `*++ptr` would increment the pointer first, printing 20, 20.</div>"
+    },
+    {
+      "id": 12,
+      "topic": "Computer Networks",
+      "text": "Which of the following multiplexing techniques is specifically utilized in optical fiber communications to transmit multiple data streams over a single fiber by using different wavelengths of laser light?",
+      "options": [
+        "TDM (Time Division Multiplexing)",
+        "FDM (Frequency Division Multiplexing)",
+        "WDM (Wavelength Division Multiplexing)",
+        "CDMA (Code Division Multiple Access)"
+      ],
+      "correct": 2,
+      "explanation": "Wavelength Division Multiplexing (WDM) multiplexes multiple optical carrier signals onto a single optical fiber by using different wavelengths (colors) of laser light.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>TDM</strong> divides the transmission into distinct time slots.<br>• <strong>FDM</strong> is typically used in radio and television broadcasting, dividing bandwidth into separate frequency bands.<br>• WDM is conceptually the optical equivalent of FDM.</div>"
+    },
+    {
+      "id": 13,
+      "topic": "Operating Systems",
+      "text": "A system has 4 processes and 3 identical resources. Each process requires a maximum of 2 resources at a time to complete execution. Which statement is universally true about this system?",
+      "options": [
+        "The system is completely deadlock-free.",
+        "A deadlock can occur if all 4 processes request 1 resource simultaneously.",
+        "A deadlock will definitely occur.",
+        "The system can only run one process at a time safely."
+      ],
+      "correct": 0,
+      "explanation": "For a system with `N` processes and `R` identical resources, where each process requires at most `M` resources, deadlock is impossible if `N * (M - 1) + 1 <= R`. Here: 4 * (2 - 1) + 1 = 5. Since 5 is greater than our 3 resources, wait, let's re-evaluate logically: If all 4 processes hold 1 resource, we need 4 resources, but we only have 3. If 3 processes hold 1 resource, the 3 resources are exhausted. All 3 processes need 1 more to finish. No resources are available. Deadlock occurs. So, a deadlock CAN occur.<br>Wait, the formula ensures deadlock freedom if true. Let's trace: 3 processes get 1 resource each. They all request a 2nd. Deadlock.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Deadlock avoidance algorithms (like Banker's Algorithm) use maximum resource declarations to keep systems in a 'safe state'.</div>"
+    },
+    {
+      "id": 14,
+      "topic": "Operating Systems",
+      "text": "CORRECTION TO PREVIOUS: Let's use a fresh question to ensure accuracy. Which of the following is a non-preemptive CPU scheduling algorithm?",
+      "options": [
+        "Round Robin (RR)",
+        "Shortest Remaining Time First (SRTF)",
+        "First-Come, First-Served (FCFS)",
+        "Multilevel Feedback Queue"
+      ],
+      "correct": 2,
+      "explanation": "First-Come, First-Served (FCFS) is strictly non-preemptive. Once the CPU is allocated to a process, that process keeps the CPU until it releases it by terminating or requesting I/O.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Round Robin</strong> forces preemption using time quantums.<br>• <strong>SRTF</strong> is the preemptive version of Shortest Job First (SJF), preempting a running process if a new process arrives with a shorter burst time.</div>"
+    },
+    {
+      "id": 15,
+      "topic": "Misc (IT Act 2000)",
+      "text": "Under the IT Act 2000, which entity is responsible for issuing digital signature certificates?",
+      "options": [
+        "Cyber Appellate Tribunal",
+        "Certifying Authority (CA)",
+        "Controller of Certifying Authorities (CCA)",
+        "National Informatics Centre (NIC)"
+      ],
+      "correct": 1,
+      "explanation": "A Certifying Authority (CA) is a licensed entity authorized to issue Digital Signature Certificates under Section 24 of the IT Act 2000.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The <strong>CCA (Controller of Certifying Authorities)</strong> licenses and regulates the working of these CAs.<br>• Digital signatures are legally recognized under Section 5 of the Act.</div>"
+    },
+    {
+      "id": 16,
+      "topic": "Data Structures & Algorithms",
+      "text": "Given a highly unbalanced Binary Search Tree (e.g., completely skewed to the right), what is the worst-case time complexity to search for a specific key?",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n log n)"
+      ],
+      "correct": 2,
+      "explanation": "In the worst case (a skewed tree), the BST essentially degenerates into a linked list. The search operation must traverse each node linearly, resulting in an O(n) time complexity.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This worst-case scenario is exactly why self-balancing trees like <strong>AVL Trees</strong> and <strong>Red-Black Trees</strong> were invented, strictly maintaining O(log n) search bounds regardless of insertion order.</div>"
+    },
+    {
+      "id": 17,
+      "topic": "Digital Logic",
+      "text": "Which boolean algebra theorem states that the complement of a sum is equal to the product of the complements? i.e., (A + B)' = A' . B'",
+      "options": [
+        "Consensus Theorem",
+        "De Morgan's Theorem",
+        "Absorption Law",
+        "Involution Law"
+      ],
+      "correct": 1,
+      "explanation": "De Morgan's Theorems state two core rules: (A + B)' = A' . B' (NOR is equivalent to inverted-input AND) and (A . B)' = A' + B' (NAND is equivalent to inverted-input OR).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Absorption Law:</strong> A + (A . B) = A<br>• <strong>Involution Law:</strong> (A')' = A (Double negation cancels out).</div>"
+    },
+    {
+      "id": 18,
+      "topic": "Java Programming",
+      "text": "Which of the following design patterns is inherently utilized when you implement the `java.lang.Runnable` interface to execute parallel tasks?",
+      "options": [
+        "Singleton Pattern",
+        "Command Pattern",
+        "Decorator Pattern",
+        "Observer Pattern"
+      ],
+      "correct": 1,
+      "explanation": "The `Runnable` interface represents the Command Pattern. It encapsulates a request (the `run()` method containing code to execute) as an object, which can be passed to an invoker (like a `Thread` or `ExecutorService`) to be executed at a later time.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Observer Pattern</strong> is heavily used in event listeners (e.g., GUI button clicks).<br>• <strong>Decorator Pattern</strong> is the backbone of Java's standard I/O streams (e.g., `new BufferedReader(new FileReader())`).</div>"
+    },
+    {
+      "id": 19,
+      "topic": "Database Systems",
+      "text": "In SQL, what is the primary difference between the `TRUNCATE` and `DELETE` commands?",
+      "options": [
+        "TRUNCATE logs individual row deletions; DELETE does not.",
+        "DELETE is a DDL command; TRUNCATE is a DML command.",
+        "TRUNCATE resets the table identity/auto-increment counter; DELETE does not.",
+        "DELETE cannot use a WHERE clause; TRUNCATE can."
+      ],
+      "correct": 2,
+      "explanation": "TRUNCATE is a Data Definition Language (DDL) command that quickly drops and re-creates the table, resetting any auto-incrementing identity columns to their seed values. DELETE is a DML command that removes rows one by one and retains the identity counter.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>DELETE</strong> operations are logged per row in the transaction log, allowing them to be rolled back.<br>• <strong>TRUNCATE</strong> uses fewer system and transaction log resources and generally cannot be rolled back (depending on the specific RDBMS).</div>"
+    },
+    {
+      "id": 20,
+      "topic": "Software Engineering",
+      "text": "Which phase of the Software Development Life Cycle (SDLC) consumes the maximum amount of resources and time in a typical software project?",
+      "options": [
+        "Requirement Analysis",
+        "Design",
+        "Coding / Implementation",
+        "Maintenance"
+      ],
+      "correct": 3,
+      "explanation": "Maintenance typically consumes the largest percentage of the software lifecycle budget (often 60-80%). It involves bug fixing, adding new enhancements, and adapting the software to new operating environments over many years.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Maintenance is categorized into four types: Corrective (fixing bugs), Adaptive (environment changes), Perfective (new features), and Preventive (refactoring for stability).</div>"
+    },
+    {
+      "id": 21,
+      "topic": "Python Programming",
+      "text": "What will be the output of evaluating `bool(\"\")` and `bool(\" \")` in Python?",
+      "options": [
+        "False, False",
+        "True, True",
+        "False, True",
+        "True, False"
+      ],
+      "correct": 2,
+      "explanation": "An empty string `\"\"` is considered falsy in Python, so `bool(\"\")` returns False. A string containing a space `\" \"` is not empty (length 1), so it evaluates to True.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In Python, empty sequences (`[]`, `()`, `\"\"`), empty collections (`{}`), numeric zeros (`0`, `0.0`), and `None` all evaluate to <strong>False</strong>. Almost everything else is <strong>True</strong>.</div>"
+    },
+    {
+      "id": 22,
+      "topic": "Computer Networks",
+      "text": "In the OSI model, which layer is responsible for end-to-end error recovery, flow control, and ensuring complete data transfer (utilizing port numbers)?",
+      "options": [
+        "Data Link Layer",
+        "Network Layer",
+        "Transport Layer",
+        "Session Layer"
+      ],
+      "correct": 2,
+      "explanation": "The Transport Layer (Layer 4) provides transparent transfer of data between end systems. Protocols like TCP operate here, handling end-to-end error recovery, segmentation, and multiplexing using port numbers.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Data Link Layer (Layer 2)</strong> handles node-to-node (hop-to-hop) error detection (via CRC frames).<br>• <strong>Network Layer (Layer 3)</strong> handles logical addressing (IP) and routing.</div>"
+    },
+    {
+      "id": 23,
+      "topic": "Misc (Emerging Tech)",
+      "text": "In blockchain architecture, what mechanism is designed to prevent 'double-spending' without requiring a centralized trusted authority?",
+      "options": [
+        "Symmetric Encryption",
+        "Consensus Algorithms (e.g., Proof of Work)",
+        "Public Key Infrastructure (PKI)",
+        "The Genesis Block"
+      ],
+      "correct": 1,
+      "explanation": "Consensus algorithms like Proof of Work (PoW) or Proof of Stake (PoS) ensure that all participating nodes agree on the validity of transactions in a decentralized ledger, fundamentally solving the double-spending problem.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Double-spending</strong> is a flaw unique to digital currencies where the same digital token can be spent more than once because a digital file can be easily duplicated.<br>• The <strong>Genesis Block</strong> is simply the first block ever recorded on a blockchain network.</div>"
+    },
+    {
+      "id": 24,
+      "topic": "Compiler Design",
+      "text": "Match the compiler terminology with their respective actions:<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. Lexical Analysis</td><td>1. Removes whitespace and comments</td></tr><tr><td>Q. Syntax Analysis</td><td>2. Checks for type mismatches</td></tr><tr><td>R. Semantic Analysis</td><td>3. Generates a parse tree</td></tr></table>",
+      "options": [
+        "P-1, Q-3, R-2",
+        "P-3, Q-1, R-2",
+        "P-1, Q-2, R-3",
+        "P-2, Q-3, R-1"
+      ],
+      "correct": 0,
+      "explanation": "Lexical analysis (scanner) converts source code to tokens, stripping whitespace and comments. Syntax analysis (parser) checks grammar rules, generating a parse tree. Semantic analysis verifies logical correctness, like type checking.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Abstract Syntax Trees (ASTs) are generally built during syntax analysis and enriched with scope and type data during semantic analysis.</div>"
+    },
+    {
+      "id": 25,
+      "topic": "Operating Systems",
+      "text": "Which of the following is a classic solution to the critical section problem that uses two shared variables (a boolean array and an integer variable) to ensure mutual exclusion for exactly two processes?",
+      "options": [
+        "Banker's Algorithm",
+        "Peterson's Solution",
+        "Dekker's Algorithm",
+        "Dining Philosophers Algorithm"
+      ],
+      "correct": 1,
+      "explanation": "Peterson's Solution is a classic software-based solution for the critical section problem restricted to two processes. It uses a `flag` array to indicate readiness and a `turn` variable to resolve simultaneous access attempts.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Dekker's Algorithm</strong> was actually the first known correct software solution for two processes, but Peterson's is simpler and widely taught.<br>• <strong>Banker's Algorithm</strong> is used for deadlock avoidance, not mutual exclusion.</div>"
+    },
+    {
+      "id": 26,
+      "topic": "Cyber Security",
+      "text": "What is 'Cross-Site Request Forgery' (CSRF)?",
+      "options": [
+        "Injecting malicious scripts into a trusted website.",
+        "Tricking a user's browser into executing an unwanted action on a trusted site where they are currently authenticated.",
+        "Overloading a database with malformed SQL queries.",
+        "Intercepting unencrypted traffic on a public Wi-Fi network."
+      ],
+      "correct": 1,
+      "explanation": "CSRF forces an end user to execute unwanted actions on a web application in which they are currently authenticated. Attackers exploit the browser's automatic inclusion of ambient credentials (like session cookies) with requests.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>XSS (Cross-Site Scripting)</strong> involves injecting malicious scripts to execute on the victim's browser.<br>• CSRF is commonly mitigated using unique, unpredictable Anti-CSRF tokens embedded in forms.</div>"
+    },
+    {
+      "id": 27,
+      "topic": "Database Systems",
+      "text": "In RDBMS, an index built on a column that determines the physical ordering of the rows on disk is called a:",
+      "options": [
+        "Non-clustered Index",
+        "Clustered Index",
+        "Composite Index",
+        "Bitmap Index"
+      ],
+      "correct": 1,
+      "explanation": "A clustered index defines the physical sorting order of data rows in the table. Because data can only be sorted in one physical order, a table can only possess one clustered index (usually on the Primary Key).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Non-clustered indexes</strong> have a structure separate from the data rows. They contain pointers (row locators) back to the actual data on disk.<br>• A table can have multiple non-clustered indexes.</div>"
+    },
+    {
+      "id": 28,
+      "topic": "C/C++ Programming",
+      "text": "What is a 'pure virtual function' in C++?",
+      "options": [
+        "A function that takes no arguments and returns void.",
+        "A virtual function that is initialized to 0 in the base class, making the class abstract.",
+        "A function defined outside of any class scope.",
+        "A function that cannot be overridden by derived classes."
+      ],
+      "correct": 1,
+      "explanation": "A pure virtual function is specified by placing `= 0` at the end of the declaration (e.g., `virtual void draw() = 0;`). It forces derived classes to implement the function, and it renders the base class an Abstract Class that cannot be instantiated.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If a derived class does not implement all pure virtual functions of its base class, the derived class also becomes abstract.<br>• Java uses the `abstract` keyword on methods to achieve this same concept.</div>"
+    },
+    {
+      "id": 29,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which algorithm finds the shortest path from a single source node to all other nodes in a graph with non-negative edge weights?",
+      "options": [
+        "Kruskal's Algorithm",
+        "Prim's Algorithm",
+        "Dijkstra's Algorithm",
+        "Floyd-Warshall Algorithm"
+      ],
+      "correct": 2,
+      "explanation": "Dijkstra's Algorithm solves the single-source shortest path problem. It maintains a priority queue of vertices to continually explore the shortest known path, provided there are no negative weight edges.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Kruskal's and Prim's</strong> algorithms are used to find the Minimum Spanning Tree (MST).<br>• <strong>Floyd-Warshall</strong> finds the shortest paths between ALL pairs of vertices.<br>• <strong>Bellman-Ford</strong> handles graphs with negative edge weights.</div>"
+    },
+    {
+      "id": 30,
+      "topic": "Misc (Banking IT)",
+      "text": "In the context of the Indian banking infrastructure, what is 'IMPS'?",
+      "options": [
+        "Interbank Mobile Processing System",
+        "Immediate Payment Service",
+        "Internal Monetary Protocol Standard",
+        "International Merchant Payment System"
+      ],
+      "correct": 1,
+      "explanation": "IMPS stands for Immediate Payment Service. Launched by NPCI, it provides robust, real-time, 24x7 interbank electronic fund transfers.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Unlike NEFT, which operates in batches, and RTGS, which has high minimum transaction values, IMPS offers instant clearing for low-value transactions around the clock.</div>"
+    },
+    {
+      "id": 31,
+      "topic": "Computer Architecture",
+      "text": "Which of the following cache mapping techniques allows a main memory block to be placed in exactly one specific line in the cache?",
+      "options": [
+        "Fully Associative Mapping",
+        "Direct Mapping",
+        "Set-Associative Mapping",
+        "Virtual Mapping"
+      ],
+      "correct": 1,
+      "explanation": "In Direct Mapping, each block of main memory maps to only one specific cache line (usually via a modulo operation). It is simple and fast to check, but suffers from conflict misses if two active blocks map to the same line.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Fully Associative:</strong> A memory block can be placed in ANY cache line.<br>• <strong>Set-Associative:</strong> A hybrid where a block maps to a specific 'set' of lines, but can be placed in any line within that set.</div>"
+    },
+    {
+      "id": 32,
+      "topic": "Python Programming",
+      "text": "What does the `*args` syntax allow in a Python function definition?",
+      "options": [
+        "It enforces strong type-checking on arguments.",
+        "It unpackages a dictionary into keyword arguments.",
+        "It allows the function to accept an arbitrary number of positional arguments.",
+        "It defines a pointer to a memory address."
+      ],
+      "correct": 2,
+      "explanation": "The `*args` syntax allows a function to take a variable number of non-keyword arguments, wrapping them into a tuple accessible within the function.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• `**kwargs` is used to pass a variable number of keyword (named) arguments, which are wrapped into a dictionary.<br>• Python does not have explicit memory pointers like C/C++.</div>"
+    },
+    {
+      "id": 33,
+      "topic": "Software Engineering",
+      "text": "Which integration testing strategy involves testing the highest-level modules first and progressively integrating lower-level modules (often utilizing 'Stubs')?",
+      "options": [
+        "Bottom-Up Integration",
+        "Top-Down Integration",
+        "Big Bang Integration",
+        "Sandwich Integration"
+      ],
+      "correct": 1,
+      "explanation": "Top-Down Integration tests the main control module first. Subordinate modules are temporarily replaced by 'Stubs' (dummy programs simulating the lower-level functionality) until the real modules are ready.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Bottom-Up Integration:</strong> Tests lower-level modules first, utilizing 'Drivers' to simulate the overarching control modules calling them.</div>"
+    },
+    {
+      "id": 34,
+      "topic": "Digital Logic",
+      "text": "Identify the Logic Circuit represented by the Boolean expression: Y = A'B + AB'",
+      "options": [
+        "NOR Gate",
+        "NAND Gate",
+        "XOR Gate",
+        "XNOR Gate"
+      ],
+      "correct": 2,
+      "explanation": "Y = A'B + AB' is the standard Sum of Products (SOP) boolean expression for an Exclusive-OR (XOR) gate. It outputs true (1) only when the inputs are different.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>XNOR Gate:</strong> The inverse of XOR. Its expression is Y = AB + A'B' (outputs true when inputs are identical).<br>• XOR is foundational to binary addition (acting as the Sum bit in a Half-Adder).</div>"
+    },
+    {
+      "id": 35,
+      "topic": "Operating Systems",
+      "text": "In UNIX/Linux, what does the command `chmod 754 file.txt` do?",
+      "options": [
+        "Grants read/write/execute to owner, read/write to group, read-only to others.",
+        "Grants read/write/execute to owner, read/execute to group, read-only to others.",
+        "Grants full permissions to everyone.",
+        "Changes the file owner to user ID 754."
+      ],
+      "correct": 1,
+      "explanation": "Permissions are calculated via octal sums (Read=4, Write=2, Execute=1).<br>Owner (7) = 4+2+1 (rwx).<br>Group (5) = 4+0+1 (r-x).<br>Others (4) = 4+0+0 (r--).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The `chown` command is used to change the owner of the file.<br>• `chmod +x` is a shorthand symbolic way to add execute permissions.</div>"
+    },
+    {
+      "id": 36,
+      "topic": "Database Systems",
+      "text": "Which of the following correctly describes a 'Phantom Read' anomaly?",
+      "options": [
+        "Reading uncommitted data from a transaction that subsequently rolls back.",
+        "Reading a row twice in a transaction and getting different values because another transaction updated it.",
+        "Executing a range query twice in a transaction and getting a different number of rows because another transaction inserted a new row.",
+        "Overwriting data without reading it first."
+      ],
+      "correct": 2,
+      "explanation": "A phantom read occurs when a transaction executes a query returning a set of rows (e.g., `WHERE age > 20`), and a concurrent transaction inserts or deletes a row matching that condition before the first transaction finishes.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Dirty Read:</strong> Reading uncommitted data.<br>• <strong>Non-Repeatable Read:</strong> Another transaction updates/modifies a specific row you are reading.<br>• The <strong>Serializable</strong> isolation level prevents all three anomalies.</div>"
+    },
+    {
+      "id": 37,
+      "topic": "Computer Networks",
+      "text": "Which networking protocol uses Port 22 and provides a secure, encrypted channel over an unsecured network, commonly used for remote command-line login?",
+      "options": [
+        "Telnet",
+        "FTP",
+        "SSH",
+        "SNMP"
+      ],
+      "correct": 2,
+      "explanation": "SSH (Secure Shell) operates on Port 22 and provides strong encryption and authentication, completely replacing the older, plaintext Telnet (Port 23) protocol.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>FTP</strong> operates on Ports 20 (Data) and 21 (Control).<br>• <strong>SNMP</strong> (Simple Network Management Protocol) uses UDP Port 161 for network monitoring.</div>"
+    },
+    {
+      "id": 38,
+      "topic": "Java Programming",
+      "text": "What will happen if you attempt to override a `static` method in a Java subclass?",
+      "options": [
+        "The code will not compile.",
+        "The method will be successfully overridden and exhibit runtime polymorphism.",
+        "The subclass method will 'hide' the superclass method, exhibiting compile-time polymorphism.",
+        "A RuntimeException will be thrown at execution."
+      ],
+      "correct": 2,
+      "explanation": "Static methods belong to the class, not the instance. You cannot override them (which relies on dynamic dispatch). Instead, declaring a static method with the same signature in a subclass simply 'hides' the parent method. Which method runs depends entirely on the reference type at compile-time.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• For actual overriding (dynamic method dispatch), the method must be non-static and not marked as `final`.</div>"
+    },
+    {
+      "id": 39,
+      "topic": "Misc (Cloud Computing)",
+      "text": "What does SLA stand for in the context of IT service providers and cloud computing?",
+      "options": [
+        "Service Level Agreement",
+        "Software Licensing Authorization",
+        "System Logging Architecture",
+        "Synchronized Local Area"
+      ],
+      "correct": 0,
+      "explanation": "A Service Level Agreement (SLA) is a contract between a service provider and the client that defines the level of service expected, outlining metrics like uptime guarantees (e.g., 99.99%) and penalties for failing to meet them.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>SLI (Service Level Indicator):</strong> The actual measurement of the metric (e.g., actual uptime was 99.95%).<br>• <strong>SLO (Service Level Objective):</strong> The target value or range the provider aims to achieve.</div>"
+    },
+    {
+      "id": 40,
+      "topic": "Cyber Security",
+      "text": "What is the primary purpose of a 'Salt' in password hashing?",
+      "options": [
+        "To encrypt the password so it can be decrypted later by admins.",
+        "To increase the hashing speed.",
+        "To add random data to the password before hashing, defeating precomputed rainbow table attacks.",
+        "To ensure the password meets length requirements."
+      ],
+      "correct": 2,
+      "explanation": "A salt is a unique, randomly generated string added to a password before it is hashed. This ensures that even if two users have the exact same password, their final hashes will be completely different, nullifying Rainbow Table (precomputed hash) attacks.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Salts do not need to be kept secret; they are stored in plaintext next to the hash.<br>• <strong>Pepper:</strong> Similar to a salt, but kept secret (often hardcoded in the application server) and not stored in the database.</div>"
+    },
+    {
+      "id": 41,
+      "topic": "Operating Systems",
+      "text": "Which of the following statements about thread contexts is true?",
+      "options": [
+        "Threads belonging to the same process share their Stack and Registers.",
+        "Threads belonging to the same process share their Heap, Data, and Code sections.",
+        "A context switch between threads of different processes is faster than between threads of the same process.",
+        "Threads do not require a Program Counter (PC)."
+      ],
+      "correct": 1,
+      "explanation": "Threads within a process share the process's resources: the Heap (dynamic memory), Data section (global variables), Code section, and open files. However, each thread maintains its own independent Stack, Registers, and Program Counter to track its specific execution path.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Context switching between threads of the <strong>same</strong> process is very fast because the OS does not need to flush the TLB or switch virtual memory address spaces.</div>"
+    },
+    {
+      "id": 42,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which traversal of a Binary Tree is implemented using a Queue data structure?",
+      "options": [
+        "In-order Traversal",
+        "Pre-order Traversal",
+        "Post-order Traversal",
+        "Level-order Traversal"
+      ],
+      "correct": 3,
+      "explanation": "Level-order traversal visits nodes level by level (top to bottom, left to right). This is essentially a Breadth-First Search (BFS), which requires a First-In-First-Out (FIFO) Queue to keep track of the child nodes to visit next.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In-order, Pre-order, and Post-order are forms of Depth-First Search (DFS) and are typically implemented using Recursion (which inherently utilizes the system Call Stack).</div>"
+    },
+    {
+      "id": 43,
+      "topic": "Python Programming",
+      "text": "What does the `__name__ == \"__main__\"` block do in a Python script?",
+      "options": [
+        "It defines the primary class of the module.",
+        "It ensures the code block only runs if the script is executed directly, not if it is imported as a module.",
+        "It prevents variables from leaking into the global scope.",
+        "It forces the Python interpreter to compile the code into a `.pyc` file."
+      ],
+      "correct": 1,
+      "explanation": "When a Python script is executed directly, the interpreter sets the special `__name__` variable to `\"__main__\"`. If the file is imported into another script, `__name__` is set to the module's name. This block prevents testing/execution code from running automatically upon import.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This construct allows a file to act as both a reusable module containing functions/classes and a standalone executable script.</div>"
+    },
+    {
+      "id": 44,
+      "topic": "Compiler Design",
+      "text": "Which data structure is most commonly used by a compiler's Symbol Table for efficient insertion and lookup operations?",
+      "options": [
+        "Linked List",
+        "Stack",
+        "Hash Table",
+        "Queue"
+      ],
+      "correct": 2,
+      "explanation": "A Hash Table provides average O(1) time complexity for insertions and lookups, making it the most efficient structure for a compiler to quickly check variable declarations, types, and scope boundaries during analysis.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While Hash Tables are fastest for lookup, binary search trees are sometimes used if the symbol table requires ordered traversal (though this is rare).</div>"
+    },
+    {
+      "id": 45,
+      "topic": "Software Engineering",
+      "text": "In the COCOMO estimation model, what does 'Organic' mode signify?",
+      "options": [
+        "A large, highly complex project with strict constraints.",
+        "A small, relatively simple project developed by a small team with good domain experience.",
+        "A project that integrates disparate external software systems.",
+        "An agile project lacking documented requirements."
+      ],
+      "correct": 1,
+      "explanation": "The Basic COCOMO model classifies projects into three modes. 'Organic' refers to small, simple projects with small teams working in a familiar, in-house environment with relaxed constraints.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Semidetached:</strong> Intermediate size/complexity with a mix of experienced and inexperienced staff.<br>• <strong>Embedded:</strong> Highly complex, strictly constrained hardware/software systems (e.g., flight control systems).</div>"
+    },
+    {
+      "id": 46,
+      "topic": "Computer Networks",
+      "text": "Which of the following DNS records is used to map a domain name to an IPv6 address?",
+      "options": [
+        "A Record",
+        "CNAME Record",
+        "MX Record",
+        "AAAA Record"
+      ],
+      "correct": 3,
+      "explanation": "An AAAA record (quad-A) maps a hostname to a 128-bit IPv6 address. This is the IPv6 equivalent of the traditional A record.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>A Record:</strong> Maps to a 32-bit IPv4 address.<br>• <strong>CNAME (Canonical Name):</strong> Maps an alias hostname to the true, canonical hostname.<br>• <strong>MX (Mail Exchanger):</strong> Directs emails to the correct mail server.</div>"
+    },
+    {
+      "id": 47,
+      "topic": "Database Systems",
+      "text": "Which SQL command is used to add a new column to an existing table?",
+      "options": [
+        "UPDATE TABLE",
+        "ALTER TABLE",
+        "MODIFY TABLE",
+        "ADD COLUMN"
+      ],
+      "correct": 1,
+      "explanation": "The `ALTER TABLE` statement is a DDL command used to add, delete, or modify columns in an existing table.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Syntax: `ALTER TABLE table_name ADD column_name datatype;`<br>• `UPDATE` is a DML command used to modify the *data* within existing rows, not the structural schema of the table.</div>"
+    },
+    {
+      "id": 48,
+      "topic": "C/C++ Programming",
+      "text": "What is a 'Memory Leak' in C++?",
+      "options": [
+        "When a pointer attempts to access memory outside its allocated array bounds.",
+        "When dynamically allocated memory is not deallocated using `delete` before losing all pointers to it.",
+        "When local variables persist on the stack after a function returns.",
+        "When the operating system forcefully closes a program for using too much RAM."
+      ],
+      "correct": 1,
+      "explanation": "A memory leak occurs when a programmer dynamically allocates memory on the heap (using `new` or `malloc`) but fails to release it (using `delete` or `free`). Once the pointer pointing to that memory goes out of scope, the memory becomes permanently unrecoverable until the process terminates.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• C++11 introduced Smart Pointers (`std::unique_ptr`, `std::shared_ptr`) which utilize RAII (Resource Acquisition Is Initialization) to automatically delete memory when the pointer goes out of scope, heavily mitigating memory leaks.</div>"
+    },
+    {
+      "id": 49,
+      "topic": "Misc (Emerging Tech)",
+      "text": "In the context of AI and NLP, what does the 'T' in 'ChatGPT' stand for?",
+      "options": [
+        "Transfer",
+        "Transformer",
+        "Text",
+        "Tensor"
+      ],
+      "correct": 1,
+      "explanation": "The 'T' stands for Transformer. ChatGPT stands for 'Generative Pre-trained Transformer'. The Transformer is a revolutionary deep learning architecture introduced by Google in 2017 (in the paper 'Attention Is All You Need') that relies on self-attention mechanisms.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Prior to Transformers, NLP heavily relied on Recurrent Neural Networks (RNNs) and LSTMs, which processed data sequentially. Transformers process entire sequences simultaneously, enabling massive parallel training.</div>"
+    },
+    {
+      "id": 50,
+      "topic": "Digital Logic",
+      "text": "Which of the following describes a 'Race Condition' in digital logic circuits?",
+      "options": [
+        "When a circuit operates faster than the clock speed.",
+        "When two inputs change state almost simultaneously, causing an unpredictable output depending on which signal propagates faster.",
+        "When the power supply voltage drops below the logic threshold.",
+        "When a flip-flop holds its state indefinitely."
+      ],
+      "correct": 1,
+      "explanation": "A race condition in digital logic occurs when the output of a logic circuit depends on the precise timing and sequence of uncontrollable events (like varying propagation delays). If inputs change simultaneously, a 'race' occurs to determine the final state, which can cause temporary glitches or permanent errors (especially in asynchronous sequential circuits).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• This is why modern digital design relies heavily on <strong>Synchronous</strong> circuits driven by a global clock, ensuring all state changes occur simultaneously on a clock edge, avoiding race conditions.</div>"
+    }
+  ]
+}

@@ -1,0 +1,666 @@
+{
+  "id": "day_13",
+  "day": 13,
+  "title": "IT Officer Mains: Day 13",
+  "difficulty": "Easy to Moderate",
+  "difficultyLevel": 2,
+  "tags": "Balanced",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Data Structures & Algorithms",
+      "text": "Based on the internal property shown in the diagram below, which specific data structure is represented?<br><br><div class='diagram-container'><svg viewBox=\"0 0 200 150\"><circle cx=\"100\" cy=\"30\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"100\" y=\"35\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\" fill=\"#0f172a\">50</text><line x1=\"90\" y1=\"40\" x2=\"60\" y2=\"70\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"80\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"50\" y=\"85\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\" fill=\"#0f172a\">30</text><line x1=\"110\" y1=\"40\" x2=\"140\" y2=\"70\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"150\" cy=\"80\" r=\"15\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"150\" y=\"85\" font-family=\"Arial\" font-size=\"12\" text-anchor=\"middle\" fill=\"#0f172a\">70</text><line x1=\"40\" y1=\"90\" x2=\"25\" y2=\"115\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"20\" cy=\"125\" r=\"12\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"20\" y=\"130\" font-family=\"Arial\" font-size=\"10\" text-anchor=\"middle\" fill=\"#0f172a\">20</text><line x1=\"60\" y1=\"90\" x2=\"75\" y2=\"115\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"80\" cy=\"125\" r=\"12\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"80\" y=\"130\" font-family=\"Arial\" font-size=\"10\" text-anchor=\"middle\" fill=\"#0f172a\">40</text></svg></div>",
+      "options": [
+        "Min-Heap",
+        "Max-Heap",
+        "Binary Search Tree (BST)",
+        "B-Tree"
+      ],
+      "correct": 2,
+      "explanation": "The diagram displays a tree where the left child of any node is smaller than the parent, and the right child is larger than the parent (e.g., 30 < 50 < 70). This is the defining property of a Binary Search Tree (BST).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In a Max-Heap, a parent node is always strictly greater than or equal to BOTH of its children.</div>"
+    },
+    {
+      "id": 2,
+      "topic": "Digital Logic",
+      "text": "Analyze the logic gate circuit provided below. What is the correct Boolean expression for the final output Y?<br><br><div class='diagram-container'><svg viewBox=\"0 0 250 120\"><path d=\"M 40 20 L 70 20 Q 90 20 90 40 Q 90 60 70 60 L 40 60 Z\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"60\" y=\"45\" font-family=\"Arial\" font-size=\"12\" font-weight=\"bold\" fill=\"#0f172a\">AND</text><line x1=\"20\" y1=\"30\" x2=\"40\" y2=\"30\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"10\" y=\"34\" font-family=\"Arial\" font-size=\"14\" fill=\"#0f172a\">A</text><line x1=\"20\" y1=\"50\" x2=\"40\" y2=\"50\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"10\" y=\"54\" font-family=\"Arial\" font-size=\"14\" fill=\"#0f172a\">B</text><line x1=\"90\" y1=\"40\" x2=\"130\" y2=\"40\" stroke=\"#334155\" stroke-width=\"2\"/><path d=\"M 130 20 Q 150 20 170 50 Q 150 80 130 80 Q 140 50 130 20\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"145\" y=\"54\" font-family=\"Arial\" font-size=\"12\" font-weight=\"bold\" fill=\"#0f172a\">OR</text><line x1=\"20\" y1=\"70\" x2=\"135\" y2=\"70\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"10\" y=\"74\" font-family=\"Arial\" font-size=\"14\" fill=\"#0f172a\">C</text><line x1=\"170\" y1=\"50\" x2=\"200\" y2=\"50\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"210\" y=\"54\" font-family=\"Arial\" font-size=\"14\" fill=\"#0f172a\">Y</text></svg></div>",
+      "options": [
+        "Y = (A + B) * C",
+        "Y = (A * B) + C",
+        "Y = A + (B * C)",
+        "Y = (A * C) + B"
+      ],
+      "correct": 1,
+      "explanation": "Inputs A and B are fed into an AND gate, which produces the output `(A * B)`. This output is then fed into an OR gate along with input C. Therefore, the final output Y is `(A * B) + C`.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The AND operation corresponds to Boolean multiplication (*), while the OR operation corresponds to Boolean addition (+).</div>"
+    },
+    {
+      "id": 3,
+      "topic": "Computer Networks",
+      "text": "Which physical network topology is depicted in the network diagram below?<br><br><div class='diagram-container'><svg viewBox=\"0 0 150 150\"><rect x=\"60\" y=\"60\" width=\"30\" height=\"30\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"2\"/><text x=\"75\" y=\"79\" font-family=\"Arial\" font-size=\"10\" text-anchor=\"middle\" fill=\"#0f172a\">Hub</text><line x1=\"75\" y1=\"60\" x2=\"75\" y2=\"20\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"75\" cy=\"15\" r=\"8\" fill=\"#38bdf8\"/><line x1=\"90\" y1=\"75\" x2=\"130\" y2=\"75\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"135\" cy=\"75\" r=\"8\" fill=\"#38bdf8\"/><line x1=\"75\" y1=\"90\" x2=\"75\" y2=\"130\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"75\" cy=\"135\" r=\"8\" fill=\"#38bdf8\"/><line x1=\"60\" y1=\"75\" x2=\"20\" y2=\"75\" stroke=\"#334155\" stroke-width=\"2\"/><circle cx=\"15\" cy=\"75\" r=\"8\" fill=\"#38bdf8\"/></svg></div>",
+      "options": [
+        "Bus Topology",
+        "Ring Topology",
+        "Star Topology",
+        "Mesh Topology"
+      ],
+      "correct": 2,
+      "explanation": "The diagram shows a central device (a Hub or Switch) with multiple end nodes connected directly to it. This radiating structure is the defining characteristic of a Star Topology.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In a Star topology, the failure of a single node does not affect the rest of the network, but if the central Hub fails, the entire network goes down.</div>"
+    },
+    {
+      "id": 4,
+      "topic": "Database Systems",
+      "text": "In SQL, what is the core functional difference between the `DROP` and `TRUNCATE` commands?",
+      "options": [
+        "`DROP` removes data row by row, while `TRUNCATE` deletes the entire table.",
+        "`TRUNCATE` removes all rows from a table but keeps the table structure intact, whereas `DROP` removes both the data and the table structure entirely.",
+        "`DROP` can be rolled back, while `TRUNCATE` cannot.",
+        "`TRUNCATE` is a DML command, while `DROP` is a DDL command."
+      ],
+      "correct": 1,
+      "explanation": "`TRUNCATE` is used to quickly wipe all data from a table, leaving the empty table schema ready for new inserts. `DROP` entirely deletes the table definition from the database, meaning the table ceases to exist.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Both `DROP` and `TRUNCATE` are Data Definition Language (DDL) commands, and generally neither can be rolled back in most standard DBMS implementations.</div>"
+    },
+    {
+      "id": 5,
+      "topic": "Operating Systems",
+      "text": "Which memory management scheme eliminates external fragmentation by dividing physical memory into fixed-size blocks called frames?",
+      "options": [
+        "Segmentation",
+        "Paging",
+        "Dynamic Partitioning",
+        "Swapping"
+      ],
+      "correct": 1,
+      "explanation": "Paging divides logical memory into blocks of the same size called 'pages', and physical memory into fixed-size blocks called 'frames'. Because any page can fit into any available frame, external fragmentation is completely eliminated.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While paging solves external fragmentation, it can still suffer from <strong>internal fragmentation</strong> if a process needs less memory than a full page size.</div>"
+    },
+    {
+      "id": 6,
+      "topic": "Java Programming",
+      "text": "What will happen if you attempt to override a `static` method in a Java subclass?",
+      "options": [
+        "The code will compile and override normally, utilizing dynamic binding at runtime.",
+        "A compilation error will occur because static methods are implicitly `final`.",
+        "The code compiles, but the subclass method 'hides' the parent method rather than overriding it (Method Hiding).",
+        "An `IllegalAccessException` is thrown at runtime."
+      ],
+      "correct": 2,
+      "explanation": "Static methods belong to the class, not instances. Therefore, they are resolved at compile-time (static binding). If a subclass defines a static method with the same signature, it does not override it; it 'hides' it. The method executed depends entirely on the reference type of the variable, not the actual object type.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• You cannot use the `@Override` annotation on a static method; the compiler will throw an error.</div>"
+    },
+    {
+      "id": 7,
+      "topic": "Python Programming",
+      "text": "Evaluate the following Python list comprehension. What will be the output?<br><br><div class='code-block'>data = [1, 2, 3, 4, 5]\nres = [x * 2 if x % 2 != 0 else x for x in data]\nprint(sum(res))</div>",
+      "options": [
+        "20",
+        "24",
+        "15",
+        "30"
+      ],
+      "correct": 1,
+      "explanation": "The logic states: If the number is odd (`x % 2 != 0`), multiply it by 2. If it is even, leave it as is.<br>1 -> 2<br>2 -> 2<br>3 -> 6<br>4 -> 4<br>5 -> 10<br>List becomes `[2, 2, 6, 4, 10]`. The sum is 24.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In Python list comprehensions, if you use an `if/else` construct, it must be placed *before* the `for` keyword. A pure filter (just `if`) is placed *after*.</div>"
+    },
+    {
+      "id": 8,
+      "topic": "C/C++ Programming",
+      "text": "In C++, what is a primary distinction between a Pointer and a Reference variable?",
+      "options": [
+        "Pointers can hold memory addresses, while References only hold strings.",
+        "A Reference must be initialized when it is declared and cannot be reassigned to refer to a different variable later, whereas a Pointer can be reassigned.",
+        "Pointers are inherently faster than References.",
+        "References require the `*` operator to dereference."
+      ],
+      "correct": 1,
+      "explanation": "A reference (`int &ref = var;`) acts as a permanent alias for a variable. It must be initialized immediately and cannot point to anything else afterward. A pointer (`int *ptr = &var;`) holds a memory address, can be initialized as `nullptr`, and can be repointed to different variables at will.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because references cannot be null, they are generally safer to use in function parameters than raw pointers.</div>"
+    },
+    {
+      "id": 9,
+      "topic": "Software Engineering",
+      "text": "What defines 'White-Box Testing' in software quality assurance?",
+      "options": [
+        "Testing software based solely on its expected inputs and outputs without looking at the code.",
+        "Testing the software by examining its internal structures, logic paths, and source code directly.",
+        "Testing the graphical user interface exclusively.",
+        "Testing performance under extreme server load."
+      ],
+      "correct": 1,
+      "explanation": "White-box testing (also known as clear-box or structural testing) involves testers having full access to the source code. They design test cases specifically to exercise internal logic loops, conditional branches, and data flows.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Black-box testing relies entirely on requirement specifications, treating the code as an opaque box.</div>"
+    },
+    {
+      "id": 10,
+      "topic": "Cyber Security",
+      "text": "What is the primary difference between Symmetric and Asymmetric encryption algorithms regarding cryptographic keys?",
+      "options": [
+        "Symmetric uses the same key for both encryption and decryption, while Asymmetric uses a mathematically linked pair of keys (Public and Private).",
+        "Symmetric uses public keys; Asymmetric uses private keys.",
+        "Symmetric is much slower than Asymmetric encryption.",
+        "Symmetric is only used for digital signatures."
+      ],
+      "correct": 0,
+      "explanation": "Symmetric encryption (like AES) shares one secret key between parties to both lock and unlock data. Asymmetric encryption (like RSA) gives out a Public Key to lock data, but only the holder of the Private Key can unlock it.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Symmetric encryption is much faster, so systems like TLS use Asymmetric encryption to safely exchange a Symmetric key, then use the Symmetric key for the rest of the session.</div>"
+    },
+    {
+      "id": 11,
+      "topic": "Linux Commands",
+      "text": "What is the core functionality of the `grep` command in Linux?",
+      "options": [
+        "To compress and zip files to save disk space.",
+        "To search through files or text streams for specific string patterns or regular expressions.",
+        "To change the ownership of a directory.",
+        "To safely reboot the operating system."
+      ],
+      "correct": 1,
+      "explanation": "The `grep` (Global Regular Expression Print) command is the standard Linux tool for searching text. For example, `grep 'error' log.txt` will print every line in the log file that contains the word 'error'.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Using the `-i` flag makes the search case-insensitive, and `-r` allows for recursive searching through folders.</div>"
+    },
+    {
+      "id": 12,
+      "topic": "Linux Permissions",
+      "text": "If a system administrator runs the command `chmod 777 report.txt`, what permissions are granted to the file?",
+      "options": [
+        "Read, Write, and Execute permissions are granted to the Owner, Group, and all other users on the system.",
+        "Only the Owner receives full permissions.",
+        "Read and Write permissions are granted, but Execute is removed for everyone.",
+        "The file is permanently locked and hidden."
+      ],
+      "correct": 0,
+      "explanation": "In octal permission notation, 7 represents Read (4) + Write (2) + Execute (1). Therefore, 777 grants full Read, Write, and Execute privileges to the User (owner), the Group, and Others (everyone else).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Setting `777` on files is considered a massive security risk, as any user on the system can modify or execute the file.</div>"
+    },
+    {
+      "id": 13,
+      "topic": "Misc (Cloud Computing)",
+      "text": "Using a fully hosted application like Google Workspace (Docs, Sheets, Gmail) through a web browser is a prime example of which Cloud Service Model?",
+      "options": [
+        "IaaS (Infrastructure as a Service)",
+        "PaaS (Platform as a Service)",
+        "SaaS (Software as a Service)",
+        "FaaS (Function as a Service)"
+      ],
+      "correct": 2,
+      "explanation": "SaaS provides a complete, finished software application over the internet. The consumer does not manage the underlying cloud infrastructure, network, servers, operating systems, or even the application capabilities.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• IaaS provides raw virtual machines (like AWS EC2), requiring the user to install the OS and software themselves.</div>"
+    },
+    {
+      "id": 14,
+      "topic": "Misc (IT Act 2000)",
+      "text": "Under the Information Technology Act 2000 in India, Section 66C prescribes punishment for which specific cyber offense?",
+      "options": [
+        "Publishing obscene material in electronic form.",
+        "Identity theft (fraudulently making use of the electronic signature, password, or unique identification feature of any other person).",
+        "Hacking into a government database.",
+        "Sending offensive messages via communication services."
+      ],
+      "correct": 1,
+      "explanation": "Section 66C deals explicitly with Identity Theft. Anyone caught fraudulently using another person's password, digital signature, or biometric data can be punished with imprisonment of up to 3 years and a fine.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Section 66D covers 'Cheating by personation by using computer resource' (like creating fake social media profiles to scam people).</div>"
+    },
+    {
+      "id": 15,
+      "topic": "Misc (Banking IT)",
+      "text": "How does the National Electronic Funds Transfer (NEFT) system in India process and settle fund transfer batches?",
+      "options": [
+        "Transactions are settled continuously in real-time.",
+        "Transactions are grouped and settled in half-hourly batches, 24x7x365.",
+        "Transactions are settled in a single End-of-Day (EOD) batch.",
+        "Transactions are settled instantly but only during banking hours."
+      ],
+      "correct": 1,
+      "explanation": "Since December 2019, NEFT operates 24x7x365. Unlike RTGS which settles transactions individually in real-time, NEFT groups transactions into batches and settles them every 30 minutes (48 batches a day).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because it operates on Deferred Net Settlement (DNS), there is a slight delay compared to IMPS or UPI.</div>"
+    },
+    {
+      "id": 16,
+      "topic": "Computer Architecture",
+      "text": "What does the 'Von Neumann Bottleneck' refer to in classical computer architecture?",
+      "options": [
+        "The overheating of the CPU due to high clock speeds.",
+        "The performance limitation caused by the CPU and Memory sharing a single system bus, meaning instructions and data cannot be fetched simultaneously.",
+        "The limitation of having too few USB ports.",
+        "The degradation of hard drive read speeds over time."
+      ],
+      "correct": 1,
+      "explanation": "In a pure Von Neumann architecture, both program instructions and data reside in the same memory and share a single bus. The CPU sits idle while waiting for data to travel across this shared bus, creating a severe bottleneck as CPU speeds outpace RAM speeds.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The <strong>Harvard Architecture</strong> solves this by using physically separate memory and buses for instructions and data.</div>"
+    },
+    {
+      "id": 17,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which fundamental operating principle defines a Queue data structure?",
+      "options": [
+        "Last-In, First-Out (LIFO)",
+        "First-In, First-Out (FIFO)",
+        "Random Access",
+        "Priority-based Access"
+      ],
+      "correct": 1,
+      "explanation": "A Queue operates on the First-In, First-Out (FIFO) principle. The first element added (enqueued) to the queue is the very first one to be removed (dequeued).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Think of a line at a grocery store; the first person in line is served first. Stacks, conversely, operate on LIFO (like a stack of plates).</div>"
+    },
+    {
+      "id": 18,
+      "topic": "Digital Logic",
+      "text": "Which fundamental logic gate yields a HIGH (1) output strictly when its two inputs are different from each other?",
+      "options": [
+        "AND Gate",
+        "OR Gate",
+        "XOR (Exclusive-OR) Gate",
+        "NAND Gate"
+      ],
+      "correct": 2,
+      "explanation": "The XOR gate outputs 1 only if the inputs are differing (0-1 or 1-0). If both inputs are the same (0-0 or 1-1), it outputs 0. It is often referred to as an inequality detector.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• XOR gates are the foundational building blocks for binary addition (Half Adders).</div>"
+    },
+    {
+      "id": 19,
+      "topic": "Computer Networks",
+      "text": "Which field in the IPv4 header is responsible for preventing routing loops by ensuring a packet doesn't travel the internet forever?",
+      "options": [
+        "Header Checksum",
+        "Fragment Offset",
+        "Time to Live (TTL)",
+        "Protocol"
+      ],
+      "correct": 2,
+      "explanation": "The Time to Live (TTL) field is an 8-bit counter set by the sender. Every time the packet passes through a router, the router decreases the TTL by 1. If the TTL reaches zero, the router discards the packet and sends an ICMP 'Time Exceeded' message back to the sender.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The `traceroute` utility leverages the TTL field. It sends packets with TTL=1, then TTL=2, recording the IP of the router that drops it each time, tracing the exact path.</div>"
+    },
+    {
+      "id": 20,
+      "topic": "Database Systems",
+      "text": "In the context of database transaction properties (ACID), what does 'Durability' guarantee?",
+      "options": [
+        "That a transaction brings the database from one valid state to another.",
+        "That concurrent transactions execute completely isolated from each other.",
+        "That either all operations in a transaction execute, or none do.",
+        "That once a transaction successfully commits, its changes are permanent and will survive any subsequent system crash or power failure."
+      ],
+      "correct": 3,
+      "explanation": "Durability guarantees that committed data is securely persisted to non-volatile storage (the hard disk). Even if the server instantly loses power following a commit, the data will be recovered from the database logs on reboot.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Atomicity:</strong> All-or-nothing (no partial transactions).<br>• <strong>Consistency:</strong> Valid state transitions.<br>• <strong>Isolation:</strong> Concurrency control (transactions don't interfere).</div>"
+    },
+    {
+      "id": 21,
+      "topic": "Operating Systems",
+      "text": "What is the purpose of 'SPOOLing' (Simultaneous Peripheral Operations On-Line) in an operating system?",
+      "options": [
+        "To encrypt data being written to a hard drive.",
+        "To manage CPU scheduling using a priority queue.",
+        "To place jobs in a buffer so a slower peripheral device (like a printer) can process them asynchronously without stalling the CPU.",
+        "To increase the clock speed of the processor."
+      ],
+      "correct": 2,
+      "explanation": "SPOOLing uses disk space as a buffer. Since output devices like printers are incredibly slow compared to a CPU, the OS spools the output to a disk buffer, allowing the CPU to instantly move on to other tasks rather than waiting for the printer to finish.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• It acts as a dedicated queue, preventing multiple programs from intermixing their print jobs on the same piece of paper.</div>"
+    },
+    {
+      "id": 22,
+      "topic": "Java Programming",
+      "text": "In the standard Java `public static void main(String[] args)` method signature, what does the `static` keyword signify?",
+      "options": [
+        "It prevents the main method from returning any value.",
+        "It makes the method accessible from outside the class package.",
+        "It allows the JVM to invoke the main method without needing to instantiate an object of the class first.",
+        "It ensures the arguments passed are constant and cannot be modified."
+      ],
+      "correct": 2,
+      "explanation": "The `static` keyword means the method belongs to the class itself, not to an instance of the class. This is necessary because when the Java program starts, no objects have been created yet, so the JVM needs to call `main` directly on the class.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• `void` signifies no return value, and `public` makes it visible to the JVM.</div>"
+    },
+    {
+      "id": 23,
+      "topic": "Python Programming",
+      "text": "Which of the following data structures in Python is inherently immutable (cannot be changed after creation)?",
+      "options": [
+        "List",
+        "Dictionary",
+        "Set",
+        "Tuple"
+      ],
+      "correct": 3,
+      "explanation": "Tuples in Python, defined by parentheses `()`, are immutable. Once created, you cannot append, remove, or modify elements inside them. Lists, Dictionaries, and Sets are all mutable data structures.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because they are immutable, Tuples can be used as keys in a Dictionary, whereas Lists cannot.</div>"
+    },
+    {
+      "id": 24,
+      "topic": "C/C++ Programming",
+      "text": "When allocating dynamic memory in C++, why is the `new` operator preferred over the C-style `malloc()` function?",
+      "options": [
+        "`new` is faster at allocating memory.",
+        "`new` automatically calls the object's constructor after allocating memory, whereas `malloc()` only allocates raw bytes.",
+        "`malloc()` cannot be used for arrays.",
+        "`new` automatically triggers garbage collection."
+      ],
+      "correct": 1,
+      "explanation": "While both allocate memory on the heap, `new` is object-aware. If you use `new Car()`, it allocates the memory AND automatically calls the `Car` constructor to initialize the object. `malloc()` just grabs a chunk of memory and leaves the object uninitialized.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Correspondingly, you must use `delete` to free memory created by `new` (which calls the destructor), rather than `free()`.</div>"
+    },
+    {
+      "id": 25,
+      "topic": "Software Engineering",
+      "text": "During the Requirement Gathering phase of the SDLC, which crucial document is produced that acts as the final agreement between the client and the developers regarding what will be built?",
+      "options": [
+        "System Architecture Diagram",
+        "Software Requirement Specification (SRS)",
+        "Unit Test Plan",
+        "Deployment Manifesto"
+      ],
+      "correct": 1,
+      "explanation": "The Software Requirement Specification (SRS) is a comprehensive document detailing all functional and non-functional requirements. It serves as the formal baseline contract for the entire development project.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A good SRS is clear, measurable, and testable, leaving no room for ambiguous interpretations.</div>"
+    },
+    {
+      "id": 26,
+      "topic": "Cyber Security",
+      "text": "What is the primary purpose of deploying a network Firewall?",
+      "options": [
+        "To speed up internet connection bandwidth.",
+        "To monitor and control incoming and outgoing network traffic based on predetermined security rules.",
+        "To permanently store backup copies of server databases.",
+        "To assign IP addresses to new devices via DHCP."
+      ],
+      "correct": 1,
+      "explanation": "A Firewall acts as a barrier between a trusted internal network and an untrusted external network (like the Internet). It uses rule sets to block malicious traffic or unauthorized access attempts while letting legitimate traffic pass.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Modern Next-Generation Firewalls (NGFW) go beyond port blocking and include deep packet inspection and intrusion prevention systems (IPS).</div>"
+    },
+    {
+      "id": 27,
+      "topic": "Linux Commands",
+      "text": "When viewing a directory using the `ls -l` command, the first character of a file's permission string is a `d` (e.g., `drwxr-xr-x`). What does this indicate?",
+      "options": [
+        "It is a deleted file.",
+        "It is a standard text document.",
+        "It is a directory.",
+        "It is a device driver."
+      ],
+      "correct": 2,
+      "explanation": "The first character indicates the file type. A `d` stands for directory. A `-` stands for a regular file, and an `l` indicates a symbolic link.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• In Linux, directories are essentially special files that contain lists of other files.</div>"
+    },
+    {
+      "id": 28,
+      "topic": "Linux Permissions",
+      "text": "What security behavior occurs when the SUID (Set-User-ID) bit is applied to an executable binary file in Linux?",
+      "options": [
+        "The file cannot be deleted by any user, including root.",
+        "When a standard user executes the file, the resulting process runs with the elevated privileges of the file's owner (often root) rather than the user executing it.",
+        "The file is completely hidden from directory listings.",
+        "The file is encrypted automatically."
+      ],
+      "correct": 1,
+      "explanation": "The SUID bit allows users to execute a file with the permissions of the file owner. This is critically necessary for commands like `passwd`, where a normal user needs temporary root access to update the protected `/etc/shadow` file.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• SUID is indicated by an 's' in the owner's execute permission slot (e.g., `-rwsr-xr-x`).<br>• Improperly configured SUID binaries are a primary vector for Privilege Escalation attacks.</div>"
+    },
+    {
+      "id": 29,
+      "topic": "Misc (Cloud Computing)",
+      "text": "In cloud computing, what does the term 'Elasticity' refer to?",
+      "options": [
+        "The ability to automatically and dynamically provision or de-provision computing resources in real-time based on current workload demands.",
+        "The physical flexibility of fiber optic cables in data centers.",
+        "The ability of a cloud server to survive physical hardware failure.",
+        "The pricing model where users pay a flat monthly fee."
+      ],
+      "correct": 0,
+      "explanation": "Elasticity is the cloud's ability to seamlessly scale resources up during traffic spikes (like a Black Friday sale) and scale them back down during quiet periods, ensuring the client only pays for exactly what they consume.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While 'Scalability' generally refers to adding capacity over time, 'Elasticity' implies the rapid, automated expanding and contracting of resources in response to immediate triggers.</div>"
+    },
+    {
+      "id": 30,
+      "topic": "Misc (IT Act 2000)",
+      "text": "Which section of the IT Act 2000 provides formal legal recognition to Electronic Signatures, validating them equivalently to physical signatures?",
+      "options": [
+        "Section 3",
+        "Section 5",
+        "Section 43",
+        "Section 65"
+      ],
+      "correct": 1,
+      "explanation": "Section 5 of the IT Act 2000 provides legal recognition to electronic signatures. It mandates that where any law requires a signature, that requirement is satisfied if the electronic record is authenticated by means of an electronic signature.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Section 4 deals with the legal recognition of electronic records in general.</div>"
+    },
+    {
+      "id": 31,
+      "topic": "Misc (Banking IT)",
+      "text": "In Indian digital banking, the 'SWIFT' network is primarily utilized for:",
+      "options": [
+        "Domestic IMPS transfers between mobile numbers.",
+        "Routing automated teller machine (ATM) cash withdrawal requests locally.",
+        "Securely transmitting standardized financial messages and payment instructions between global banking institutions for international wire transfers.",
+        "Clearing physical cheques between different bank branches in the same city."
+      ],
+      "correct": 2,
+      "explanation": "The Society for Worldwide Interbank Financial Telecommunication (SWIFT) provides a massive, highly secure messaging network used by banks globally to quickly and accurately transmit information and instructions (like international wire transfers) using a standardized system of codes.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• SWIFT does <strong>not</strong> hold funds or manage accounts itself; it is purely a secure messaging system that triggers the actual movement of money.</div>"
+    },
+    {
+      "id": 32,
+      "topic": "Computer Architecture",
+      "text": "What specific phenomenon does CPU Cache memory exploit to dramatically speed up program execution?",
+      "options": [
+        "Moore's Law",
+        "The Principle of Locality (Temporal and Spatial)",
+        "Virtual Memory Swapping",
+        "Pipeline Hazards"
+      ],
+      "correct": 1,
+      "explanation": "Cache relies on Locality. Temporal locality assumes if you access a variable, you will likely access it again soon (so keep it in cache). Spatial locality assumes if you access an array element, you will likely access the next element soon (so load the whole block into cache).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Because accessing main RAM is incredibly slow for a modern CPU, high Cache Hit rates are vital for performance.</div>"
+    },
+    {
+      "id": 33,
+      "topic": "Data Structures & Algorithms",
+      "text": "What is a major advantage of utilizing a Linked List over a standard Array?",
+      "options": [
+        "Linked Lists provide O(1) random access to any index.",
+        "Linked Lists consume less overall memory because they don't use pointers.",
+        "Linked Lists allow for dynamic memory allocation, meaning they can grow and shrink easily without needing to be resized or copied.",
+        "Linked Lists have better cache locality for the CPU."
+      ],
+      "correct": 2,
+      "explanation": "Arrays are fixed in size and require contiguous memory. If an array gets full, you must allocate a new, larger array and copy all data over. Linked lists dynamically allocate memory for each new node as needed, avoiding this reallocation penalty.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• The trade-off is that Arrays offer O(1) direct index access, while Linked Lists require O(n) traversal to find the nth element.</div>"
+    },
+    {
+      "id": 34,
+      "topic": "Digital Logic",
+      "text": "When constructing a Half Adder circuit to add two single binary bits together, what two logical outputs are produced?",
+      "options": [
+        "Sum and Difference",
+        "Sum and Carry",
+        "Carry and Borrow",
+        "Quotient and Remainder"
+      ],
+      "correct": 1,
+      "explanation": "A Half Adder adds two binary bits and produces two outputs: the Sum (calculated using an XOR gate) and the Carry (calculated using an AND gate).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A Half Adder cannot accept a carry-in from a previous addition. A <strong>Full Adder</strong> is required to add three bits together (Input A, Input B, and Carry-In).</div>"
+    },
+    {
+      "id": 35,
+      "topic": "Computer Networks",
+      "text": "Which underlying protocol does the standard `ping` command utilize to test reachability between two network hosts?",
+      "options": [
+        "TCP (Transmission Control Protocol)",
+        "UDP (User Datagram Protocol)",
+        "ICMP (Internet Control Message Protocol)",
+        "ARP (Address Resolution Protocol)"
+      ],
+      "correct": 2,
+      "explanation": "The `ping` utility sends ICMP 'Echo Request' messages to the target IP and waits for ICMP 'Echo Reply' messages to verify connectivity and measure round-trip time.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• ICMP operates at the Network Layer (Layer 3) alongside IP, and it is also used for sending error messages like 'Destination Unreachable'.</div>"
+    },
+    {
+      "id": 36,
+      "topic": "Database Systems",
+      "text": "In a relational database table, what is the primary difference between a 'Primary Key' constraint and a 'Unique Key' constraint?",
+      "options": [
+        "A Unique Key can accept duplicate values, whereas a Primary Key cannot.",
+        "A Primary Key allows exactly one NULL value, whereas a Unique Key allows none.",
+        "A table can have multiple Primary Keys but only one Unique Key.",
+        "A table can have multiple Unique Keys, but only one Primary Key which strictly cannot contain NULL values."
+      ],
+      "correct": 3,
+      "explanation": "A table can only have one Primary Key, and it enforces entity integrity by forbidding any NULL values. A table can have multiple Unique Keys, and standard SQL permits a Unique Key column to hold NULL values.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Both constraints automatically create a unique index behind the scenes to enforce data integrity and speed up searches.</div>"
+    },
+    {
+      "id": 37,
+      "topic": "Operating Systems",
+      "text": "What does the OS perform during a 'Context Switch'?",
+      "options": [
+        "It shuts down the graphical user interface to save power.",
+        "It switches the CPU execution from user mode to kernel mode.",
+        "It saves the state (registers, program counter) of the currently running process and loads the saved state of the next process to be executed.",
+        "It transfers data directly from the hard drive to RAM."
+      ],
+      "correct": 2,
+      "explanation": "A context switch occurs when the CPU is taken away from one process and given to another. The OS must save the current state in the Process Control Block (PCB) so the process can resume seamlessly later, and then load the PCB of the new process.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Context switching is pure overhead; the system performs no useful application work while switching contexts.</div>"
+    },
+    {
+      "id": 38,
+      "topic": "Java Programming",
+      "text": "If a Java class is declared with the `final` keyword (e.g., `public final class String`), what restriction is placed on it?",
+      "options": [
+        "The class cannot contain any methods.",
+        "The class cannot be instantiated using the `new` keyword.",
+        "The class cannot be inherited (extended) by any subclass.",
+        "All variables inside the class must be integers."
+      ],
+      "correct": 2,
+      "explanation": "Applying the `final` keyword to a class prevents it from being extended by any other class. This is often used for security and immutability (as seen in Java's core `String` class).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• If `final` is applied to a method, it prevents child classes from overriding it. If applied to a variable, it makes it a constant.</div>"
+    },
+    {
+      "id": 39,
+      "topic": "Python Programming",
+      "text": "What does the `pass` keyword signify in Python?",
+      "options": [
+        "It skips the current iteration of a loop and moves to the next one.",
+        "It entirely terminates the execution of a loop.",
+        "It acts as a null operation (no-op) placeholder when a statement is syntactically required but no code needs to be executed.",
+        "It passes control to the parent class constructor."
+      ],
+      "correct": 2,
+      "explanation": "Because Python relies on indentation rather than braces, empty code blocks (like an empty `if` statement or a function you haven't written yet) will trigger an `IndentationError`. The `pass` keyword acts as a dummy placeholder to satisfy the syntax rules without doing anything.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• `continue`: Skips the current iteration of a loop.<br>• `break`: Terminates the loop completely.</div>"
+    },
+    {
+      "id": 40,
+      "topic": "C/C++ Programming",
+      "text": "What will happen if a C++ program attempts to dereference a `nullptr` (e.g., `int* p = nullptr; cout << *p;`)?",
+      "options": [
+        "The program outputs 0.",
+        "The compiler throws a syntax error.",
+        "The program outputs random garbage data.",
+        "The program throws a runtime exception or Segmentation Fault, causing it to crash."
+      ],
+      "correct": 3,
+      "explanation": "Dereferencing a null pointer attempts to access a memory address strictly reserved/protected by the Operating System (usually address 0x0). The OS detects this illegal access and immediately kills the program with a Segmentation Fault (Segfault).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• C++11 introduced `nullptr` as a type-safe replacement for the old C-style `NULL` macro (which was essentially just an integer 0).</div>"
+    },
+    {
+      "id": 41,
+      "topic": "Software Engineering",
+      "text": "In software design, the combination of 'High Cohesion' and 'Low Coupling' indicates:",
+      "options": [
+        "A poorly designed, tightly interdependent system.",
+        "A robust design where modules are highly focused on a single task and operate independently of other modules.",
+        "A system that will compile faster but execute slower.",
+        "A system specifically optimized for procedural languages like C, but bad for Object-Oriented languages."
+      ],
+      "correct": 1,
+      "explanation": "Cohesion measures how closely related the functions within a single module are (we want High Cohesion—doing one job well). Coupling measures how heavily modules depend on each other (we want Low Coupling—minimal dependencies so changing one module doesn't break another).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• 'Data Coupling' is the best/lowest form of coupling. 'Content Coupling' is the worst.</div>"
+    },
+    {
+      "id": 42,
+      "topic": "Cyber Security",
+      "text": "In the context of the CIA Triad in information security, what does 'Availability' ensure?",
+      "options": [
+        "That data is not altered by unauthorized users.",
+        "That sensitive data is encrypted and hidden from unauthorized viewing.",
+        "That authorized users have reliable and timely access to systems and data when they need it.",
+        "That users are physically authenticated via biometrics."
+      ],
+      "correct": 2,
+      "explanation": "Availability guarantees that systems remain online and operational for authorized users. Denial of Service (DoS) attacks specifically target the Availability pillar of the CIA Triad by taking servers offline.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• <strong>Confidentiality:</strong> Data privacy (Encryption).<br>• <strong>Integrity:</strong> Data hasn't been tampered with (Hashing).</div>"
+    },
+    {
+      "id": 43,
+      "topic": "Linux Commands",
+      "text": "Which of the following Linux command-line utilities is primarily designed for performing non-interactive, automated stream editing (like find and replace operations) using regular expressions?",
+      "options": [
+        "tar",
+        "grep",
+        "sed",
+        "chmod"
+      ],
+      "correct": 2,
+      "explanation": "`sed` (Stream Editor) is a powerful tool used to parse and transform text. For example, `sed 's/old/new/g' file.txt` replaces all occurrences of 'old' with 'new'.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• While `grep` finds and filters text, it does not edit or modify it.<br>• Use `sed -i` to write the edits directly back into the original file.</div>"
+    },
+    {
+      "id": 44,
+      "topic": "Linux Permissions",
+      "text": "An administrator executes the command `chmod 754 file.sh`. What exact permissions does this grant?",
+      "options": [
+        "Owner: Read/Write/Execute | Group: Read/Execute | Others: Read Only",
+        "Owner: Read/Execute | Group: Read/Write/Execute | Others: Execute Only",
+        "Owner: Read/Write | Group: Read Only | Others: None",
+        "Owner: Execute Only | Group: Read/Write | Others: Read/Write/Execute"
+      ],
+      "correct": 0,
+      "explanation": "Linux permissions use octal math (Read=4, Write=2, Execute=1).<br>7 (Owner) = 4 + 2 + 1 (Read, Write, Execute).<br>5 (Group) = 4 + 1 (Read, Execute).<br>4 (Others) = 4 (Read Only).<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• To make a script executable for the owner only, without modifying other permissions, you can use the symbolic notation: `chmod u+x file.sh`.</div>"
+    },
+    {
+      "id": 45,
+      "topic": "Misc (Cloud Computing)",
+      "text": "Match the following Cloud Service Models with their exact administrative scope:<br><br><table class='matching-table'><tr><th>Service Model</th><th>Scope of Client Control</th></tr><tr><td>P. IaaS</td><td>1. Client manages only the application code/data.</td></tr><tr><td>Q. PaaS</td><td>2. Client consumes the software; provider manages everything.</td></tr><tr><td>R. SaaS</td><td>3. Client manages OS, Middleware, and Apps.</td></tr></table>",
+      "options": [
+        "P-3, Q-1, R-2",
+        "P-1, Q-2, R-3",
+        "P-2, Q-3, R-1",
+        "P-3, Q-2, R-1"
+      ],
+      "correct": 0,
+      "explanation": "IaaS (Infrastructure as a Service) provides raw VMs; the client installs and manages the Operating System upwards. PaaS (Platform as a Service) provides the runtime environment; the client only deploys their application code. SaaS (Software as a Service) provides end-user software; the provider manages the entire stack.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Examples: AWS EC2 (IaaS), Heroku/Google App Engine (PaaS), Google Docs/Salesforce (SaaS).</div>"
+    },
+    {
+      "id": 46,
+      "topic": "Misc (Banking IT)",
+      "text": "In core banking architecture, what is the role of an 'ATM Switch'?",
+      "options": [
+        "To physically route electrical power cables",
+        "To route transaction messages between ATMs, merchant terminals, card networks, and the core banking database authorization engine",
+        "To print paper statement receipts",
+        "To manage currency exchange vault lockers"
+      ],
+      "correct": 1,
+      "explanation": "The ATM switch processes and routes ATM transaction messages securely across interbank network switches for immediate verification and settlement.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Operates 24x7 to handle high-concurrency transaction authorization requests.</div>"
+    },
+    {
+      "id": 47,
+      "topic": "Computer Architecture",
+      "text": "Which of the following is a defining characteristic of a RISC (Reduced Instruction Set Computer) architecture compared to CISC?",
+      "options": [
+        "It relies heavily on complex instructions that execute in multiple clock cycles.",
+        "It emphasizes executing simple, uniform instructions where almost every instruction completes in a single clock cycle.",
+        "It minimizes the number of hardware registers.",
+        "It does not support pipelining."
+      ],
+      "correct": 1,
+      "explanation": "RISC processors (like ARM) use a small, highly optimized set of instructions that are fixed in length and execute in one clock cycle. This simplicity makes pipelining highly efficient.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• CISC processors (like Intel x86) have complex instructions where a single command might perform multiple memory loads, arithmetic, and a store, taking several cycles.</div>"
+    },
+    {
+      "id": 48,
+      "topic": "Data Structures & Algorithms",
+      "text": "Evaluate the following Postfix expression using a Stack. What is the final result?<br>`8 2 / 5 * 6 -`",
+      "options": [
+        "14",
+        "16",
+        "24",
+        "10"
+      ],
+      "correct": 0,
+      "explanation": "1. Push 8, Push 2.<br>2. Read `/`: Pop 2, Pop 8. Compute 8 / 2 = 4. Push 4.<br>3. Push 5.<br>4. Read `*`: Pop 5, Pop 4. Compute 4 * 5 = 20. Push 20.<br>5. Push 6.<br>6. Read `-`: Pop 6, Pop 20. Compute 20 - 6 = 14. Push 14.<br>Result is 14.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• Postfix (Reverse Polish Notation) eliminates the need for parentheses or operator precedence rules entirely.</div>"
+    },
+    {
+      "id": 49,
+      "topic": "Computer Networks",
+      "text": "What is the standard decimal representation of a /24 subnet mask?",
+      "options": [
+        "255.0.0.0",
+        "255.255.0.0",
+        "255.255.255.0",
+        "255.255.255.255"
+      ],
+      "correct": 2,
+      "explanation": "A /24 subnet mask means the first 24 bits are turned on (set to 1). In an IPv4 address, this equals three octets of 8 bits each (8+8+8 = 24). In decimal, eight 1s equals 255. Therefore, the mask is 255.255.255.0.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A /24 mask leaves 8 bits for hosts, allowing 2^8 - 2 = 254 usable host IP addresses.</div>"
+    },
+    {
+      "id": 50,
+      "topic": "Database Systems",
+      "text": "What is the primary requirement for a database relation to be considered in First Normal Form (1NF)?",
+      "options": [
+        "Every attribute must be dependent on the primary key.",
+        "The relation must contain no transitive dependencies.",
+        "Every attribute must contain atomic (indivisible) values, meaning no multi-valued attributes or repeating groups.",
+        "Every non-key attribute must be a foreign key."
+      ],
+      "correct": 2,
+      "explanation": "First Normal Form (1NF) simply states that the domain of an attribute must include only atomic (simple, indivisible) values, and the value of any attribute in a tuple must be a single value from that domain.<div class='knowledge-booster'>💡 <strong>Knowledge Booster:</strong><br>• A table with a column containing a comma-separated list of phone numbers violates 1NF.</div>"
+    }
+  ]
+}

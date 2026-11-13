@@ -1,0 +1,666 @@
+{
+  "id": "day_5",
+  "day": 5,
+  "title": "IT Officer Mains: Day 5",
+  "difficulty": "Easy to Moderate",
+  "difficultyLevel": 2,
+  "tags": "Balanced",
+  "totalQuestions": 50,
+  "timeLimitMinutes": 60,
+  "markingScheme": {
+    "correct": 2,
+    "incorrect": -0.5
+  },
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Database Systems",
+      "text": "Which normal form is strictly based on the concept of eliminating partial dependencies?",
+      "options": [
+        "First Normal Form (1NF)",
+        "Second Normal Form (2NF)",
+        "Third Normal Form (3NF)",
+        "Boyce-Codd Normal Form (BCNF)"
+      ],
+      "correct": 1,
+      "explanation": "2NF requires that a relation is in 1NF and all non-key attributes are fully functionally dependent on the entire primary key, eliminating partial dependencies."
+    },
+    {
+      "id": 2,
+      "topic": "Computer Networks",
+      "text": "Match the following IEEE standards with their common names:<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. IEEE 802.3</td><td>1. Wi-Fi</td></tr><tr><td>Q. IEEE 802.11</td><td>2. Bluetooth (PAN)</td></tr><tr><td>R. IEEE 802.15</td><td>3. Ethernet</td></tr></table>",
+      "options": [
+        "P-3, Q-1, R-2",
+        "P-1, Q-2, R-3",
+        "P-3, Q-2, R-1",
+        "P-2, Q-1, R-3"
+      ],
+      "correct": 0,
+      "explanation": "802.3 is the standard for Ethernet. 802.11 is the standard for Wireless LANs (Wi-Fi). 802.15 is the standard for Wireless PANs (Bluetooth)."
+    },
+    {
+      "id": 3,
+      "topic": "Python Programming",
+      "text": "What will be the output of the following Python code snippet?<br><br><div class='code-block'>data = {'a': 1, 'b': 2}\nprint(data.get('c', 3))</div>",
+      "options": [
+        "None",
+        "KeyError",
+        "3",
+        "0"
+      ],
+      "correct": 2,
+      "explanation": "The dictionary `.get(key, default)` method returns the value for the specified key if it exists. If the key is not found, it returns the specified default value (which is 3 in this case)."
+    },
+    {
+      "id": 4,
+      "topic": "Operating Systems",
+      "text": "A system uses 3 page frames for a process. The reference string of pages is: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5. How many page faults occur using the FIFO page replacement algorithm?",
+      "options": [
+        "9",
+        "10",
+        "12",
+        "7"
+      ],
+      "correct": 0,
+      "explanation": "Using FIFO with 3 frames: \n1(PF)->[1], \n2(PF)->[1,2], \n3(PF)->[1,2,3], \n4(PF)->[2,3,4], \n1(PF)->[3,4,1], \n2(PF)->[4,1,2], \n5(PF)->[1,2,5], \n1(Hit), \n2(Hit), \n3(PF)->[2,5,3], \n4(PF)->[5,3,4], \n5(Hit). Total page faults = 9."
+    },
+    {
+      "id": 5,
+      "topic": "Software Engineering",
+      "text": "In the context of software testing, which of the following best describes 'White Box Testing'?",
+      "options": [
+        "Testing conducted at the user end to validate business requirements.",
+        "Testing the internal structure, design, and coding of software.",
+        "Testing without any knowledge of the internal source code.",
+        "Testing the system's performance under extreme load conditions."
+      ],
+      "correct": 1,
+      "explanation": "White Box testing (or structural testing) evaluates the internal logic, code structure, and data flows of an application, requiring programming knowledge."
+    },
+    {
+      "id": 6,
+      "topic": "Digital Logic",
+      "text": "Observe the logic gate symbol below. What logic function does it represent?<br><br><div class='diagram-container'><svg viewBox='0 0 200 100' xmlns='http://www.w3.org/2000/svg'><path d='M 40 20 L 80 20 A 30 30 0 0 1 80 80 L 40 80 Z' fill='none' stroke='black' stroke-width='2'/><circle cx='115' cy='50' r='5' fill='none' stroke='black' stroke-width='2'/><line x1='10' y1='35' x2='40' y2='35' stroke='black' stroke-width='2'/><line x1='10' y1='65' x2='40' y2='65' stroke='black' stroke-width='2'/><line x1='120' y1='50' x2='150' y2='50' stroke='black' stroke-width='2'/></svg></div>",
+      "options": [
+        "AND Gate",
+        "OR Gate",
+        "NAND Gate",
+        "NOR Gate"
+      ],
+      "correct": 2,
+      "explanation": "The symbol features a straight vertical back (AND gate) followed by an inversion bubble at the output, making it a NAND gate."
+    },
+    {
+      "id": 7,
+      "topic": "Java Programming",
+      "text": "What happens when you attempt to compile and execute this Java code?<br><br><div class='code-block'>class Test {\n    public static void main(String args[]) {\n        final int x = 10;\n        x = 20;\n        System.out.println(x);\n    }\n}</div>",
+      "options": [
+        "Prints 10",
+        "Prints 20",
+        "Throws a RuntimeException",
+        "Compile-time error"
+      ],
+      "correct": 3,
+      "explanation": "The `final` keyword makes the variable `x` a constant. Attempting to reassign a value to a final variable (`x = 20;`) results in a compile-time error."
+    },
+    {
+      "id": 8,
+      "topic": "Cyber Security",
+      "text": "In the RSA algorithm, if the prime numbers chosen are p=5 and q=7, what is the value of the Euler's Totient function, φ(n)?",
+      "options": [
+        "35",
+        "24",
+        "12",
+        "48"
+      ],
+      "correct": 1,
+      "explanation": "In RSA, the Totient function is calculated as φ(n) = (p-1) * (q-1). So, (5-1) * (7-1) = 4 * 6 = 24."
+    },
+    {
+      "id": 9,
+      "topic": "Data Structures & Algorithms",
+      "text": "Which traversal technique visits the root node, then the left subtree, and finally the right subtree?",
+      "options": [
+        "In-order Traversal",
+        "Pre-order Traversal",
+        "Post-order Traversal",
+        "Level-order Traversal"
+      ],
+      "correct": 1,
+      "explanation": "Pre-order traversal follows the sequence: Root, Left, Right."
+    },
+    {
+      "id": 10,
+      "topic": "Misc (IT Act 2000)",
+      "text": "Under the Information Technology Act, 2000, Section 43 deals primarily with:",
+      "options": [
+        "Electronic Signatures",
+        "Damage to computer systems without owner's consent",
+        "Publishing obscene material in electronic form",
+        "Establishment of the Cyber Appellate Tribunal"
+      ],
+      "correct": 1,
+      "explanation": "Section 43 of the IT Act prescribes the penalty and compensation for damage to a computer, computer system, or network without the permission of the owner."
+    },
+    {
+      "id": 11,
+      "topic": "Misc (Banking IT)",
+      "text": "Between NEFT and RTGS payment systems in India, which of the following statements is true?",
+      "options": [
+        "RTGS settles transactions in batches, while NEFT settles in real-time.",
+        "NEFT settles transactions in half-hourly batches, while RTGS is settled continuously in real-time.",
+        "Both NEFT and RTGS settle transactions only at the end of the business day.",
+        "RTGS requires no minimum transaction limit, whereas NEFT has a minimum limit of Rs. 2 Lakhs."
+      ],
+      "correct": 1,
+      "explanation": "NEFT operates on a Deferred Net Settlement (DNS) basis settling in half-hourly batches. RTGS stands for Real-Time Gross Settlement, settling transactions continuously. RTGS actually has a minimum limit of Rs. 2 Lakhs."
+    },
+    {
+      "id": 12,
+      "topic": "Compiler Design",
+      "text": "Which phase of a compiler utilizes a Parse Tree (or Syntax Tree) to ensure the expressions are structurally correct?",
+      "options": [
+        "Lexical Analyzer",
+        "Syntax Analyzer",
+        "Semantic Analyzer",
+        "Code Optimizer"
+      ],
+      "correct": 1,
+      "explanation": "The Syntax Analyzer (Parser) groups tokens into grammatical phrases, typically represented as a parse tree, to check for structural correctness."
+    },
+    {
+      "id": 13,
+      "topic": "C/C++ Programming",
+      "text": "What is the output of the following C code snippet?<br><br><div class='code-block'>#include &lt;stdio.h&gt;\nint main() {\n    int a = 10;\n    int *p = &a;\n    *p = 20;\n    printf(\"%d\", a);\n    return 0;\n}</div>",
+      "options": [
+        "10",
+        "20",
+        "Garbage Value",
+        "Compilation Error"
+      ],
+      "correct": 1,
+      "explanation": "The pointer `p` holds the memory address of `a`. Dereferencing it (`*p = 20`) directly alters the value stored at that address, so `a` becomes 20."
+    },
+    {
+      "id": 14,
+      "topic": "Computer Networks",
+      "text": "If a computer has the IP address 172.16.5.10 with a subnet mask of 255.255.255.0, what is the network address of this computer?",
+      "options": [
+        "172.16.0.0",
+        "172.16.5.0",
+        "172.16.5.255",
+        "172.0.0.0"
+      ],
+      "correct": 1,
+      "explanation": "A subnet mask of 255.255.255.0 (/24) means the first three octets identify the network. Therefore, the network address is 172.16.5.0."
+    },
+    {
+      "id": 15,
+      "topic": "Object Oriented Programming",
+      "text": "What OOP concept allows a single function name or operator to exhibit different behaviors depending on the input parameters or data types?",
+      "options": [
+        "Encapsulation",
+        "Polymorphism",
+        "Abstraction",
+        "Inheritance"
+      ],
+      "correct": 1,
+      "explanation": "Polymorphism (meaning 'many forms') allows methods to do different things based on the object it is acting upon or the parameters passed (e.g., method overloading/overriding)."
+    },
+    {
+      "id": 16,
+      "topic": "Database Systems",
+      "text": "In a relational database schema, what does the term 'Degree' refer to?",
+      "options": [
+        "The number of rows/tuples in a table.",
+        "The number of attributes/columns in a table.",
+        "The maximum number of foreign keys allowed.",
+        "The total number of relations in the database."
+      ],
+      "correct": 1,
+      "explanation": "In relational algebra, the Degree (or Arity) refers to the number of attributes (columns) in a relation, whereas Cardinality refers to the number of tuples (rows)."
+    },
+    {
+      "id": 17,
+      "topic": "Software Engineering",
+      "text": "Which level of cohesion is considered the most desirable in software design because all elements in a module contribute strictly to a single, well-defined task?",
+      "options": [
+        "Logical Cohesion",
+        "Temporal Cohesion",
+        "Communicational Cohesion",
+        "Functional Cohesion"
+      ],
+      "correct": 3,
+      "explanation": "Functional cohesion is the strongest and most desirable level of cohesion. It means every part of the module is focused on executing one single, specific function."
+    },
+    {
+      "id": 18,
+      "topic": "Operating Systems",
+      "text": "Which condition necessary for a deadlock involves a process holding at least one resource and requesting additional resources held by other processes?",
+      "options": [
+        "Mutual Exclusion",
+        "Hold and Wait",
+        "No Preemption",
+        "Circular Wait"
+      ],
+      "correct": 1,
+      "explanation": "The 'Hold and Wait' condition occurs when a process holding at least one resource is waiting to acquire additional resources held by other processes."
+    },
+    {
+      "id": 19,
+      "topic": "Data Structures & Algorithms",
+      "text": "Identify the type of tree shown in the diagram below, where the balance factor of every node is either -1, 0, or +1.<br><br><div class='diagram-container'><svg viewBox='0 0 300 200' xmlns='http://www.w3.org/2000/svg'><circle cx='150' cy='30' r='15' fill='white' stroke='black' stroke-width='2'/><text x='150' y='35' text-anchor='middle'>M</text><circle cx='80' cy='90' r='15' fill='white' stroke='black' stroke-width='2'/><text x='80' y='95' text-anchor='middle'>F</text><circle cx='220' cy='90' r='15' fill='white' stroke='black' stroke-width='2'/><text x='220' y='95' text-anchor='middle'>S</text><line x1='140' y1='40' x2='90' y2='80' stroke='black' stroke-width='2'/><line x1='160' y1='40' x2='210' y2='80' stroke='black' stroke-width='2'/><circle cx='40' cy='150' r='15' fill='white' stroke='black' stroke-width='2'/><text x='40' y='155' text-anchor='middle'>A</text><circle cx='120' cy='150' r='15' fill='white' stroke='black' stroke-width='2'/><text x='120' y='155' text-anchor='middle'>K</text><line x1='70' y1='100' x2='50' y2='140' stroke='black' stroke-width='2'/><line x1='90' y1='100' x2='110' y2='140' stroke='black' stroke-width='2'/></svg></div>",
+      "options": [
+        "B-Tree",
+        "Red-Black Tree",
+        "AVL Tree",
+        "Trie"
+      ],
+      "correct": 2,
+      "explanation": "An AVL tree is a self-balancing binary search tree where the difference between heights of left and right subtrees (the balance factor) cannot be more than 1 for all nodes."
+    },
+    {
+      "id": 20,
+      "topic": "Misc (Cloud Computing)",
+      "text": "Which tool is an open-source container orchestration platform used for automating the deployment, scaling, and management of containerized applications?",
+      "options": [
+        "Jenkins",
+        "Git",
+        "Kubernetes",
+        "Ansible"
+      ],
+      "correct": 2,
+      "explanation": "Kubernetes (K8s) is the industry standard open-source system for orchestrating, managing, and scaling containerized applications (like those built with Docker)."
+    },
+    {
+      "id": 21,
+      "topic": "Python Programming",
+      "text": "What is the primary purpose of the `__init__` method in a Python class?",
+      "options": [
+        "It is used to destroy an object and free memory.",
+        "It is a constructor used to initialize the object's attributes when it is created.",
+        "It is used to define class-level (static) variables.",
+        "It returns a string representation of the object."
+      ],
+      "correct": 1,
+      "explanation": "The `__init__` method is the constructor in Python. It is automatically called when an object of the class is instantiated, primarily to initialize instance variables."
+    },
+    {
+      "id": 22,
+      "topic": "Database Systems",
+      "text": "What is the result of executing a `LEFT OUTER JOIN` between Table A and Table B?",
+      "options": [
+        "Only the matching rows from both tables are returned.",
+        "All rows from Table B and matching rows from Table A are returned.",
+        "All rows from Table A and matching rows from Table B are returned; non-matching rows from Table A will have NULLs for Table B columns.",
+        "All rows from both tables are returned, combining matching and non-matching rows with NULLs."
+      ],
+      "correct": 2,
+      "explanation": "A LEFT OUTER JOIN preserves all rows from the left table (Table A). If there is no match in the right table (Table B), the result set will contain NULLs for the Table B columns."
+    },
+    {
+      "id": 23,
+      "topic": "Digital Logic",
+      "text": "In Boolean algebra, what does the expression A + A'B simplify to?",
+      "options": [
+        "A",
+        "B",
+        "A + B",
+        "1"
+      ],
+      "correct": 2,
+      "explanation": "By the Distributive Law and the property (A + A') = 1: A + A'B = (A + A')(A + B) = 1 * (A + B) = A + B. This is the boolean absorption rule."
+    },
+    {
+      "id": 24,
+      "topic": "Java Programming",
+      "text": "Which collection interface in Java does not allow duplicate elements?",
+      "options": [
+        "List",
+        "Set",
+        "Map",
+        "Queue"
+      ],
+      "correct": 1,
+      "explanation": "The Set interface (e.g., HashSet, TreeSet) in the Java Collections Framework models the mathematical set abstraction and does not permit duplicate elements."
+    },
+    {
+      "id": 25,
+      "topic": "Computer Networks",
+      "text": "Which protocol is responsible for securing communication over a computer network by encrypting the data transmitted, commonly used in securing web browsing (HTTPS)?",
+      "options": [
+        "FTP",
+        "SMTP",
+        "TLS / SSL",
+        "SNMP"
+      ],
+      "correct": 2,
+      "explanation": "Transport Layer Security (TLS), and its predecessor Secure Sockets Layer (SSL), are cryptographic protocols designed to provide communications security over a computer network."
+    },
+    {
+      "id": 26,
+      "topic": "Data Structures & Algorithms",
+      "text": "In an undirected graph with 'V' vertices and 'E' edges, what is the sum of the degrees of all the vertices?",
+      "options": [
+        "V",
+        "E",
+        "2 * V",
+        "2 * E"
+      ],
+      "correct": 3,
+      "explanation": "According to the Handshaking Lemma, every edge connects two vertices, meaning it contributes exactly 2 to the sum of the degrees. Thus, the sum of degrees is 2*E."
+    },
+    {
+      "id": 27,
+      "topic": "Operating Systems",
+      "text": "What is the primary difference between a Thread and a Process?",
+      "options": [
+        "A process shares memory with other processes; threads have isolated memory.",
+        "A thread is an independent executing entity with its own PCB; a process is a lightweight unit within a thread.",
+        "Threads within the same process share code, data, and OS resources, while processes have separate isolated address spaces.",
+        "There is no difference; the terms are synonymous in modern Linux kernels."
+      ],
+      "correct": 2,
+      "explanation": "A process is a heavyweight, isolated execution environment. Threads are lightweight units of execution within a process that share the process's memory space and resources."
+    },
+    {
+      "id": 28,
+      "topic": "Cyber Security",
+      "text": "What type of attack involves an attacker sending an overwhelming amount of traffic to a target server to exhaust its resources, making it unavailable to legitimate users?",
+      "options": [
+        "SQL Injection",
+        "Man-in-the-Middle (MitM)",
+        "Denial-of-Service (DoS)",
+        "Cross-Site Scripting (XSS)"
+      ],
+      "correct": 2,
+      "explanation": "A DoS (or DDoS) attack is specifically designed to overwhelm systems, servers, or networks with a flood of internet traffic to exhaust resources."
+    },
+    {
+      "id": 29,
+      "topic": "Software Engineering",
+      "text": "In the Constructive Cost Model (COCOMO), estimating the effort required for a project is primarily based on which metric?",
+      "options": [
+        "Function Points (FP)",
+        "Lines of Code (KLOC)",
+        "Number of Use Cases",
+        "Number of Developers"
+      ],
+      "correct": 1,
+      "explanation": "The basic COCOMO model calculates software development effort (and cost) as a function of the estimated size of the software, primarily measured in Kilo Lines of Code (KLOC)."
+    },
+    {
+      "id": 30,
+      "topic": "Misc (Emerging Tech)",
+      "text": "In Machine Learning, what is 'Supervised Learning'?",
+      "options": [
+        "The algorithm learns by interacting with an environment and receiving rewards or penalties.",
+        "The algorithm is trained on unlabeled data to find hidden structures or clusters.",
+        "The algorithm is trained on a labeled dataset, where each training example is paired with an output label.",
+        "The algorithm creates neural networks automatically without human data input."
+      ],
+      "correct": 2,
+      "explanation": "In supervised learning, models are trained using labeled datasets, meaning the algorithm is provided with the input data and the corresponding correct output to learn the mapping function."
+    },
+    {
+      "id": 31,
+      "topic": "Compiler Design",
+      "text": "Match the following compiler phases (List I) with their output (List II).<br><br><table class='matching-table'><tr><th>List I</th><th>List II</th></tr><tr><td>P. Lexical Analysis</td><td>1. Parse Tree</td></tr><tr><td>Q. Syntax Analysis</td><td>2. Stream of Tokens</td></tr><tr><td>R. Intermediate Code Gen.</td><td>3. Three-Address Code</td></tr></table>",
+      "options": [
+        "P-1, Q-2, R-3",
+        "P-2, Q-1, R-3",
+        "P-3, Q-1, R-2",
+        "P-2, Q-3, R-1"
+      ],
+      "correct": 1,
+      "explanation": "Lexical Analysis produces Tokens (2). Syntax Analysis produces a Parse Tree (1). Intermediate Code Generation produces representation like Three-Address Code (3)."
+    },
+    {
+      "id": 32,
+      "topic": "C/C++ Programming",
+      "text": "Which access specifier in a C++ class makes members accessible only from within the class and its derived (child) classes?",
+      "options": [
+        "public",
+        "private",
+        "protected",
+        "internal"
+      ],
+      "correct": 2,
+      "explanation": "The `protected` access specifier allows a class member to be accessible within the class itself and by classes that inherit from it, but not from the outside world."
+    },
+    {
+      "id": 33,
+      "topic": "Database Systems",
+      "text": "In SQL, what is the difference between the `WHERE` and `HAVING` clauses?",
+      "options": [
+        "WHERE is used with UPDATE statements; HAVING is used with SELECT statements.",
+        "WHERE filters rows before aggregation; HAVING filters groups after aggregation.",
+        "WHERE can only be used with numeric data; HAVING is used with strings.",
+        "There is no difference; they are interchangeable."
+      ],
+      "correct": 1,
+      "explanation": "The `WHERE` clause applies conditions to individual rows before the `GROUP BY` clause groups them. The `HAVING` clause applies conditions to the aggregated groups formed by `GROUP BY`."
+    },
+    {
+      "id": 34,
+      "topic": "Operating Systems",
+      "text": "Consider a disk with 200 tracks (0-199) and a disk queue with requests for I/O to blocks on cylinders: 98, 183, 37, 122, 14, 124, 65, 67. The head is initially at cylinder 53. If the Shortest Seek Time First (SSTF) algorithm is used, what is the next cylinder serviced?",
+      "options": [
+        "98",
+        "65",
+        "67",
+        "37"
+      ],
+      "correct": 1,
+      "explanation": "SSTF selects the request with the minimum seek time from the current head position. The distances from 53 are: |53-65|=12, |53-37|=16, |53-67|=14. The shortest distance is to 65."
+    },
+    {
+      "id": 35,
+      "topic": "Data Structures & Algorithms",
+      "text": "What is the time complexity of searching for an element in a perfectly balanced Binary Search Tree (BST) containing 'n' nodes?",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(log n)",
+        "O(n log n)"
+      ],
+      "correct": 2,
+      "explanation": "In a balanced BST, every comparison cuts the search space in half. This halving process results in a logarithmic time complexity of O(log n)."
+    },
+    {
+      "id": 36,
+      "topic": "Computer Networks",
+      "text": "Which IP address belongs to the Class B network range?",
+      "options": [
+        "10.25.14.8",
+        "172.16.45.90",
+        "192.168.1.1",
+        "224.0.0.5"
+      ],
+      "correct": 1,
+      "explanation": "Class A is 1-126. Class B is 128-191. Class C is 192-223. The address 172.16.45.90 falls squarely in the Class B range."
+    },
+    {
+      "id": 37,
+      "topic": "Object Oriented Programming",
+      "text": "Which of the following is NOT a pillar of Object-Oriented Programming?",
+      "options": [
+        "Abstraction",
+        "Inheritance",
+        "Compilation",
+        "Encapsulation"
+      ],
+      "correct": 2,
+      "explanation": "The four main pillars of OOP are Abstraction, Encapsulation, Inheritance, and Polymorphism. Compilation is a process in programming languages, not an OOP concept."
+    },
+    {
+      "id": 38,
+      "topic": "Python Programming",
+      "text": "What will the following list comprehension produce in Python?<br><br><div class='code-block'>squares = [x**2 for x in range(4)]\nprint(squares)</div>",
+      "options": [
+        "[1, 4, 9, 16]",
+        "[0, 1, 4, 9]",
+        "[0, 2, 4, 6]",
+        "[0, 1, 8, 27]"
+      ],
+      "correct": 1,
+      "explanation": "`range(4)` generates numbers 0, 1, 2, 3. The comprehension squares them: 0**2=0, 1**2=1, 2**2=4, 3**2=9. The result is [0, 1, 4, 9]."
+    },
+    {
+      "id": 39,
+      "topic": "Digital Logic",
+      "text": "How many selection lines are required for an 8-to-1 Multiplexer (MUX)?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 2,
+      "explanation": "A multiplexer with 2<sup>n</sup> data inputs requires 'n' select lines to choose which input is routed to the output. For 8 inputs (2<sup>3</sup>), 3 select lines are required."
+    },
+    {
+      "id": 40,
+      "topic": "Misc (IT Standards)",
+      "text": "Which international ISO/IEC standard provides guidelines on IT Service Management (ITSM), often aligned with ITIL frameworks?",
+      "options": [
+        "ISO 9001",
+        "ISO 20000",
+        "ISO 27001",
+        "ISO 14001"
+      ],
+      "correct": 1,
+      "explanation": "ISO/IEC 20000 is the international standard for IT service management. ISO 27001 is for security, and 9001 is for general quality management."
+    },
+    {
+      "id": 41,
+      "topic": "Cyber Security",
+      "text": "What is a primary characteristic of a 'Stateful Firewall' compared to a 'Stateless Firewall'?",
+      "options": [
+        "It blocks all UDP traffic permanently.",
+        "It only inspects the IP header and port numbers of individual packets without tracking connection context.",
+        "It tracks the state and context of active network connections, allowing return traffic for established sessions.",
+        "It encrypts all payload data passing through it."
+      ],
+      "correct": 2,
+      "explanation": "Stateful firewalls remember the state of connections (like a TCP handshake) and make decisions based on the context of the traffic flow, not just individual packets."
+    },
+    {
+      "id": 42,
+      "topic": "Java Programming",
+      "text": "Which keyword in Java is used to invoke a parent class's constructor or access parent class members from a child class?",
+      "options": [
+        "this",
+        "super",
+        "extends",
+        "parent"
+      ],
+      "correct": 1,
+      "explanation": "The `super` keyword in Java is a reference variable used to refer to the immediate parent class object, allowing access to its constructors and overridden methods."
+    },
+    {
+      "id": 43,
+      "topic": "Database Systems",
+      "text": "A transaction in a database schedule reads a value written by an uncommitted transaction that subsequently aborts. What is this phenomenon called?",
+      "options": [
+        "Lost Update",
+        "Phantom Read",
+        "Dirty Read",
+        "Non-repeatable Read"
+      ],
+      "correct": 2,
+      "explanation": "A Dirty Read occurs when a transaction is allowed to read data from a row that has been modified by another running transaction and not yet committed."
+    },
+    {
+      "id": 44,
+      "topic": "Computer Networks",
+      "text": "Which device operates primarily at the Data Link layer (Layer 2) of the OSI model and uses MAC addresses to forward frames?",
+      "options": [
+        "Router",
+        "Hub",
+        "Repeater",
+        "Switch"
+      ],
+      "correct": 3,
+      "explanation": "A Switch operates at Layer 2, inspecting MAC addresses to forward data frames directly to the intended device. Hubs/Repeaters are Layer 1, and Routers are Layer 3."
+    },
+    {
+      "id": 45,
+      "topic": "Compiler Design",
+      "text": "What is a 'Symbol Table' used for in a compiler?",
+      "options": [
+        "To optimize the machine code for the target CPU architecture.",
+        "To store information about identifiers, their types, scope, and memory locations during compilation.",
+        "To parse the context-free grammar.",
+        "To convert tokens into regular expressions."
+      ],
+      "correct": 1,
+      "explanation": "The Symbol Table is a crucial data structure created and maintained by compilers to keep track of semantics of variables, such as variable names, types, and scope."
+    },
+    {
+      "id": 46,
+      "topic": "Software Engineering",
+      "text": "In the Unified Modeling Language (UML), which diagram is a structural diagram that shows the system's classes, their attributes, methods, and relationships?",
+      "options": [
+        "Use Case Diagram",
+        "Sequence Diagram",
+        "Activity Diagram",
+        "Class Diagram"
+      ],
+      "correct": 3,
+      "explanation": "A Class Diagram is a static structural diagram that describes the structure of a system by showing the system's classes and the relationships among them."
+    },
+    {
+      "id": 47,
+      "topic": "Data Structures & Algorithms",
+      "text": "In a Hash Table, what is a 'Collision'?",
+      "options": [
+        "When two tables share the same memory space.",
+        "When a hash function maps two different keys to the same array index.",
+        "When the array size exceeds the maximum memory limit.",
+        "When a deleted key is accessed again."
+      ],
+      "correct": 1,
+      "explanation": "A collision happens when a hash function generates the same index for more than one key. It is handled using techniques like Chaining or Open Addressing."
+    },
+    {
+      "id": 48,
+      "topic": "Operating Systems",
+      "text": "What is 'Thrashing' in the context of Operating System memory management?",
+      "options": [
+        "A rapid context switching between multiple high-priority threads.",
+        "A state where the CPU is highly utilized doing actual computations.",
+        "A condition where the system spends more time swapping pages in and out of memory than executing code.",
+        "The physical corruption of sectors on the hard disk drive."
+      ],
+      "correct": 2,
+      "explanation": "Thrashing occurs when a computer's virtual memory subsystem is in a constant state of paging, rapidly exchanging data in memory for data on disk, causing performance to collapse."
+    },
+    {
+      "id": 49,
+      "topic": "C/C++ Programming",
+      "text": "In C++, what does the `inline` keyword request the compiler to do?",
+      "options": [
+        "Make the function accessible from other files.",
+        "Insert the function's code directly into the calling code to eliminate function call overhead.",
+        "Force the function to execute in a single CPU cycle.",
+        "Prevent the function from modifying any global variables."
+      ],
+      "correct": 1,
+      "explanation": "An inline function is a request to the compiler to substitute the function call with the actual code of the function, reducing overhead for small, frequently called functions."
+    },
+    {
+      "id": 50,
+      "topic": "Misc (Banking IT)",
+      "text": "What does the acronym 'UPI' stand for in the context of Indian digital payments?",
+      "options": [
+        "Unified Payments Interface",
+        "Universal Payment Infrastructure",
+        "Unique Payment Identification",
+        "United Portal Integration"
+      ],
+      "correct": 0,
+      "explanation": "UPI stands for Unified Payments Interface, an instant real-time payment system developed by NPCI facilitating inter-bank peer-to-peer and person-to-merchant transactions."
+    }
+  ]
+}
